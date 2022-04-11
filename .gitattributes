@@ -1,0 +1,8 @@
+*.ai binary
+*.eps binary
+*.ttf binary
+*.otf binary
+*.pptx binary
+*.afdesign binary
+
+*.bat           text eol=crlf
