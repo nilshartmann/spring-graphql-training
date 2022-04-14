@@ -24,7 +24,7 @@ Reveal.addEventListener("ready", function (event) {
   document.querySelectorAll('pre code').forEach(
     n => {
       n.setAttribute("contenteditable", "true");
-      n.setAttribute("data-trim", "")
+//      n.setAttribute("data-trim", "")
     }
   )
 });
@@ -37,6 +37,10 @@ Reveal.addEventListener("ready", function (event) {
 
 Reveal.initialize({
   hash: true,
+
+//  highlight: {
+//    beforeHighlight: hljs => hljs.registerLanguage(/*...*/)
+//  },
 
   // Learn about plugins: https://revealjs.com/plugins/
   plugins: [RevealMarkdown, RevealHighlight, RevealNotes]

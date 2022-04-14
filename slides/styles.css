@@ -156,3 +156,7 @@ html.es6-exkurs body {
 html.js-exkurs body {
   background-color: #e3f3ff;
 }
+
+.language-graphql .hljs-punctuation {
+  color: #268bd2;e
+}
