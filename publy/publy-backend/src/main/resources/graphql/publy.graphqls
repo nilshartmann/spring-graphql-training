@@ -1,0 +1,699 @@
+"""
+`DateTime`-Fields send/receive a date as an ISO 8601 timestamp format
+"""
+scalar DateTime
+
+"""
+Represents a single Node in our System.
+
+All objects in our API implement this Node. Nodes can be queried using the `node` `Query`-field
+"""
+interface Node {
+
+    """
+    The unique identifier of this node.
+
+    The value should not be interpreted by the client in any way.
+    """
+    id: ID!
+
+    """
+    The timestamp, when this node has been created
+    """
+    createdAt: DateTime!
+}
+
+"""
+An accunt of a user that is able to login into our application.
+
+Authorization is done in a separate process that also stores other User information, like credentials and roles
+"""
+type User {
+    id: ID!
+
+    "Username is used to login"
+    username: String!
+
+    "Fullname of a user"
+    name: String!
+
+    "The user's E-Mail adress"
+    email: String!
+}
+
+
+"""
+A Member is a person that is part of our application. It might be backed by a `User` or not.
+
+If the Member discards it`s user (leaving our service), the Member stays but is now "offline"
+"""
+type Member implements Node {
+    id: ID!
+
+    createdAt: DateTime!
+
+    """
+    The `User` that is represented by this member.
+
+    If the `User` does not exists anymore, null is returned
+    """
+    user: User
+
+    "URL to the profile image of this Member"
+    profileImageUrl: String!
+
+    "Date, when this Member first joined our service"
+    joined: DateTime!
+
+    "Location, where the Member currenty lives"
+    location: String
+
+    "A short biography of this Member in it's own words"
+    bio: String
+
+    "Skills that Members has, for example `graphql` or `drinking beers`"
+    skills: String
+
+    "What is this Member currently learning?"
+    currentlyLearning: String
+
+    "Where is this Member working currently"
+    works: String
+
+    """
+    The stories this Member has written.
+
+    Note:
+    - you have to specify at least `first` or `last` argument
+    - ou cannot request more than 10 stories at a time
+    """
+    stories(first:Int, after: ID, last:Int, before: ID, orderBy: StoryOrder): StoryConnection!
+
+    """
+    The comments this user has written
+
+    Note:
+    - you have to specify at least `first` or `last` argument
+    - ou cannot request more than 10 comments at a time
+    """
+    comments(first:Int, after: ID, last:Int, before: ID, orderBy: CommentOrder): CommentConnection!
+
+}
+
+"""
+https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
+"""
+type PageInfo {
+    """
+    If you would read data before the `startCursor` would you receive data?
+    """
+    hasPreviousPage: Boolean!
+
+    """
+    Is there more data after `endCursor`?
+    """
+    hasNextPage: Boolean!
+
+    "The cursor pointing to the first result"
+    startCursor: ID
+
+    "The cursor pointing to the last result"
+    endCursor: ID
+}
+
+"""
+A Comment is written by a Member for a Story of another member
+
+A Comment cannot be changed and does not have a title.
+
+"""
+type Comment implements  Node {
+    id: ID!
+
+    "When was this comment written?"
+    createdAt: DateTime!
+    writtenBy: Member!
+
+    """
+    Contains the actual content the `Member` has written.
+
+    Note: Markdown is **not** supported here!
+    """
+    content: String!
+
+    "The `story` this comment referres to"
+    story: Story!
+}
+
+"Classification of a `Reaction` that is given to a `Story`"
+enum ReactionType {
+    "👍"
+    like,
+
+    "😀"
+    laugh,
+
+    "❤️"
+    heart,
+
+    "🍻"
+    prosit,
+}
+
+"""
+Members can give a short `Reaction` to a `Story` to express their feelings about that story.
+
+There are different `ReactionTypes` and each member can give any type of reaction exactly once for each
+Story
+"""
+type Reaction implements Node {
+    id: ID!
+    createdAt: DateTime!
+
+    "Type of the reaction"
+    type: ReactionType!
+
+    "What member has given this reaction?"
+    givenBy: Member!
+}
+
+"Specifies the direction collections can be sorted by"
+enum OrderDirection {
+    "Order by value **ascending**"
+    asc,
+
+    "Order by value **descending**"
+    desc
+}
+
+"List of fields that a `Comment` can be ordered by"
+enum CommentOrderField {
+    "Order by creation date"
+    createdAt,
+
+    "order by member that has written this comment"
+    writtenBy
+}
+
+"""Specified how a list of comments should be ordered"""
+input CommentOrder {
+    "Field that should be used for ordering"
+    field: CommentOrderField!
+
+    "Sort direction"
+    direction: OrderDirection!
+}
+
+"""Specifes a field of a `Comment` that can be used to filter comments from a collection"""
+enum CommentConditionField {
+    writtenBy,
+    story
+}
+
+"""Describes a condition that should be used to filter comments from a collection of comments"""
+input CommentCondition {
+    field: CommentConditionField!
+    value: ID!
+}
+
+"An Edge that represents a `Comment`"
+type CommentEdge {
+
+    "The actual `Comment` object"
+    node: Comment!
+
+    "A cursor that points to this object"
+    cursor: ID!
+}
+
+"""
+A _connection_ of `Comment` objects
+"""
+type CommentConnection {
+    "Information of the page that this connection represents"
+    pageInfo: PageInfo!
+
+    """
+    Returns all `CommentEdge`s that this connection represents. Might be empty, but never null.
+    """
+    edges: [CommentEdge!]!
+
+    """
+    Returns all `Comment` fetched with this connection.
+
+    This is similiar to the way the GitHub GraphQL API works:
+    - you can received the `edges` (your resulting object graph is deeper, but you also have the cursors for each edge)
+    - you can use this `nodes` to directly access only the node objects, if you don't need the cursors
+    """
+    nodes: [Comment!]!
+
+    "total number of objects that is selected by the criteria that was used to create this connection"
+    totalCount: Int!
+}
+
+type ReactionEdge {
+    node: Reaction!
+    cursor: ID!
+}
+
+type ReactionConnection {
+    pageInfo: PageInfo!
+
+    """
+    Returns all `ReactionEdge`s that this connection represents. Might be empty, but never null.
+    """
+    edges: [ReactionEdge!]!
+
+    """
+    Contains the list of `Reactions` of this connection.
+
+    This is similiar to the way the GitHub GraphQL API works:
+    - you can received the `edges` (your resulting object graph is deeper, but you also have the cursors for each edge)
+    - you can use this `nodes` to directly access only the node objects, if you don't need the cursors
+    """
+    nodes: [Reaction!]!
+
+    totalCount: Int!
+}
+
+type StoryEdge {
+    node: Story!
+    cursor: ID!
+}
+
+type StoryConnection {
+    pageInfo: PageInfo!
+
+    """
+    Returns all `StoryEdges` that this connection represents. Might be empty, but never null.
+    """
+    edges: [StoryEdge!]!
+
+    """
+    Contains the list of `Stories` of this connection.
+
+    This is similiar to the way the GitHub GraphQL API works:
+    - you can received the `edges` (your resulting object graph is deeper, but you also have the cursors for each edge)
+    - you can use this `nodes` to directly access only the node objects, if you don't need the cursors
+    """
+    nodes: [Story!]!
+
+    totalCount: Int!
+}
+
+"""
+Specified fields on a `Story` that can be used to
+filter/search for stories using a condition (for example
+to find only Stories that are written by a specific `Member`)
+"""
+enum StoryConditionField  {
+    """
+    Selects Stories that are written by the specified `Member`.
+
+    The `value` for this condition must be the `Id` of a `Member`
+    """
+    writtenBy,
+
+    """
+    Returns Stories that contain a specified `Tag`
+    """
+    tag
+
+    """
+    Returns Stories that are newer than the specified date
+    """
+    newerThan
+}
+
+input StoryCondition {
+    field: StoryConditionField
+    value: String!
+}
+
+enum StoryOrderField {
+    createdAt, reactions
+}
+
+input StoryOrder {
+    field: StoryOrderField!
+    direction: OrderDirection!
+}
+
+type ReactionByType {
+    type: ReactionType!
+    totalCount: Int!
+    givenByMe: Boolean!
+}
+
+type ReactionSummary {
+    totalCount: Int!
+    reactionsByType: [ReactionByType!]!
+}
+
+"""
+A `Story` is the main object in our service.
+
+Stories are written and published by `Member`s. Other members can leave a `Comment` or give a `Reaction`
+"""
+type Story implements Node {
+    id: ID!
+    "The title of this Story, should be short and precise"
+    title: String!
+
+    """
+    Time and date when this story has been written and published
+    """
+    createdAt: DateTime!
+
+    "Who has written this story"
+    writtenBy: Member!
+
+    "The actual story text. Can contain markdown for formatting"
+    body: String!
+
+    """
+    Returns a short _excerpt_ of this Story's body.
+
+    The returned string _does not_ contain any markdown or html code.
+    """
+    excerpt(maxLength: Int! = 200): String!
+
+    """
+    A `Tag` is a free-form word that categories this Story.
+
+    Stories can be searched by their tags. This way Members can find stories they're interessted in.
+    """
+    tags:[String!]!
+
+    """
+    A summary of all reactions given to this Story by Reaction type
+    """
+    reactionSummary(
+        """Only return summary for the given `ReactionType`"""
+        type: ReactionType): ReactionSummary!
+
+    """
+    list all reactions of this story
+
+    """
+    reactions(first:Int=10, after: ID, last:Int, before: ID): ReactionConnection!
+
+    """
+    list all comments of this story
+
+    Note:
+    - if you neither specify `first` nor `last`, `first` is set to `10` by default.
+    - you must not specify both  `first` and `last` (only specify one)
+    - you cannot load more than `10` comments in one query
+    """
+    comments(first:Int=10, after: ID, last:Int, before: ID, orderBy: CommentOrder): CommentConnection!
+
+    """
+    list all comments of this story
+
+    Note:
+    - if you neither specify `first` nor `last`, `first` is set to `10` by default.
+    - you must not specify both  `first` and `last` (only specify one)
+    - you cannot load more than `10` comments in one query
+    """
+    allComments(first:Int=10, after: ID, last:Int, before: ID, orderBy: CommentOrder): CommentConnection! @deprecated(reason: "Use comments instead")
+
+}
+
+"""
+_Top Tags_  are a special feature of our service: determined by a high complex and very secret algorithm in the
+backend we calculate a list of tags and their story that are very useful for the current Member.
+"""
+type TopTags {
+    "The name of a Tag"
+    tagName: String!
+
+    """
+    Some _top stories_ for this tag
+
+    The stories that are returned are collected by our highly secret algorithm that determines the
+    best matching stories for the current member
+    """
+    stories: [Story!]!
+}
+
+"""
+This is an example for an **Offset-based** pagination API
+
+In contrast, almost all other lists in our application use **Cursor-based** pagination ("Connections")
+
+A `MemberPage` represent a list of `Member` objects that are returned by the `members` `Query` field.
+
+"""
+type MemberPage {
+
+    #    """
+    #    Is there a previous page that can be queried (back navigation)
+    #    """
+    #    hasPrevious: Boolean!
+    #
+    #    """
+    #    Is there a next page that can be queried (forward navigation)
+    #    """
+    #    hasNext: Boolean!
+
+    """
+    Number of all pages
+    """
+    totalPages: Int!
+
+    """
+    Number of all Members
+    """
+    totalElements: Int!
+
+    """
+    Members read in the query
+    """
+    content: [Member!]!
+
+}
+
+type Query {
+
+    """
+    Return a `Node` by it's id or null, if not found
+    """
+    node(id: ID!): Node
+
+    """
+    Returns the `Member` by it's `id` or null, if the `Member` could not be found
+    """
+    member(id: ID!): Member
+
+    """
+    Returns the `Story` with the specified `id` or null if there is no `Story`
+    with that `id`.
+
+    If you don't specify an `id`, the topmost story is returned
+    """
+    story(id: ID): Story
+
+    """
+    Find stories, ordered and matched by specified criterias
+
+    Returned is a always a `StoryConnection` that might be empty. Use the fields argument to
+    filter and limit the results that you need
+    """
+    stories(
+        "Return the first X stories. Might not be more than 10! Note: either `first` or `last` must be specified!"
+        first:Int,
+        "Return stories _after_  this cursor"
+        after: ID,
+        "Returns the last X stories. Might not be more than 10"
+        last:Int,
+        "Return stories _before_  this cursor"
+        before: ID,
+        "Only return stories matched by this `StoryCondition`"
+        condition: StoryCondition,
+        "Order the returned stories by this `StoryOrder`"
+        orderBy: StoryOrder): StoryConnection!
+
+    comments(first:Int, after: ID, last:Int, before: ID, orderBy: CommentOrder, condition: CommentCondition): CommentConnection!
+
+    """
+    Return a list of `TopTags` for the given member.
+
+    _TopTags_  are tags and stories that are individually collected for a specific member using a very complex
+    and secret in our Publy backend
+    """
+    topTags: [TopTags!]!
+
+    """
+    Return the current logged in Member (as read from the `Authorization` JWT) or null
+    if no member is logged in
+    """
+    me: Member
+
+    """
+    Returns Publy's registered members
+    """
+    members(page: Int, size:Int): MemberPage!
+}
+
+"""
+Input-Type for adding a new `Comment`
+"""
+input AddCommentInput {
+    "The id of the `Story` that the comment should be added to"
+    storyId: ID!
+
+    "The comment itself"
+    content: String!
+}
+
+"""
+Represents an error message when a comment could not be added
+"""
+type AddCommentFailurePayload {
+    "Error message describing the problem"
+    msg: String!
+}
+
+"""Returns if a comment has been successfully created"""
+type AddCommentSuccessPayload {
+    "The new comment object that has been added to the story"
+    newComment: Comment!
+}
+
+"""
+Return type for the `addComment` `Mutation`
+
+It can either be a `AddCommentFailurePaylod` if adding failed or
+`AddCommentSuccessPayload` if the comment have been added successfully
+"""
+union AddCommentPayload = AddCommentFailurePayload | AddCommentSuccessPayload
+
+"""
+Input for a new `Story`
+
+See field description for constraints
+"""
+input AddStoryInput {
+    """
+    The story title.
+
+    - Must have at least 10 characters
+    """
+    title: String!
+
+    """
+    The tags for the story.
+
+    - Tags are free text (should be only one word though)
+    - You must specify at least one tag
+    """
+    tags: [String!]!
+
+    """
+    The story body, i.e. its main content.
+
+    - the body might contain markdown code
+    - the body must be at least 10 characters long
+    """
+    body: String!
+}
+
+enum StoryConstrationViolationField {
+    title, body, tags, other
+}
+
+"""
+A single violation that occurred when creating a new `Story`
+"""
+type AddStoryConstraintViolation {
+    message: String!
+    field: StoryConstrationViolationField
+}
+
+"""Result object when a new `Story` has been created successfully"""
+type AddStorySuccessPayload {
+    newStory: Story!
+}
+
+"""Result object when a new `Story` could not be created, because one or
+more fields have violated constraints
+"""
+type AddStoryConstraintViolationPayload  {
+    """A list of all violations that occured when adding a new `Story`"""
+    violations: [AddStoryConstraintViolation!]!
+}
+
+"""Result object, when a `Story` could not be created, because the
+`Member` has not the suffient credentials
+
+Note that you must be logged in to add a new `Story` and your User
+must habe the `ROLE_USER` role.
+"""
+type AddStoryInvalidCredentialsPayload {
+    """The error message"""
+    message: String!
+
+    """The currently logged in `Member` or `null` if no member is logged in"""
+    member: Member
+}
+
+"""
+Result type for adding a new story
+"""
+union AddStoryPayload = AddStorySuccessPayload | AddStoryConstraintViolationPayload | AddStoryInvalidCredentialsPayload
+
+input ToggleReactionInput {
+    storyId: ID!, reactionType: ReactionType!
+}
+
+type ToggleReactionPayload {
+    updatedStory: Story!
+}
+
+"""
+This event is raised when a new `Comment` has been successfully added to a `Story`
+"""
+type OnNewCommentEvent {
+    """
+    The new comment as a `CommentEdge` object that can be used on the client to add it to existing
+    list of CommentEdges (like CommentConnections)
+    """
+    newCommentEdge: CommentEdge!
+
+    """
+    The newly added Comment object
+    """
+    newComment: Comment!
+}
+
+type Mutation {
+    """
+    Add a new `Comment` to a `Story`
+
+    Note:
+    - to add a Comment you have to be logged in. Anonymoud users cannot add comments.
+    - the content lenght must be at least 5 characters
+
+    Depending on the outcome of this operation:
+    - a `AddCommentFailurePayload` _or_ `AddCommentSuccessPayload` is returned
+    - in case of success, a `OnNewCommentEvent` is raised to inform clients about this new comment
+    """
+    addComment(input: AddCommentInput!): AddCommentPayload!
+
+    """
+    Add a new story.
+
+    - The `AddStoryInput` must contain valid values!
+    - You must be logged in to create stories (with a user with role `ROLE_USER`)
+    """
+    addStory(input: AddStoryInput!): AddStoryPayload!
+    toggleReaction(input: ToggleReactionInput!): ToggleReactionPayload!
+}
+
+type Subscription {
+    """
+    Register for new comments for the given story
+    """
+    onNewComment(storyId: ID!):OnNewCommentEvent!
+}

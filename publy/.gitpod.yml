@@ -1,0 +1,74 @@
+image:
+  file: .gitpod.Dockerfile
+tasks:
+  - name: Start postgres
+    command: docker-compose -f docker-compose.yml up -d
+  - name: Build
+    init: |
+      echo "Start" >> ./time.txt
+      date >> ./time.txt
+      cat ./time.txt
+      ./gradlew -x test clean bootJar
+      date >> ./time.txt
+      echo "Fertig" >> ./time.txt
+      gp sync-done build
+  - name: Run UserService
+    init: gp sync-await build
+    command: java -jar publy-userservice/build/libs/publy-userservice-0.0.1-SNAPSHOT.jar
+  - name: Run Backend
+    init: |
+      gp sync-await build
+    command: |
+      gp await-port 8432
+      echo "Start" >> ./time-backend.txt
+      date >> ./time-backend.txt
+      cat ./time-backend.txt
+      IMAGES_URL=`gp url 8080`
+      java -Dpubly.profileImageBaseUrl=${IMAGES_URL}/ -jar publy-backend/build/libs/publy-backend-0.0.1-SNAPSHOT.jar
+  - name: "Frontend"
+    init: |
+      cd publy-frontend
+      yarn install
+      export REACT_APP_SHOW_LOGIN_HINT=true
+      yarn build
+      cp build/index.html build/index-orig.html
+    command: |
+      gp await-port 8080
+      export USERSERVICE_HOST=`gp url 8081`
+      export BACKEND_HOST=`gp url 8080`
+      cd $GITPOD_REPO_ROOT/publy-frontend
+      node patch-index-html.js
+      yarn serve -s build
+ports:
+  - port: 8432
+    onOpen: ignore
+    visibility: public
+  - port: 6942
+    onOpen: ignore
+  - port: 8080
+    onOpen: open-browser
+    visibility: public
+  - port: 8081
+    onOpen: ignore
+    visibility: public
+  - port: 3000
+    onOpen: open-browser
+    visibility: public
+  - port: 5000
+    onOpen: open-browser
+    visibility: public
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo
+    branches: true
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: true
+

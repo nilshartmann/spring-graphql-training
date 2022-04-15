@@ -1,0 +1,18 @@
+query FeedPage($after: ID) {
+  stories(
+    first: 3
+    after: $after
+    orderBy: { direction: desc, field: createdAt }
+  ) {
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+
+    edges {
+      node {
+        ...StoryTeaser
+      }
+    }
+  }
+}

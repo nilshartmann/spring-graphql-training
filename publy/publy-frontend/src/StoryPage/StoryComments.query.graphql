@@ -1,0 +1,13 @@
+query StoryComments($storyId: ID!) {
+  comments(
+    first: 10
+    orderBy: { field: createdAt, direction: desc }
+    condition: { field: story, value: $storyId }
+  ) {
+    totalCount
+
+    edges {
+      ...StoryCommentEdge
+    }
+  }
+}

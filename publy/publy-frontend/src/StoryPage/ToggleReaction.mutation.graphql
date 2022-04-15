@@ -1,0 +1,14 @@
+mutation ToggleReaction($storyId: ID!, $reactionType: ReactionType!) {
+  toggleReaction(input: { storyId: $storyId, reactionType: $reactionType }) {
+    updatedStory {
+      id
+      reactionSummary {
+        reactionsByType {
+          type
+          givenByMe
+          totalCount
+        }
+      }
+    }
+  }
+}

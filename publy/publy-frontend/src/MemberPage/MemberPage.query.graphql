@@ -1,0 +1,40 @@
+query MemberPage($memberId: ID!) {
+  member(id: $memberId) {
+    id
+    profileImageUrl
+    user {
+      name
+      email
+    }
+    bio
+    joined
+    currentlyLearning
+    location
+    skills
+    works
+
+    stories(orderBy: { field: createdAt, direction: desc }, first: 5) {
+      totalCount
+      edges {
+        node {
+          ...StoryTeaser
+        }
+      }
+    }
+
+    comments(orderBy: { field: createdAt, direction: desc }, first: 5) {
+      totalCount
+      edges {
+        node {
+          id
+          createdAt
+          content
+          story {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+}
