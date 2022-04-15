@@ -1,0 +1,18 @@
+{
+  "Markdown Slide": {
+    "scope": "html",
+    "prefix": "ms",
+    "body": [
+      "<section data-markdown>",
+      "  <textarea data-template>",
+      "    $0",
+      "  </textarea>",
+      "</section>"
+    ]
+  },
+  "GraphQL Code Block": {
+    "scope": "html",
+    "prefix": "gc",
+    "body": ["", "<pre><code class=\"graphql\">", "  $0", "</code></pre>", ""]
+  }
+}

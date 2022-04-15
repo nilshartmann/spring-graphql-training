@@ -1,7 +1,7 @@
 /*@import "reveal.js/css/reveal.css";*/
 /*@import "reveal.js/css/theme/solarized.css";*/
 /*@import "reveal.js/lib/css/github.css";*/
-@import "/slides/revealjs/fontsljs/fonts/google-fonts.css";
+@import "fonts/google-fonts.css";
 
 .reveal .slides,
 .reveal .slides > section {

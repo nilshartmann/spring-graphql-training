@@ -1,81 +1,99 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
     <title>Spring GraphQL Workshop</title>
 
-    <link rel="stylesheet" href="revealjs/reveal.js/dist/reset.css">
-    <link rel="stylesheet" href="revealjs/reveal.js/dist/reveal.css">
-    <link rel="stylesheet" href="revealjs/reveal.js/dist/theme/solarized.css">
+    <link rel="stylesheet" href="revealjs/reveal.js/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/reveal.js/dist/theme/solarized.css" />
 
     <!-- Theme used for syntax highlighted code -->
-    <link rel="stylesheet" href="revealjs/highlight-js-github-theme.css">
-    <link rel="stylesheet" href="revealjs/styles.css">
+    <link rel="stylesheet" href="revealjs/highlight-js-github-theme.css" />
+    <link rel="stylesheet" href="revealjs/styles.css" />
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
         <section data-state="title">
-          <h2 class="title" style="font-size: 7rem;">
+          <h2 class="title" style="font-size: 7rem">
             <b>Spring GraphQL Workshop</b>
           </h2>
 
           <h3>
-            <span class="transparent-bg">
-              20. April 2022
-            </span>
+            <span class="transparent-bg"> 20. April 2022 </span>
           </h3>
 
           <h4>
             <span class="transparent-bg">
-              <a href="https://nilshartmann.net" target="_blank">Nils Hartmann</a> |
-              <a href="https://twitter.com/nilshartmann" target="_blank">@nilshartmann</a>
+              <a href="https://nilshartmann.net" target="_blank"
+                >Nils Hartmann</a
+              >
+              |
+              <a href="https://twitter.com/nilshartmann" target="_blank"
+                >@nilshartmann</a
+              >
             </span>
           </h4>
 
-          <p style="margin-top: 4rem;"></p>
+          <p style="margin-top: 4rem"></p>
           <div>
             <h3><span class="transparent-bg">Slides</span></h3>
             <p>
-              <span class="transparent-bg">Lokal: 2022_04_20_spring-graphql.html</span>
+              <span class="transparent-bg"
+                >Lokal: 2022_04_20_spring-graphql.html</span
+              >
             </p>
           </div>
         </section>
         <section>
           <h2>Nils Hartmann</h2>
           <p>
-            <a href="https://nilshartmann.net" target="_blank">https://nilshartmann.net</a> /
-            <a href="https://twitter.com/nilshartmann" target="_blank">@nilshartmann</a>
+            <a href="https://nilshartmann.net" target="_blank"
+              >https://nilshartmann.net</a
+            >
+            /
+            <a href="https://twitter.com/nilshartmann" target="_blank"
+              >@nilshartmann</a
+            >
           </p>
-          <p><em>Freiberuflicher Software-Entwickler, Berater und Trainer aus Hamburg</em></p>
+          <p>
+            <em
+              >Freiberuflicher Software-Entwickler, Berater und Trainer aus
+              Hamburg</em
+            >
+          </p>
 
-          <div style="display: flex; justify-content: center;">
+          <div style="display: flex; justify-content: center">
             <div>
               <p>Java</p>
               <p>JavaScript, TypeScript</p>
               <p>React</p>
               <p>Single-Page-Applications</p>
               <p>GraphQL</p>
-              <p style="margin-top: 20px;">
+              <p style="margin-top: 20px">
                 <a href="https://reacttraining.dev">Schulungen und Workshops</a>
               </p>
             </div>
-            <div style="margin-left: 15px;">
+            <div style="margin-left: 15px">
               <a href="https://reactbuch.de"
-              ><img
-                  style="max-height: 450px;"
-                  src="revealjs/images/react-buch-v2.jpg"
-              /><br/>https://reactbuch.de</a
+                ><img
+                  style="max-height: 450px"
+                  src="images/react-buch-v2.jpg"
+                /><br />https://reactbuch.de</a
               >
-              <br/>
+              <br />
             </div>
           </div>
         </section>
 
         <section data-markdown>
-  <textarea data-template>
+          <textarea data-template>
     ## Die Beispiel-Anwendung
 
     ---
@@ -85,10 +103,11 @@
     ## Architektur Beispiel-Anwendung
 
     ### todo !!!!!!!!!!!!!
-  </textarea>
+  </textarea
+          >
         </section>
         <section data-markdown>
-  <textarea data-template>
+          <textarea data-template>
 # Die GraphQL Abfrage-Sprache
 ---
 
@@ -107,7 +126,7 @@
 
 ### Felder können **Argumente** haben
 
-<pre><code data-line-numbers="3" class="graphql">
+<pre><code class="graphql">
   query {
     story(storyId: 5) {
       id title writtenBy {
@@ -121,13 +140,13 @@
 
 ### Die **Antwort** sieht immer so aus, wie die Abfrage
 
-<img src="/slides/images/query-antwort.png" />
+<img src="images/query-antwort.png" />
 
 ---
 
 ### Operation-Type
 
-Ausgeführt werden **Operationen.
+Ausgeführt werden **Operationen**.
 Der **Operation-Type** beschreibt, was in der Anfrage getan werden soll
 
 * **query**: Daten lesen (Default-Operation, Schlüsselwort "query" kann weggelassen werden)
@@ -140,16 +159,17 @@ Der **Operation-Type** beschreibt, was in der Anfrage getan werden soll
 ### Operation-Type
 
 Der Operation-Type bestimmt auch den Einstiegspunkt in den Objekt-Graphen
-<img height="480px" src="/slides/images/einstiegspunkte.png" />
+
+<img src="images/einstiegspunkte.png" />
 
 ---
 
 ### Namen von Operationen
 
-* Operationen können **Namen** haben.
+*Operationen können **Namen** haben.
 * Das ist vor allem für Debugging und Code-Generatoren relevant
 
-<pre><code class="graphql" data-line-numbers="2|2-10">
+<pre class="fragment"><code class="graphql">
 query NewestStory {
     story {
       id
@@ -186,7 +206,7 @@ query {
 
 Ein **Union-Type** kann mehr als einen Typ zurückliefern:
 
-<pre><code class="graphql" data-line-numbers="5,9">
+<pre><code class="graphql">
 mutation  addComment
     (input: { storyId: "1", content: "..." }) {
 
@@ -230,17 +250,36 @@ query {
 * Variablen müssen im Query deklariert werden
 * Werte für Variablen werden in einem eigenen JSON-Objekt an den Server geschickt
 
-<pre><code class="graphql" data-line-numbers="2|3|1-10">query ($storyId: ID!) {
+<pre class="fragment"><code class="graphql">query ($storyId: ID!) {
     story(id: $storyId) {
       id
       title body
     }
 }
 </code></pre>
-
-  </textarea>
+ 
+  </textarea
+          >
         </section>
+        <section data-markdown>
+          <textarea data-template>
+# Das GraphQL Schema
 
+---
+
+### Das GraphQL Schema
+
+* GraphQL APIs müssen in einem Schema beschrieben werden.
+* In dem Schema werden Objekte (Typen) mit Feldern beschrieben.
+* Das Schema selbst ist zur Laufzeit mit einem _Introspection Query_ abfragbar
+* Je nach Framework gibt's unterschiedliche Möglichkeiten, das Schema zu definieren
+  * **Schema-first**: erst Schema beschreiben, dann implementieren
+  * **Code-first**: Schema wird aus (Java-)Code generiert
+  * Java-Frameworks verwenden i.d.R. Schema-first (bis auf MicroProfile GraphQL)  
+
+             </textarea
+          >
+        </section>
       </div>
     </div>
     <script src="revealjs/reveal.js/dist/reveal.js"></script>
