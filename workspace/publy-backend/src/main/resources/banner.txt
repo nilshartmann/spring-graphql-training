@@ -1,0 +1,9 @@
+${AnsiStyle.BOLD}${AnsiColor.GREEN}  _____            _           _           ${AnsiColor.MAGENTA}   _____                          _        ____    _
+${AnsiStyle.BOLD}${AnsiColor.GREEN} |  __ \          | |         | |          ${AnsiColor.MAGENTA}  / ____|                        | |      / __ \  | |
+${AnsiStyle.BOLD}${AnsiColor.GREEN} | |__) |  _   _  | |__       | |  _   _   ${AnsiColor.MAGENTA} | |  __   _ __    __ _   _ __   | |__   | |  | | | |
+${AnsiStyle.BOLD}${AnsiColor.GREEN} |  ___/  | | | | | '_ \      | | | | | |  ${AnsiColor.MAGENTA} | | |_ | | '__|  / _` | | '_ \  | '_ \  | |  | | | |
+${AnsiStyle.BOLD}${AnsiColor.GREEN} | |      | |_| | | |_) |  _  | | | |_| |  ${AnsiColor.MAGENTA} | |__| | | |    | (_| | | |_) | | | | | | |__| | | |____
+${AnsiStyle.BOLD}${AnsiColor.GREEN} |_|       \__,_| |_.__/  (_) |_|  \__, |  ${AnsiColor.MAGENTA}  \_____| |_|     \__,_| | .__/  |_| |_|  \___\_\ |______|
+${AnsiStyle.BOLD}${AnsiColor.GREEN}                                    __/ |  ${AnsiColor.MAGENTA}                         | |
+${AnsiStyle.BOLD}${AnsiColor.GREEN}                                   |___/   ${AnsiColor.MAGENTA}                         |_|
+${AnsiColor.BLACK}Powered by Spring Boot ${spring-boot.version}

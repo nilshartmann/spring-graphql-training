@@ -1,0 +1,179 @@
+"""This represents a date in iso date format"""
+scalar DateTime
+
+directive @Complexity(complexity: Int!) on FIELD_DEFINITION
+
+enum ReactionType {
+    like,
+    laugh,
+    heart,
+    prosit,
+}
+
+type Reaction {
+    id: ID!
+    createdAt: DateTime!
+
+    type: ReactionType!
+
+    givenBy: Member!
+}
+
+type ReactionByType {
+    type: ReactionType!
+    totalCount: Int!
+    givenByMember: Boolean!
+}
+
+type ReactionSummary {
+    totalCount: Int!
+    reactionsByType: [ReactionByType!]!
+}
+
+type Comment implements Node {
+    id: ID!
+
+    createdAt: DateTime!
+    writtenBy: Member!
+
+    content: String!
+}
+
+"""
+This is a `Story`.
+"""
+type Story implements Node {
+    id: ID!
+    title: String!
+
+    "Returns the date and time when this story has been published"
+    createdAt: DateTime!
+
+    writtenBy: Member!
+    body: String!
+
+    excerpt(maxLength: Int! = 100): String!
+    reactions: [Reaction!]!
+    comments: [Comment!]!
+
+    reactionSummary(forMember: ID): ReactionSummary!
+}
+
+type User {
+    id: ID!
+
+    username: String!
+    name: String!
+    email: String!
+}
+
+type Member implements Node {
+    id: ID!
+
+    createdAt: DateTime!
+    skills: String
+    location: String
+    bio: String
+    currentlyLearning: String
+    profileImage: String
+
+    user: User @Complexity(complexity: 40)
+    stories(page: Int, size: Int): StoryPage!
+}
+
+interface Node {
+    id: ID!
+}
+
+type StoryPage {
+    stories: [Story!]!
+
+    hasNextPage: Boolean!
+    hasPrevPage: Boolean!
+
+    totalStories: Int!
+    totalPage: Int!
+}
+
+enum StoryFilterField {
+    newerThan,
+    writtenBy
+}
+
+input StoryFilter {
+    field: StoryFilterField!
+    value: String!
+}
+
+type Query {
+    node(id: ID!): Node
+
+    "Returns the newest `Story` in our backend or null if no Story available"
+    story(storyId: ID): Story
+
+    stories(storyFilter: StoryFilter!, page: Int, size: Int): StoryPage!
+
+    member(id: ID!): Member
+    members(page: Int, size: Int): [Member!]!
+}
+
+input ToggleReactionInput {
+    storyId: ID!
+    reactionType: ReactionType!
+}
+type AddCommentSuccessPayload {
+    newComment: Comment!
+}
+type AddCommentFailedPayload {
+    errorMessage: String!
+}
+union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
+input AddStoryInput {
+    title: String!
+    tags: [String!]!
+    body: String!
+}
+
+type AddStorySuccessPayload { newStory: Story!  }
+
+type AddStoryFailedPayload { errorMessage: String! }
+
+type AddStoryInvalidCredentialsPayload {
+    message: String!
+    member: Member
+}
+
+type AddStoryConstraintViolation {
+    message: String!
+    field: String!
+}
+
+type AddStoryConstraintViolationPayload {
+    violations: [AddStoryConstraintViolation!]!
+}
+
+union AddStoryPayload = AddStorySuccessPayload  | AddStoryFailedPayload | AddStoryInvalidCredentialsPayload | AddStoryConstraintViolationPayload
+
+type Mutation {
+    addStory(input: AddStoryInput!): AddStoryPayload!
+
+    toggleReaction(input: ToggleReactionInput!): Story!
+    addComment(storyId: ID!, memberId: ID!, content: String!): AddCommentPayload!
+}
+
+type OnNewCommentEvent {
+    newComment: Comment!
+}
+
+type OnNewReactionEvent {
+    newReaction: Reaction!
+}
+
+union OnNewFeedbackEvent = OnNewCommentEvent | OnNewReactionEvent
+
+type Subscription {
+    onNewComment(storyId: ID!): OnNewCommentEvent! @deprecated(reason: "Use onNewFeedback instead")
+
+    onNewFeedback(storyId: ID!): OnNewFeedbackEvent!
+}

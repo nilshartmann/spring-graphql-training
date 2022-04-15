@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Reset Data" type="DatabaseScript">
+    <script-file value="$PROJECT_DIR$/docker/initdb/01_publy-schema.sql" />
+    <script-file value="$PROJECT_DIR$/docker/initdb/02_publy-data-large.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="8ad54e0b-47e9-4e56-8df9-18b5a31106c4" />
+    <method v="2" />
+  </configuration>
+</component>
