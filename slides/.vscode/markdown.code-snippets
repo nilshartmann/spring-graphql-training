@@ -14,5 +14,36 @@
     "scope": "html",
     "prefix": "gc",
     "body": ["", "<pre><code class=\"graphql\">", "  $0", "</code></pre>", ""]
+  },
+  "GraphQL Code Fragent Block": {
+    "scope": "html",
+    "prefix": "gcf",
+    "body": [
+      "",
+      "<pre class=\"fragment\"><code class=\"graphql\">",
+      "  $0",
+      "</code></pre>",
+      ""
+    ]
+  },
+  "Java Code Fragent Block": {
+    "scope": "html",
+    "prefix": "jcf",
+    "body": ["```java fragment  ", "  $0", "```", ""]
+  },
+  "Markdown Todo": {
+    "scope": "html",
+    "prefix": "mdt",
+    "body": ["<!-- .element: class=\"todo\" -->$0"]
+  },
+  "Markdown Note": {
+    "scope": "html",
+    "prefix": "mdn",
+    "body": ["* <!-- .element: class=\"note\" --> $0"]
+  },
+  "Markdown Demo": {
+    "scope": "html",
+    "prefix": "mdd",
+    "body": ["* <!-- .element: class=\"demo\" --> $0"]
   }
 }

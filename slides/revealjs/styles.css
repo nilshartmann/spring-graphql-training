@@ -59,6 +59,10 @@
   color: red !important;
 }
 
+section.todo {
+  background-color: #d41a1a40;
+}
+
 code span.line-number {
   color: lightcoral;
 }
@@ -76,7 +80,7 @@ code span.line-number {
   box-shadow: 0 0 0 0;
 }
 
-.reveal .x-list > li {
+.reveal li {
   margin-bottom: 10px;
 }
 
@@ -158,5 +162,26 @@ html.js-exkurs body {
 }
 
 .language-graphql .hljs-punctuation {
-  color: #268bd2;e
+  color: #268bd2;
+}
+
+.language-graphql .hljs-string {
+  color: #2aa198;
+}
+
+
+.demo:before {
+  content: "👨‍💻 ";
+} 
+
+
+li.note {
+  margin-top: 5px;
+  font-weight: bold;
+  list-style-type: none;
+  
+}
+
+li.note:before {
+  content: "👉 ";
 }

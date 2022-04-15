@@ -32,7 +32,18 @@ Reveal.initialize({
     Reveal.configure({ controls: false, fragments: true });
 
     document.querySelectorAll("li").forEach((n) => n.classList.add("fragment"));
+    // document.querySelectorAll("li.fragment:first-child").forEach((n) => {
+    //   n.classList.remove("fragment");
+    //   n.parentNode.classList.add("fragment");
+    // });
 
+    // when using code blocks with markdown like this:
+    //  ```java fragment
+    //  the code elements gets the "fragment" class
+    document.querySelectorAll("code.fragment").forEach((n) => {
+      n.classList.remove("fragment");
+      n.parentNode.classList.add("fragment");
+    });
     document.querySelectorAll("pre.fragment").forEach((n) => {
       n.classList.remove("fragment");
       const div = document.createElement("div");
