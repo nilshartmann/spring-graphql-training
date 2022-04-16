@@ -574,17 +574,34 @@ type Story {
 
 ---
 
+### 
+
 ### Übung: Schema Beschreiben
 
-* <!-- .element: class="todo" -->larifaris
+* Lege die Datei `resources/graphql/publy.graphqls` an und beschreibe darin eine API, die folgende Objekt-Typen enthält:
+  * **Member** mit `id` und `profileImage`
+  * **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
+  * Alle Felder in den beiden Typen sind Pflicht (non-nullable), das `id`-Feld ist vom Typ `ID` alle anderen Strings
+* Lege den Query-Typen mit folgenden Feldern an:
+  * `stories`: Liefert eine Liste der `Story`-Objekte zurück. Nicht nullable.
+  * `story`: Liefert eine einzelne Story zurück. Das Feld soll ein Argument haben: `storyId`. Das Feld kann `null` zurückgeben
+* Füge für ein oder zwei Felder oder Typen Dokumentation hinzu
+* Die Implementierung für die API machen wir später! Du musst also nichts programmieren.
+* Sieh dir das API-Schema in GraphiQL an (http://localhost:8090).
+  * Prüfe, ob Code Completion funktioniert und ob die Dokumentation im "Docs"-Tab findest
+  * Wenn Du Änderungen an der `graphqls`-Datei gemacht hast, musst Du die Anwendung neu bauen, und in GraphiQL
+    die Seite im Browser neu laden.
+  * Du kannst mal probieren, was passiert, wenn Du einen `stories` bzw `story`-Query ausführst.    
+    * Eine gültige ID für eine Story ist z.B. `1`
+
 
 ---
 
-# GraphQL APIs mit Spring GraphQL
+# Verarbeitung von GraphQL Queries
 
 ---
 
-### Verarbeitung eines Queries
+### Ablauf eines Queries
 
 1. Query kommt an (in der Regel über einen HTTP POST Request)
 2. Query wird geparst und validiert
@@ -658,11 +675,36 @@ type Story {
   ```
   
   * Handler-Funktionen für Felder am Query-Typen werden mit `@QueryMapping` annotiert
-  * Der Name der Methode entspricht dem Namen des Feldes (oder explizit mit `value` setzen)
+    * Mutations: `@MutationMapping`, Subscription: `@SubscriptionMapping`
+  * Der Name der Methode entspricht dem Namen des Feldes des entsprechenden Root-Typen (oder explizit mit `value` setzen)
 
 ---
 
-## Argumente
+### Environment-Objekte
+
+* In GraphQL-Java und Spring-GraphQL werden häufig `Environment`-Objekte verwendet
+  * Zum Beispiel: `DataFetchingEnvironment`, `DataLoaderEnvironment`, `TypeResolutionEnvironment`
+* Dabei handelt es sich um Objekte, die Informationen über den aktuellen Query, bzw. die aktuelle
+  Ausführungsumgebung enthalten
+  * Anstatt meherere Methoden-Parameter zu verwenden  
+  * In anderen Frameworks wären das zum Beispiel `Context` oder `Info`-Klassen
+* Das `DataFetchingEnvironment` kannst Du als Parameter an Handler-Funktionen hinzufügen
+  * Hierüber bekommst Du z.B. Informationen über den aktuellen Query und Zugriff auf das Schema
+
+---
+
+### Context
+
+* Beim Ausführen jedes Queries wird ein Context-Objekt erzeugt, dass Du z.B. über das `DataFetchingEnvironment`
+  abfragen und befüllen kannst.
+* Dabei handelt es sich um ein Objekt mit Key-Value-Paaren
+* Häufig wird es zum Beispiel für Security-Informationen oder zum reinreichen von Services in die DataFetcher verwendet
+* Ich denke, in der Spring-Welt mit Dependency-Injection spielt es eher keine Rolle, deswegen werden wir uns das nicht ansehen
+
+
+---
+
+### Argumente
 
 
 * Auf einzelne Argumente kann mit `@Argument` zugegriffen werden
@@ -672,7 +714,6 @@ type Story {
 ```java fragment  
   @QueryMapping
   public Story story(@Argument String id) { /* ... */ }
-
 ```
 
 * Für **Input-Types** kann ein Java POJO angegeben werden
@@ -704,8 +745,48 @@ type Story {
 
 ## Übung: Handler-Funktionen
 
-* Zwei Handler-Funktionen bauen für `stories` und `story(id: ID!)`
-* Folgende Queries sollten funktionieren: ...
+_Implementiere zwei Handler-Funktionen_
+
+* Eine Handler-Funktion `Query.stories` und für `Query.story(id: ID!)`
+* Lege dazu eine neue Controller-Klasse an (`PublyGraphQLController`)
+* Folgende Queries sollten danach funktionieren:
+
+<pre class="fragment"><code class="graphql">
+  query {
+    stories {
+      id
+      title
+      body
+     
+      writtenBy {
+        id
+        profileImage
+      }
+    }
+  }
+</code></pre>
+
+<pre class="fragment"><code class="graphql">
+  query {
+    story(storyId: 1) {
+      id
+      title
+      body
+     
+      writtenBy {
+        id
+        profileImage
+      }
+    }
+  }
+</code></pre>
+
+---
+
+## Handler-Funktionen an Objekt-Typen
+
+* <!-- .element: class="demo" --> Excerpt-Feld hinzufügen
+* <!-- .element: class="demo" --> `SchemaMapping` Implementieren !
 
 ---
 
@@ -714,12 +795,87 @@ type Story {
 * Felder, die an einem Java-Objekt definiert sind, die von einer Handler-Funktion
   zurückgeliefert werden, werden automatisch per Reflektion von Spring-GraphQL abgefragt
   * Voraussetzung: Name des Java-Felder/getter-Methode entspricht Namen am GraphQL Schema
+  * Beispiel: `body`- und `writtenBy`-Feld an der `Story`-Entity
 * Wenn es kein Feld am Java-Objekt gibt, oder es sich anders verhält, als von der GraphQL
   API erwartet, müssen wir auch dafür Handler-Funktionen schreiben
+* (Felder, die an Java Objekten existieren, aber nicht in der GraphQL API können nie vom 
+  Client abgefragt werden.)
 
 ---
 
-### Beispiel: Member und User
+### SchemaMapping
+
+* Die Funktion wird dann mit `@SchemaMapping` annotiert
+  * Name muss dem Namen des Feldes in der API entsprechen
+  * Parameter bestimmt das `Source`-Objekt, auf dem das Feld ermittelt werden soll
+  * Das Source-Objekt stammt aus einem vorherigen DataFetcher
+
+```java fragment  
+@Controller
+class GraphQLController {
+  @SchemaMapping  
+  public String excerpt(Story source, @Argument int maxLength) {
+    return source.getBody().substring(0, maxLength);
+  }
+
+}
+```
+
+* Wenn die als Parameter übergebene Klasse nicht so heißt, wie im GraphQL Schema,
+  kann mit `typename` der Typ explizit gesetzt werden
+
+```java fragment  
+@SchemaMapping(typeName="Story")
+public String excerpt(StoryDto source) {
+  // ...
+}
+```
+
+* `@QueryMapping` und `@MutationMapping` sind nur Aliase für 
+  * `@SchemaMapping(typeName="Query")` bzw.
+  * `@SchemaMapping(typeName="Mutation")`
+
+  
+---
+
+## Asynchrone Handler-Funktionen
+
+* <!-- .element: class="demo" --> Instrumentation hinzufügen
+* <!-- .element: class="demo" --> excerpt-Feld slowdown aktivieren
+* <!-- .element: class="demo" --> stories abfragen und Report auswerten
+* <!-- .element: class="demo" --> CompletableFuture
+
+
+---
+
+### Asynchrone Handler-Funktionen
+
+* Handler-Funktionen werden grundsätzlich nacheinander ausgeführt 
+* Handler-Funktionen können aber `CompletableFuture`, `Flux` oder `Mono`-Objekte zurückliefern
+* Dann werden mehrere Handler-Funktionen parallel ausgeführt
+
+```java fragment  
+  class DomainService {
+    @Async
+    CompletableFuture<User> determineExcerpt(Story story) {
+      // long running task...
+    }
+  }
+
+  @Controller
+  public class GraphQLController {
+    @Autowired DomainService domainService;
+
+    @SchemaMapping
+    public CompletableFuture<String> story(Story story) {
+      return domainService.determineExcerpt(story); // asynchron bzw. reaktiv
+    }
+  }
+```
+
+---
+
+### Übung: Zugriff auf externen Service
 
 * Wir erweitern den Member-Typen um das User-Objekt:
 
@@ -737,85 +893,34 @@ type Story {
 
 * Die `Member`-Klasse hat aber keine Referenz auf den User (nur dessen Id)
 * Der User kommt aus dem `UserService` (externer Micro-Service)
-
----
-
-### SchemaMapping
-
-* Die Funktion wird dann mit `@SchemaMapping` annotiert
-  * Name muss dem Namen des Feldes in der API entsprechen
-  * Parameter bestimmt das `Source`-Objekt, auf dem das Feld ermittelt werden soll
-  * Das Source-Objekt stammt aus einem vorherigen DataFetcher
-
-```java fragment  
-@Controller
-class GraphQLController {
-  @SchemaMapping  
-  public User user(Member source) {
-    // z.B. Micro-Service aufrufen, um User zu lesen
-  }
-
-}
-```
-
-* Wenn die als Parameter übergebene Klasse nicht so heißt, wie im GraphQL Schema,
-  kann mit `typename` der Typ explizit gesetzt werden
-
-```java fragment  
-@SchemaMapping(typeName="Member")
-public User user(MemberEntity source) {
-  // ...
-}
-```
-
-* `@QueryMapping` und `@MutationMapping` sind nur Aliase für 
-  * `@SchemaMapping(typeName="Query")` bzw.
-  * `@SchemaMapping(typeName="Mutation")`
-
-
----
-
-### Asynchrone Handler-Funktionen
-
-* <!-- .element: class="demo" --> Synchrone Zugriffe auf UserService mit Instrumentation
-
----
-
-### Asynchrone Handler-Funktionen
-
-* Handler-Funktionen werden grundsätzlich nacheinander ausgeführt 
-* Handler-Funktionen können aber `CompletableFuture`, `Flux` oder `Mono`-Objekte zurückliefern
-* Dann werden mehrere Handler-Funktionen parallel ausgeführt
-
-```java fragment  
-  interface UserService {
-    Mono<User> getUser(String userId);
-  }
-
-  @Controller
-  public class GraphQLController {
-    @Autowired UserService userService;
-
-    @SchemaMapping
-    public Mono<User> user(Member member) {
-      String userId = member.getUserId();  // UserId ist in DB gespeichert
-
-      return userService.getUser(userId); // asynchron bzw. reaktiv
-    }
-  }
-```
+* 🤔 Was müssen wir tun, um den User zu ermitteln? 🤔
 
 ---
 
 ### Übung: Schema-Mapping 
 
-* Füge den User-Type hinzu
-  * Felder: id (ID!), username (String!)
-* Erweitere den Member-Typen um das `user`-Feld (optionales Feld)  
+* Ergänze das Schema
+  * Neuer Type `User`, Felder: `id` (ID), `name` (String) und `email` (String). Alle non-nullable. 
+  * Erweiter den `Member`-Typen um das Feld `user` (Type: `User`, nullable).
+* Führe den untenstehenden Query aus. Was kommt für `user` zurück und warum?  
 * Implementiere die Schema-Mapping-Funktion für das Feld
   * Die Schema-Mapping-Funktion soll asynchron funktionieren
   * Der `UserService` ist bereits implementiert
-* Der folgende Query sollte funktionieren: ...
+* Der folgende Query sollte dann einen User zurückliefern:
+
+<pre class="fragment"><code class="graphql">
+  query {
+    story(storyId: 1) {
+      id 
+      writtenBy {
+        id
+        user {
+          id username  email
+        }
+      }
+    }
+  }
+</code></pre>
 
 ---
 
@@ -827,7 +932,14 @@ public User user(MemberEntity source) {
 
 * Was passiert, wenn wir folgenden Query ausführen:
 
-* ...
+<pre class="fragment"><code class="graphql">
+  query {
+    stories {
+      writtenBy { user { id email } }
+    }
+  }
+</code></pre>
+
 
 * Wir haben sehr viele einzelne Calls zum Micro-Service 😨
 * Wir haben doppelte Aufrufe zum Micro-Service 😱 😱
@@ -848,33 +960,160 @@ public User user(MemberEntity source) {
 
 ### Verwenden vom DataLoader
 
+* Den DataLoader kannst Du dir in deine Handler-Funktionen übergebenlassen
+* Es handelt sich dabei um ein Interface mit zwei Typ-Parametern:
+  * `Key`: Typ des Keys, den Du beim Verwenden an den DataLoader übergeben willst
+  * `Value`: Typ des Java-Objekts, das der DataLoader für einen Key zurückliefert
 
-```java fragment todo
-public Mono<User> user(Member member) {
+
+```java fragment
+public CompletableFuture<User> user(Member member, DataLoader<String, User> userLoader) {
   String userId = member.getUserId();  // UserId ist in DB gespeichert
 
-  return userService.getUser(userId); // asynchron bzw. reaktiv
+  return userLoader.load(userId); // Laden des Users wird verzögert
 }
 ```
 
 ---
 
-### Registrieren vom DataLoader
+
+### Implementierung und Registrieren vom DataLoader
+
+* Es gibt mehrere Wege
+* In der `BatchLoaderRegistry` gibt es Hilfsfunktionen
+* Die `BatchLoaderRegistry` steht als Spring Bean zur Verfügung
+* Mit `forTypePair` registrierst Du einen BatchLoader für ein Key-Value-Paar
+* Die Methode erwartet eine Callback-Funktion:
+*  zwei Parameter: die Liste mit den Keys und das `BatchLoaderEnvironment`
+*  Rückgabe: die Liste mit den geladenen Objekten als Flux
+
+
+```java fragment  
+public PublyGraphQLController(/* ... */, BatchLoaderRegistry registry) {
+
+  registry.forTypePair(String.class, User.class).registerBatchLoader(
+
+    (List<String> keys, BatchLoaderEnvironment env) -> {
+      // findUsers liefert Flux<User> zurück. 
+      return userService.findUsers(keys);
+    }
+  );
+
+}
+```
+ 
+* Jeder Key wird nur einmal in die Liste eingefügt, du bekommst also keine doppelten Keys
+  * Selbst wenn Du also nicht _alle_ Objekte  mit _einem_ Request laden/ermitteln kannst,
+    verhinderst Du immerhin doppeltes Laden
+* Wichtig! Die Funktion muss die Objekte in derselben Reihenfolge zurückliefern,
+  in der die Keys übergeben wurden.
+  * Konnte für einen Key kein Objekt ermittelt werden, muss an der Stelle `null`
+  zurückgegeben werden
+
+---
+
+### MappedBatchLoader
+
+* Der BatchLoader liefert eine _Liste_ von Objekten zurück
+* Die enthaltenen Objekte müssen in derselben Menge und Reihenfolge wie die Keys zurückgeliefert werden.
+* Alternativ kann ein `MappedBatchLoader` verwendet werden, der ein Mono-Objekt mit einer Map zurückliefert
+* Die Map enthält dann Key-Value-Paare mit einem gelesenen Objekt jeweils für einen Key. Objekte, die nicht gefunden
+  wurden werden auch nicht in die Map aufgenommen.
+
+```java fragment  
+public PublyGraphQLController(/*... */, BatchLoaderRegistry registry) {
+
+  registry.forTypePair(String.class, User.class).registerMappedBatchLoader(
+
+    (List<String> keys, BatchLoaderEnvironment env) -> {
+      // zurückgeben: Mono<Map<String, User>>
+    }
+
+  );
+}
+```
+
 
 ---
 
 ### BatchMapping
 
+* In einfachen Fällen kann der MappedBatchLoader mit einer BatchMapping-Funktion implementiert werden
+* Das ist eine Handler-Funktion, der automatisch eine Liste von Objekten übergeben wird (zum Beispiel Liste von Member-Objekten)
+* Die Handler-Funktion liefert dann entweder ein Mono mit einer Map oder ein Flux mit Objekten zurück (wie vorher gesehen).
+* Achtung! Darauf achten, dass `equals` und `hashCode`-Methoden in den Objekten, die als Keys verwendet werden, korrekt implementiert sind!
+
+```java fragment  
+@Controller
+public class PublyGraphQLController {
+
+  @BatchMapping
+  public Flux<User> user(List<Member> member) {
+    List<String> keys = member.stream().map(Member::getUserId).collect(Collectors.toList());
+
+    return userService.findUsers(keys);
+  }
+
+  // -- oder: --
+
+  @BatchMapping
+  public Mono<Map<Member, User>> user(List<Member> member) {
+    // ...
+  }
+
+
+  // BatchLoaderRegistry und SchemaMapping für User-Feld entfallen jetzt
+}
+```
+
 ---
 
-### Security
+### DataFetchingFieldSelectionSet
 
-* Einfach Spring Security verwenden
-  * /graphql-Endpunkt absichern
-  * und/oder einzelne Handler-Funktionen  mit `preAuthorize` absichern
-  * und/oder Domain-Layer absichern
+* Das `DataFetchingFieldSelectionSet` enthält eine Liste aller Felder, die im aktuellen Query abgefragt sind
+* Hiermit kannst Du weitere Optimierungen der Query-Verarbeitung vornehmen, zum Beispiel optimale
+  SQL-Queries generieren
+* Das `DataFetchingFieldSelectionSet` kannst Du an deine Handler-Funktionen übergeben lassen.
+
+```java fragment  
+@QueryMapping List<Story> stories(DataFetchingFieldSelectionSet selectionSet) {
+
+  if (s.contains("comments") ) {
+    // SQL Statement mit JOIN auf Comment-Tabelle
+    return ...;
+  }
+
+  // SQL Statement nur mit Stories
+  return ...;
   
-* AuthenticationPrincipal
+}  
+```
+  
+---
+
+
+### Ausblick: Security
+
+* Wie üblich Spring Security verwenden
+* Überlegung: wo wird GraphQL API abgesichert?
+  * /graphql-Endpunkt absichern
+  * und/oder einzelne Handler-Funktionen mit `@PreAuthorize` absichern
+  * und/oder Domain-Layer absichern mit `@PreAuthorize` absichern
+
+* HandlerFunktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
+
+```java fragment  
+public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal PublyUser user) {
+  Long storyWrittenById = user.getId();
+
+  return domainService.addStory(storyWrittenById, input.getTitle(), input.getBody());
+})  
+```
+
+
+---
+
+### Test
 
 ---
 
