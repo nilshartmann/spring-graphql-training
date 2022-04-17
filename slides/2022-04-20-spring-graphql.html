@@ -686,6 +686,19 @@ type Story {
 
 ---
 
+### Übung: Schema beschreiben
+
+---
+
+### Vorbereitung: Das Repository
+
+* `workspace`: Hier arbeiten wir, bitte in der IDE öffnen
+  * `workspace/publy-backend`: Spring Boot-Projekt, in dem wir die GraphQL API implementieren
+  * `workspace/publy-userservice`: Spring Boot-Projekt mit dem UserService
+  * `workspace/steps`: Lösungen für die einzelnen Übungen
+
+---
+
 ### Vorbereitung: Starten der Anwendung
 
 * Verzeichnis `workspace` in der IDE öffnen
@@ -1278,6 +1291,9 @@ public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal Pu
 })  
 ```
 
+---
+
+# GraphQL APIs testen
 
 ---
 
@@ -1375,6 +1391,32 @@ public class PublyGraphQLControllerWebTest {
       .build()
       .document(query) /* konfigurierte Instanz verwenden... */
 ```
+
+---
+
+### Übung: Tests
+
+_Schreibe einen Test für unsere GraphQL-API_
+
+* Der Test kann z.B. eine einzelne Story mit einer ID abfragen, und sicherstellen, dass die abgefragten Felder korrekt in der Antwort enthalten sind:
+  * ```graphql
+
+    query { 
+      story(storyId: 1) {
+        title
+        body
+
+        member { id }
+      }
+    }
+    ```
+* Verwende den `@GraphlTest`
+  * Der Controller wird dabei erzeugt, aber die Repositories müssen gemockt werden
+* Im Workspace findest Du im `test`-Verzeichnis eine Klasse `AbstractPublyGraphQLTest`, die Du als Basis verwenden kannst
+  * Darin sind schon die Mock-Beans konfiguriert
+  * Es gibt Hilfsfunktionen zum Konfigurieren der Mocks mit Mockito
+  * Du kannst diese Funktionen in deinen Testfällen aufrufen oder selbst mit Mockito mocken
+* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
 
 
 
