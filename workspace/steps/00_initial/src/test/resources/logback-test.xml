@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="nh.graphql" level="debug"/>
+    <logger name="org.hibernate.SQL" level="debug"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace"/>
+    <logger name="org.springframework.graphql" level="debug"/>
+    <logger name="org.springframework.transaction.reactive.TransactionContext" level="warn"/>
+    <logger name="org.springframework.test.context.transaction.TransactionContext" level="warn"/>
+    <logger name="org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTestContextBootstrapper" level="warn"/>
+    <logger name="com.github" level="warn"/>
+    <logger name="org.testcontainers" level="info"/>
+</configuration>

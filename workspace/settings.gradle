@@ -7,7 +7,7 @@ pluginManagement {
 }
 
 
-rootProject.name = 'publy'
+rootProject.name = 'workspace'
 
 
 include 'publy-userservice'

@@ -1,11 +1,11 @@
 version: "3"
 services:
-  publy_db:
+  publy_db_graphql_training:
     image: postgres:14.1-alpine
     command: ["postgres", "-c", "log_statement=all"]
-    container_name: publy_db
+    container_name: publy_db_graphql_training
     ports:
-      - "8432:5432"
+      - "8442:5432"
     environment:
       - POSTGRES_PASSWORD=secretpw
       - POSTGRES_USER=klaus
