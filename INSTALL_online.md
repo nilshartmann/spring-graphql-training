@@ -61,6 +61,12 @@ cd workspace
 ./gradlew build
 ```
 
+## Schritt 4: Öffnen in der IDE
+
+Wenn Du möchstest, kannst Du das `workspace`-Verzeichnis in deiner IDE öffnen. Dort sollten zwei (Gradle-)Projekte erkannt und compiliert werden: `publy-backend` und `publy-userservice`.
+
+Die anderen Verzeichnisse in diesem Repository brauchst Du _nicht_ in der IDE zu öffnen. Wir arbeiten ausschliesslich in dem `workspace`-Verzeichnis.
+
 **Das ist alles!**
 
 Bei Fragen oder Problemen melde dich gerne bei mir.
