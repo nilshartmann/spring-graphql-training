@@ -84,6 +84,31 @@ code span.line-number {
   margin-bottom: 10px;
 }
 
+.reveal li > ul {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.reveal ul ul,
+.reveal ul ul ul {
+  list-style-type: circle;
+}
+
+/* Siehe auch config.js fuer no-icon! */
+li.no-icon {
+  list-style-type: none;
+}
+
+/* Siehe auch config.js fuer no-icon! */
+li > pre.code-wrapper {
+  margin: 5px;
+  margin-bottom: 40px;
+}
+
+li > pre.code-wrapper > code {
+  padding: 10px;
+}
+
 .reveal .xx-list > li {
   margin-bottom: 20px;
 }
@@ -140,25 +165,14 @@ body.title {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url("/slides/revealjs/imagesjs/images/bg.jpg");
-}
-
-body.title  {
-  background: rgba(212, 235, 233, 0.5);
+  background-image: url("bg.jpg");
+  background-color: rgba(212, 235, 233, 0.5);
 }
 
 body.title b,
 body.title .transparent-bg {
   background-color: rgba(189, 215, 238, 0.5);
   padding: 5px 10px;
-}
-
-html.es6-exkurs body {
-  background: rgb(252, 220, 185) url("revealjs/images/es6-icon.png") no-repeat right bottom;
-}
-
-html.js-exkurs body {
-  background-color: #e3f3ff;
 }
 
 .language-graphql .hljs-punctuation {
@@ -170,8 +184,12 @@ html.js-exkurs body {
 }
 
 
-.demo:before {
+li.demo:before {
   content: "👨‍💻 ";
+} 
+
+li.demo li.demo:before {
+  content: none;
 } 
 
 

@@ -51,6 +51,14 @@ Reveal.initialize({
       n.parentNode.insertBefore(div, n);
       div.appendChild(n);
     });
+
+    document.querySelectorAll("li > pre.code-wrapper").forEach((n) => {
+      n.parentNode.classList.add("no-icon");
+    });
+  } else {
+    // public version
+    document.querySelectorAll(".demo .demo").forEach((n) => n.remove());
+    document.querySelectorAll(".todo").forEach((n) => n.remove());
   }
 
   // document.querySelectorAll("code[data-line-numbers]").forEach((el) => {

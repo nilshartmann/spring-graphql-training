@@ -26,7 +26,7 @@
           </h2>
 
           <h3>
-            <span class="transparent-bg"> 20. April 2022 </span>
+            <span class="transparent-bg">20. April 2022 </span>
           </h3>
 
           <h4>
@@ -46,7 +46,7 @@
             <h3><span class="transparent-bg">Slides</span></h3>
             <p>
               <span class="transparent-bg"
-                >Lokal: 2022_04_20_spring-graphql.html</span
+                >Lokal: slides/2022_04_20_spring-graphql.html</span
               >
             </p>
           </div>
@@ -77,7 +77,9 @@
               <p>Single-Page-Applications</p>
               <p>GraphQL</p>
               <p style="margin-top: 20px">
-                <a href="https://reacttraining.dev">Schulungen und Workshops</a>
+                <a href="https://nilshartmann.net/workshops"
+                  >Schulungen und Workshops</a
+                >
               </p>
             </div>
             <div style="margin-left: 15px">
@@ -94,21 +96,101 @@
 
         <section data-markdown>
           <textarea data-template>
-    ## Die Beispiel-Anwendung
 
-    ---
-    ## Beispiel: Tooling mit GraphiQL und IntelliJ IDEA
+## Agenda
 
-    ---
-    ## Architektur Beispiel-Anwendung
+* Teil 1: GraphQL
+  * Was ist GraphQL?
+  * Die Abfragesprache
+  * APIs beschreiben
 
-    ### todo !!!!!!!!!!!!!
-  </textarea
-          >
-        </section>
-        <section data-markdown>
-          <textarea data-template>
+  
+* Teil 2: Spring GraphQL  
+  * GraphQL APIs mit Spring-GraphQL implementieren
+  * Optimierungen
+  * Testen
+
+---
+
+## Zeitplan
+
+* 12:30 bis 17:00
+* Zwischendurch Pausen ☕️ 😴
+
+---
+
+
+## Grundsätzliches
+
+* **Jederzeit:** Fragen und Diskussionen!
+* Motto: Es gibt keine dummen Fragen!
+* Bemerkbar machen per Audio, Chat oder in Teams "Hand erheben"
+* <img width="30%" src="slides/images/zoom-reaktionen.png" />
+* Bonuspunkte für eingeschaltetes Video 🥰
+* Ich zeige viel direkt im Editor, aber ihr könnt die Slides als Referenz benutzen
+* Wir machen zwischendurch Übungen, in denen ihr selbst programmieren könnt
+
+---
+
+# GraphQL
+  
+---
+
+# GraphQL
+
+
+_"GraphQL is a **query language for APIs** and a runtime for fulfilling those queries with your existing data"_ ([https://graphql.org](https://graphql.org))
+
+---
+<!-- .slide: data-transition="none" -->
+
+# GraphQL
+
+_"GraphQL is a query language for APIs and a **runtime for fulfilling** those queries with your existing data"_ ([https://graphql.org](https://graphql.org))
+
+---
+<!-- .slide: data-transition="none" -->
+
+# GraphQL
+
+_"GraphQL is a query language for APIs and a runtime for fulfilling those queries with **your existing data**"_ ([https://graphql.org](https://graphql.org))
+
+---
+
+## Spezifikation
+
+* https://spec.graphql.org/
+* Umfasst:
+  * Query Sprache und -Ausführung
+  * Schema Definition Language
+* Kein fertiges Produkt, keine fertige Bibliothek
+   * Es gibt Bibliotheken, die dir helfen, GraphQL APIs zu implementieren und bereitzustellen
+   * Die abgefragten Daten müssen wir selbst ermitteln
+   * GraphQL macht keine Aussage darüber, wo diese Daten herkommen (lokal, Datenbank, Micro-Service, ...)
+
+---
+
+## Die Beispiel-Anwendung
+
+<img style="border: 1px solid grey" src="images/publy-screenshot.png" />
+
+---
+
+## Beispiel: GraphQL Tooling
+
+* <!-- .element: class="demo" --> IntelliJ IDEA
+  * <!-- .element: class="demo" --> graphql-Extension (hello.graphql)
+  * <!-- .element: class="demo" --> GraphQL.md im publy-Verzeichnis
+  * <!-- .element: class="demo" --> language=GraphQL in einer leeren Java-Datei
+
+* <!-- .element: class="demo" --> TypeScript
+  * <!-- .element: class="demo" --> publy-frontend, npm run codegen:watch
+  * <!-- .element: class="demo" --> StoryPage.query.graphql zeigen und story-Feld entfernen
+
+---
+
 # Die GraphQL Abfrage-Sprache
+
 ---
 
 ### Sprache, um **Felder** aus einem **Objekt-Graphen** abzufragen
@@ -166,7 +248,7 @@ Der Operation-Type bestimmt auch den Einstiegspunkt in den Objekt-Graphen
 
 ### Namen von Operationen
 
-*Operationen können **Namen** haben.
+* Operationen können **Namen** haben.
 * Das ist vor allem für Debugging und Code-Generatoren relevant
 
 <pre class="fragment"><code class="graphql">
@@ -257,12 +339,43 @@ query {
     }
 }
 </code></pre>
+
+---
+
+## Übung: Einen Query ausführen
+
+_Mach' dich mit der GraphQL-Abfragesprache vertraut_
+
+* Öffne GraphiQL auf meinem Computer (URL gibt's im Chat)
+* Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert
+  * Id, Titel, Excerpt, Wer hat die Story geschrieben und die ersten zehn Kommentare
+* Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
+* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
+  <!-- .element: class="todo" -->Untersuche im Netzwerktab, was passiert, wenn du einen Query abschickst. Wie sieht der Request aus? Wie sieht die Antwort aus?
+
+---
+
+### GraphQL Requests
+
+* <!-- .element: class="demo" --> HTTP Request an die GraphQL API
+  * <!-- .element: class="demo" --> request.http im publy-Ordner
+  * <!-- .element: class="demo" --> Fehler zeigen
+---
+
+## GraphQL Requests
+
+* Üblicherweise nur HTTP POST-Request
+  * andere HTTP Verben spielen keine Rolle
+  * HTTP Status-Code meist 200 OK, auch im Fehlerfall!
+  * Großer Unterscheid zu REST APIs
+* Antwort-JSON-Objekt besteht aus maximal drei Feldern:
+  * `data`: Die gelesenen Daten (Struktur darunter entspricht der Abfrage)
+  * `errors`: Liste mit (technischen) Fehlern, u.a. Fehlermeldung
+  * `extensions`: Freibelegbares Objekt für proprietäre Erweiterungen (z.B. Debug-Informationen)
+
+
+---
  
-  </textarea
-          >
-        </section>
-        <section data-markdown>
-          <textarea data-template>
 # Das GraphQL Schema
 
 ---
@@ -292,9 +405,9 @@ query {
 ### Die SDL
 
 * <!-- .element: class="demo" --> Demo: Schema-Definition 
-* ping-Feld
-* Argument!
-* Rückgabewert-String
+  * <!-- .element: class="demo" --> ping-Feld
+  * <!-- .element: class="demo" --> Argument!
+  * <!-- .element: class="demo" --> Rückgabewert-String
 
 ---
 
@@ -364,8 +477,7 @@ Beschreibung eines *Objekt Types*
 
 * Wie in Java
 
-
-<pre><code class="graphql">
+<pre class="fragment"><code class="graphql">
   enum ReactionType {
     like,
     laugh,
@@ -411,10 +523,10 @@ Beschreibung eines *Objekt Types*
 
 <pre class="fragment"><code class="graphql">
 type Story {
+
   # Mandatory argument maxLength, defaults to 20
   #  if not specified by the client
   excerpt(maxLength: Int! = 20): String!
-
 
 }  
 </code></pre>
@@ -574,9 +686,25 @@ type Story {
 
 ---
 
-### 
+### Vorbereitung: Starten der Anwendung
 
-### Übung: Schema Beschreiben
+* Verzeichnis `workspace` in der IDE öffnen
+* Dort sind zwei Spring Boot-Anwendungen vorhanden: `publy-userservice` und `publy-backend`
+
+* Schritt 1: Datenbank starten
+  * Im `workspace`-Verzeichnis: `docker-compose up -d`
+  * (Dauert einen Moment, bis die Daten importiert werden)
+* Schritt 2: User Service starten
+  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
+* Schritt 3: Backend starten
+  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
+  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
+
+---
+
+### Übung: Schema beschreiben
 
 * Lege die Datei `resources/graphql/publy.graphqls` an und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
@@ -593,29 +721,44 @@ type Story {
     die Seite im Browser neu laden.
   * Du kannst mal probieren, was passiert, wenn Du einen `stories` bzw `story`-Query ausführst.    
     * Eine gültige ID für eine Story ist z.B. `1`
-
-
----
-
-# Verarbeitung von GraphQL Queries
+* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
 
 ---
 
-### Ablauf eines Queries
+# Implementieren der GraphQL API
 
-1. Query kommt an (in der Regel über einen HTTP POST Request)
-2. Query wird geparst und validiert
-3. Ungültige Queries werden abgewiesen (`errors`-Feld in der Antwort)
+---
+
+## GraphQL Frameworks für Java
+
+<img src="images/java-graphql-frameworks.png" />
+
+* graphql-java ist die Grundlage aller(?) Java-Frameworks für GraphQL
+  * Parsen und Validieren der Queries
+  * Optimierte Ausführung der `DataFetcher` zum Ermitteln der Daten (später mehr)
+  * Kein Abhängigkeit zu anderen Bibliotheken, auch kein HTTP Endpunkt
+  * Alle anderen Frameworks abstrahieren davon und bieten "High-Level" API
+* graphql-java-tools-Familie: POJO-basierte Entwicklung, möglicherweise durch die anderen Frameworks nun obsolet
+* DGS und spring-graphql fast zeitnah veröffentlicht
+  * Möglicherweise wird DGS auf spring-graphql aufgebaut
+
+---
+
+### Verarbeitung eines Queries mit graphql-java
+
+1. Query kommt an (nicht Bestandteil von graphql-java)
+2. Query wird geparst und validiert 
+3. Ungültige Queries werden abgewiesen (`errors`-Feld in der Antwort) 
 4. Für jedes Feld wird ein `DataFetcher` aufgerufen, der verantwortlich dafür ist, die Daten für das jeweilige Feld zu liefern
 5. Die Ergebnisse der DataFetcher werden validiert (insb. hinsichtlich der Typen)
-6. Das Ergebnis wird an den Client zurückgesendet (`data`-Feld in der Antwort)
-
+6. Das Ergebnis wird als `data`-Feld bereitsgestellt
+7. Das Ergebnis wird an den Client zurückgeschickt (nicht Bestandteil von graphl-java)
 
 * <!-- .element: class="note" --> Unsere Aufgabe ist es, die DataFetcher zu implementieren
 
 ---
 
-### DataFetcher
+### DataFetcher (graphql-java)
 
 * Zentrales Interface in GraphQL-Java: Ermitteln die Daten für _ein_ Feld eines Queries
   * Zum Beispiel für das Feld `Query.story` oder `Story.title`
@@ -628,7 +771,15 @@ type Story {
   }  
 ```  
 
-* Die DataFetcher werden im **RuntimeWiring** registriert
+* Beispiel:
+```java fragment  
+  public class StoryFetchers {
+    public DataFetcher<List<Story>> storiesFetcher = env -> storyRepository.findAll();
+  }
+```
+
+
+* Jeder DataFetcher wird im **RuntimeWiring** einem Feld der API zugewiesen
 
 ---
 
@@ -640,28 +791,34 @@ type Story {
 
 ## Spring GraphQL
 
+
 * [Spring GraphQL](https://spring.io/projects/spring-graphql) bietet eine Abstraktion von GraphQL-Java an
-* Automatische Konfiguration des RuntimeWirings
-* HTTP-Endpunkt für Requests und Subscriptions automatisch
-* GraphiQL integration per Property
-* Gewohntes Spring-Programmiermodell mit Annotationen etc.
-* Integration in Spring Stack (z.B. Bean Validation, Security)
-* [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/2.7.0-SNAPSHOT/reference/htmlsingle/#web.graphql) für Spring Boot
+* Erstes Release von Spring GraphQL enthalten in Spring Boot 2.7 (Mai 2022)
+  * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.0-M3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden (Spring Boot Version 2.7M3 auswählen)
+
+* Features:
+  * Automatische Konfiguration des RuntimeWirings
+  * HTTP-Endpunkt für Requests und Subscriptions automatisch
+  * GraphiQL integration per Property
+  * Gewohntes Spring-Programmiermodell mit Annotationen etc.
+  * Integration in Spring Stack (z.B. Bean Validation, Security)
+  * [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/2.7.0-SNAPSHOT/reference/htmlsingle/#web.graphql) für Spring Boot
+  * Actuator-Endpunkte für Spring Boot
 
 ---
 
 ## Spring GraphQL
 
 * <!-- .element: class="demo" --> Demo: Handler-Funktionen mit `ping`-Feld
-* Query-Mapping!
-* Argumente!
+* <!-- .element: class="demo" --> Query-Mapping!
+* <!-- .element: class="demo" --> Argumente!
 
 ---
 
 ## Handler-Funktionen
 
 
-* Anstatt `DataFetcher` werden `Handler-Funktionen` an `Controller`-Klassen implementiert
+* Anstatt `DataFetcher` werden *Handler-Funktionen* an `Controller`-Klassen implementiert
   * Vorsichtig vergleichbar mit `@RequestMapping` 
 
   ```java fragment  
@@ -695,7 +852,7 @@ type Story {
 
 ### Context
 
-* Beim Ausführen jedes Queries wird ein Context-Objekt erzeugt, dass Du z.B. über das `DataFetchingEnvironment`
+* Beim Ausführen jedes Queries wird ein Context-Objekt erzeugt, das Du z.B. über das `DataFetchingEnvironment`
   abfragen und befüllen kannst.
 * Dabei handelt es sich um ein Objekt mit Key-Value-Paaren
 * Häufig wird es zum Beispiel für Security-Informationen oder zum reinreichen von Services in die DataFetcher verwendet
@@ -706,24 +863,26 @@ type Story {
 
 ### Argumente
 
-
 * Auf einzelne Argumente kann mit `@Argument` zugegriffen werden
   * Der Name des Java-Parameters muss dem Namen des Argumentes entsprechen 
   * (oder explizit angeben)
 
-```java fragment  
+* ```java
   @QueryMapping
+
   public Story story(@Argument String id) { /* ... */ }
-```
+
+  // ...
+  ```
 
 * Für **Input-Types** kann ein Java POJO angegeben werden
 
-```java fragment  
+* ```java
   static class CommentInput { String storyId; String memberId; String content };
 
   @MutationMapping
   public Comment addComment(@Argument CommentInput input) { /* ... */ }
-```
+  ```
       
 * Weitere Möglichkeiten:
   * `@Arguments` um _alle_ Argumente in _einem_ Java Objekt zu bekommen
@@ -749,18 +908,17 @@ _Implementiere zwei Handler-Funktionen_
 
 * Eine Handler-Funktion `Query.stories` und für `Query.story(id: ID!)`
 * Lege dazu eine neue Controller-Klasse an (`PublyGraphQLController`)
+* Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
+  * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
 * Folgende Queries sollten danach funktionieren:
 
 <pre class="fragment"><code class="graphql">
   query {
     stories {
-      id
-      title
-      body
+      id title body
      
       writtenBy {
-        id
-        profileImage
+        id profileImage
       }
     }
   }
@@ -769,24 +927,30 @@ _Implementiere zwei Handler-Funktionen_
 <pre class="fragment"><code class="graphql">
   query {
     story(storyId: 1) {
-      id
-      title
-      body
+      id title body
      
       writtenBy {
-        id
-        profileImage
+        id profileImage
       }
     }
   }
 </code></pre>
 
+* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
+
+---
+
+## Exkurs: Listen mit GraphQL
+
+* Typische Anforderungen: Sortieren, Filtern, Paginieren
+* Wie könnten wir das Umsetzen? 🤔
+
 ---
 
 ## Handler-Funktionen an Objekt-Typen
 
-* <!-- .element: class="demo" --> Excerpt-Feld hinzufügen
-* <!-- .element: class="demo" --> `SchemaMapping` Implementieren !
+* <!-- .element: class="demo" --> Demo: Excerpt-Feld hinzufügen
+  * <!-- .element: class="demo" --> `SchemaMapping` Implementieren !
 
 ---
 
@@ -810,26 +974,26 @@ _Implementiere zwei Handler-Funktionen_
   * Parameter bestimmt das `Source`-Objekt, auf dem das Feld ermittelt werden soll
   * Das Source-Objekt stammt aus einem vorherigen DataFetcher
 
-```java fragment  
-@Controller
-class GraphQLController {
-  @SchemaMapping  
-  public String excerpt(Story source, @Argument int maxLength) {
-    return source.getBody().substring(0, maxLength);
-  }
+* ```java
+  @Controller
+  class GraphQLController {
 
-}
-```
+    @SchemaMapping  
+    public String excerpt(Story source, @Argument int maxLength) {
+      return source.getBody().substring(0, maxLength);
+    }
+  }
+  ```
 
 * Wenn die als Parameter übergebene Klasse nicht so heißt, wie im GraphQL Schema,
   kann mit `typename` der Typ explizit gesetzt werden
 
-```java fragment  
-@SchemaMapping(typeName="Story")
-public String excerpt(StoryDto source) {
-  // ...
-}
-```
+* ```java
+  @SchemaMapping(typeName="Story")
+  public String excerpt(StoryDto source) {
+    // ...
+  }
+  ```
 
 * `@QueryMapping` und `@MutationMapping` sind nur Aliase für 
   * `@SchemaMapping(typeName="Query")` bzw.
@@ -841,9 +1005,9 @@ public String excerpt(StoryDto source) {
 ## Asynchrone Handler-Funktionen
 
 * <!-- .element: class="demo" --> Instrumentation hinzufügen
-* <!-- .element: class="demo" --> excerpt-Feld slowdown aktivieren
-* <!-- .element: class="demo" --> stories abfragen und Report auswerten
-* <!-- .element: class="demo" --> CompletableFuture
+  * <!-- .element: class="demo" --> excerpt-Feld slowdown aktivieren
+  * <!-- .element: class="demo" --> stories abfragen und Report auswerten
+  * <!-- .element: class="demo" --> CompletableFuture
 
 
 ---
@@ -855,9 +1019,10 @@ public String excerpt(StoryDto source) {
 * Dann werden mehrere Handler-Funktionen parallel ausgeführt
 
 ```java fragment  
-  class DomainService {
+  @Service
+  public class DomainService {
     @Async
-    CompletableFuture<User> determineExcerpt(Story story) {
+    CompletableFuture<String> determineExcerpt(Story story, int maxLenght) {
       // long running task...
     }
   }
@@ -867,8 +1032,8 @@ public String excerpt(StoryDto source) {
     @Autowired DomainService domainService;
 
     @SchemaMapping
-    public CompletableFuture<String> story(Story story) {
-      return domainService.determineExcerpt(story); // asynchron bzw. reaktiv
+    public CompletableFuture<String> excerpt(Story story, @Argument int maxLength) {
+      return domainService.determineExcerpt(story, maxLength); // asynchron bzw. reaktiv
     }
   }
 ```
@@ -882,7 +1047,8 @@ public String excerpt(StoryDto source) {
 <pre class="fragment"><code class="graphql">
   type User {
     id: ID!
-    username: String
+    name: String!
+    email: String!
   }
 
   type Member {
@@ -893,7 +1059,7 @@ public String excerpt(StoryDto source) {
 
 * Die `Member`-Klasse hat aber keine Referenz auf den User (nur dessen Id)
 * Der User kommt aus dem `UserService` (externer Micro-Service)
-* 🤔 Was müssen wir tun, um den User zu ermitteln? 🤔
+
 
 ---
 
@@ -914,13 +1080,18 @@ public String excerpt(StoryDto source) {
       id 
       writtenBy {
         id
+
+        # Hier sollten nun Daten kommen:
         user {
-          id username  email
+          id name email
         }
+
       }
     }
   }
 </code></pre>
+
+* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
 
 ---
 
@@ -986,22 +1157,19 @@ public CompletableFuture<User> user(Member member, DataLoader<String, User> user
 * Die Methode erwartet eine Callback-Funktion:
 *  zwei Parameter: die Liste mit den Keys und das `BatchLoaderEnvironment`
 *  Rückgabe: die Liste mit den geladenen Objekten als Flux
+* ```java
+  public PublyGraphQLController(/* ... */, BatchLoaderRegistry registry) {
 
+    registry.forTypePair(String.class, User.class).registerBatchLoader(
 
-```java fragment  
-public PublyGraphQLController(/* ... */, BatchLoaderRegistry registry) {
+      (List<String> keys, BatchLoaderEnvironment env) -> {
+        // findUsers liefert Flux<User> zurück. 
+        return userService.findUsers(keys);
+      }
+    );
 
-  registry.forTypePair(String.class, User.class).registerBatchLoader(
-
-    (List<String> keys, BatchLoaderEnvironment env) -> {
-      // findUsers liefert Flux<User> zurück. 
-      return userService.findUsers(keys);
-    }
-  );
-
-}
-```
- 
+  }
+  ```
 * Jeder Key wird nur einmal in die Liste eingefügt, du bekommst also keine doppelten Keys
   * Selbst wenn Du also nicht _alle_ Objekte  mit _einem_ Request laden/ermitteln kannst,
     verhinderst Du immerhin doppeltes Laden
@@ -1115,16 +1283,131 @@ public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal Pu
 
 ### Test
 
+* Zum Testen deiner Anwendung gibt es einen `@GraphQLTest`.
+* Dieser erzeugt u.a. Controller-Klassen und RuntimeWirings (also GraphQL Infrastruktur)
+* In diesem Test kann ein `GraphQlTester` verwendet werden, um GraphQL Queries auszuführen
+* Das Ergebnis des Queries kann dann validiert werden
+  * Mit JSON-Path ausdrücken kann auf Teile des Ergebnisses zugegriffen werden
+  * Die Teile können in unterschiedliche Formate konvertiert werden
+
+```java fragment
+
+@GraphQlTest
+public class PublyGraphQLControllerTest {
+
+  // ausgelassen: Mocks konfigurieren, z.B. für Repositories mit @MockBean
+
+  @Autowired
+  GraphQlTester graphQlTester;
+
+  private final String query = "query { ping }";
+
+  @Test
+  void pingReturnsPong() {
+    // Query ausführen
+    GraphQlTester.Response response = graphQlTester.document(query)
+      .execute();
+
+    // Ergebnis validieren
+    response
+      .path("ping").entity(String.class).isEqualTo("pong");
+
+  }
+```
+
 ---
 
-### Ende
-  
+### GraphQlTester
 
-  
+* Der Query kann entweder direkt als String übergeben werden (wie gesehen)
+* oder in einer Datei abgelegt werden (`xyz.graphql`), die im Klassenpfad sein muss
+
+```fragment java
+@Test
+void pingReturnsPong() {
+
+  graphQlTester.document("query { ping } "); // ...
+
+  graphQlTester.documentName("ping-test-query"); // erwartet ping-test-query.graphql im Klassenpfad
+}
+
+``` 
+
+---
+
+### Der WebGraphQlTester
+
+* Mit dem `WebGraphQlTester` können GraphQL Requests über HTTP gemacht werden
+* An einen laufenden Server oder in-place
+* Dazu kann ein gewohnten `@SpringBootTest` geschrieben werden
+* Die Testklasse muss außerdem mit `@AutoConfigureHttpGraphQlTester` annotiert werden
+* API ansonsten wie GraphQlTester
+
+```java fragment
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureHttpGraphQlTester
+public class PublyGraphQLControllerWebTest {
+  @Autowired
+  private WebGraphQlTester webGraphQlTester;
+
+  @Test
+  void pingReturnsPong() {
+    // Query ausführen
+    webGraphQlTester.document("query { ping }")
+      .execute()
+      .validate(/* ... */);
+  }
+}
+```
+
+---
+
+### WebGraphQlTester
+
+* Der injizierte `WebGraphQlTester` ist fertig konfiguriert
+* Kann aber pro Request angepasst werden, z.B. um HTTP Header zu setzen
+* dazu muss eine neue Instanz mit `mutate` erzeugt werden
+
+```java fragment
+  graphQlTester
+      .mutate() // erzeugt neue Instant, die konfiguriert werden kann
+      .header("Authorization", "Bearer user-mock-token")
+      .build()
+      .document(query) /* konfigurierte Instanz verwenden... */
+```
+
 
 
              </textarea
           >
+        </section>
+        <section>
+          <h2>Geschafft! 😊</h2>
+          <h3>Vielen Dank für Eure Teilnahme!</h3>
+          <h3>Viel Spaß und Erfolg mit GraphQL!</h3>
+          <p>Wenn ihr noch Fragen habt, könnt ihr mich erreichen:</p>
+          <p>
+            <a href="mailto:nils@nilshartmann.net">nils@nilshartmann.net</a>
+          </p>
+          <p>
+            <a href="https://nilshartmann.net" target="_blank"
+              >https://nilshartmann.net</a
+            >
+          </p>
+          <p>
+            <a
+              href="https://www.xing.com/profile/Nils_Hartmann2/cv"
+              target="_blank"
+              >Xing</a
+            >
+          </p>
+
+          <p>
+            Twitter:
+            <a href="https://twitter.com/nilshartmann" target="_blank"
+              >@nilshartmann</a
+            >
+          </p>
         </section>
       </div>
     </div>
