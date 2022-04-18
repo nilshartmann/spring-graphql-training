@@ -1,7 +1,6 @@
   static class AddCommentInput {
     private final Long storyId;
     private final Long memberId;
-    // @Size(min=5)
     private final String content;
 
     public AddCommentInput(Long storyId, Long memberId, String content) {

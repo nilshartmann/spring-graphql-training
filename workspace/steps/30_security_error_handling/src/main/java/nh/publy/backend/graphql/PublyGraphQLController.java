@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +99,7 @@ public class PublyGraphQLController {
   @Autowired MemberRepository memberRepository;
 
   @MutationMapping
-  public Comment addComment(@Argument AddCommentInput input,
+  public Comment addComment(@Valid @Argument AddCommentInput input,
                             @AuthenticationPrincipal User user) {
     Long memberIdForUserId = memberRepository.getMemberIdForUserId(user.getId());
     return publyDomainService.addComment(

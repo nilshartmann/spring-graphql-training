@@ -8,11 +8,19 @@ type Story  {
     body: String!
 
     excerpt(maxLength: Int! = 10): String!
+    comments: [Comment!]!
+}
+
+type Comment {
+    id: ID!
+
+    story: Story!
+    writtenBy: Member!
+    content: String!
 }
 
 type User {
     id: ID!
-
     name: String!
     email: String!
 }
@@ -29,5 +37,15 @@ type Query {
     story(storyId: ID): Story
 
     stories: [Story!]!
+}
+
+input AddCommentInput {
+    storyId: ID!
+    memberId: ID!
+    content: String!
+}
+
+type Mutation {
+    addComment(input: AddCommentInput!): Comment!
 }
 

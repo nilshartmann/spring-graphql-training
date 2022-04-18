@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 <html>
+  <!DOCTYPE html>
   <head>
     <meta charset="utf-8" />
     <meta
@@ -666,7 +666,7 @@ type Story {
 
 ### Das Schema in Spring GraphQL
 
-* Das Schema wird in Schema-Dateien mit der Endung `.graphqls` abgelegt
+* Das Schema wird in Dateien mit der Endung `.graphqls` abgelegt
   * Verzeichnis: `main/resources/graphql`
 * Spring Boot sammelt alle Schema-Dateien ein und erzeugt ein Schema daraus
 * Typen können erweitert werden
@@ -836,10 +836,10 @@ type Story {
 
   ```java fragment  
     @Controller
-    public StoryController {
+    public GraphQLController {
 
       @QueryMapping
-      public List<Story> stories() { /* ... */ }
+      public String ping() { return "Pong!" }
 
     }
   ```
@@ -847,6 +847,95 @@ type Story {
   * Handler-Funktionen für Felder am Query-Typen werden mit `@QueryMapping` annotiert
     * Mutations: `@MutationMapping`, Subscription: `@SubscriptionMapping`
   * Der Name der Methode entspricht dem Namen des Feldes des entsprechenden Root-Typen (oder explizit mit `value` setzen)
+
+---
+
+### Parameter von Handler-Funktionen
+
+* `@Argument` um ein einzelnes Argument zu erhalten
+* ```graphql
+  type Query {
+    ping(msg: String): String!
+  }
+  ```
+* ```java
+  @QueryMapping
+  public String ping(@Argument String msg) { 
+    return "Hello " + msg; 
+  }
+  ```  
+* `@Arguments`, um Parameter in einer Java-Klasse zusammenzufassen
+* ```graphql
+  type Query {
+    greet(name: String, msg: String): String!
+  }
+  ```
+
+* ```java
+    class GreetingParams { private String name; private String msg; /* getter+setter... */ }
+
+    @QueryMapping
+    public String greet(@Arguments GreetingParams params) { 
+      return "Hello " + params.getName(); 
+    }
+  ```
+* `@ProjectedPayload` um einzelne Parameter in einem Interface zusammenzufassen
+* ```graphql
+    type Query {
+      greet(name: String, msg: String): String!
+    }
+  ```
+
+* ```java
+    @ProjectedPayload
+    interface GreetingParams { String getName(); String getMsg(); }
+
+    @QueryMapping
+    public String greet(@Argument GreetingParams params) { 
+      return "Hello " + params.getName(); 
+    }
+  ```
+
+---
+### Parameter von Handler-Funktionen  
+  
+* Für Input-Typen kann ein Pojo angegeben werden:
+* ```graphql
+  input GreetingInput { name: String, msg: String }
+  type Query {
+    greet(input: GreetingInput!): String!
+  }
+  ```
+* ```java
+  class GreetingInput { private String name; private String msg; /* getter+setter... */ }
+
+  @QueryMapping
+  public String greet(@Argument GreetingInput input) { 
+    return "Hello " + input.getName(); 
+  }
+  ```  
+* Argumente können mit Bean Validation validiert werden
+* ```java
+  class GreetingInput { @Size(min=5) private String name; private String msg; /* getter+setter... */ }
+
+  @QueryMapping
+  public String greet(@Valid @Argument GreetingInput input) { 
+    return "Hello " + input.getName(); 
+  }
+  ```  
+
+---
+
+### Parameter von Handler-Funktionen
+
+* `DataFetchingEnvironment` und `DataFetchingFieldSelectionSet`: Informationen über den Query und Zugriff auf das Schema
+* `@AuthenticationPrincipal`: Aktueller Princial von Spring Security 
+* `@ContextValue` Zugriff auf den GraphQL Context
+  * Beim Ausführen jedes Queries wird ein Context-Objekt erzeugt, das Du auch über das `DataFetchingEnvironment`
+    abfragen und befüllen kannst.
+  * Dabei handelt es sich um ein Objekt mit Key-Value-Paaren
+  * Häufig wird es zum Beispiel für Security-Informationen oder zum reinreichen von Services in die DataFetcher verwendet
+  * Ich denke, in der Spring-Welt mit Dependency-Injection spielt es eher keine Rolle, deswegen werden wir uns das nicht ansehen
 
 ---
 
@@ -861,57 +950,7 @@ type Story {
 * Das `DataFetchingEnvironment` kannst Du als Parameter an Handler-Funktionen hinzufügen
   * Hierüber bekommst Du z.B. Informationen über den aktuellen Query und Zugriff auf das Schema
 
----
 
-### Context
-
-* Beim Ausführen jedes Queries wird ein Context-Objekt erzeugt, das Du z.B. über das `DataFetchingEnvironment`
-  abfragen und befüllen kannst.
-* Dabei handelt es sich um ein Objekt mit Key-Value-Paaren
-* Häufig wird es zum Beispiel für Security-Informationen oder zum reinreichen von Services in die DataFetcher verwendet
-* Ich denke, in der Spring-Welt mit Dependency-Injection spielt es eher keine Rolle, deswegen werden wir uns das nicht ansehen
-
-
----
-
-### Argumente
-
-* Auf einzelne Argumente kann mit `@Argument` zugegriffen werden
-  * Der Name des Java-Parameters muss dem Namen des Argumentes entsprechen 
-  * (oder explizit angeben)
-
-* ```java
-  @QueryMapping
-
-  public Story story(@Argument String id) { /* ... */ }
-
-  // ...
-  ```
-
-* Für **Input-Types** kann ein Java POJO angegeben werden
-
-* ```java
-  static class CommentInput { String storyId; String memberId; String content };
-
-  @MutationMapping
-  public Comment addComment(@Argument CommentInput input) { /* ... */ }
-  ```
-      
-* Weitere Möglichkeiten:
-  * `@Arguments` um _alle_ Argumente in _einem_ Java Objekt zu bekommen
-  * `@ProjectedPayload` an einem Interface, um Argumente gleichen Namens zu erhalten
-
-```java fragment  
-  @ProjectedPayload
-  interface CommentInput {
-    String getStoryId();
-    String getMemberId();
-    String getContent();
-  }
-  
-  @MutationMapping
-  public Comment addComment(@Argument CommentInput input) { /* ... */ }
-```
 
 ---
 
@@ -1273,7 +1312,7 @@ public class PublyGraphQLController {
 ---
 
 
-### Ausblick: Security
+### Security
 
 * Wie üblich Spring Security verwenden
 * Überlegung: wo wird GraphQL API abgesichert?
@@ -1281,7 +1320,20 @@ public class PublyGraphQLController {
   * und/oder einzelne Handler-Funktionen mit `@PreAuthorize` absichern
   * und/oder Domain-Layer absichern mit `@PreAuthorize` absichern
 
-* HandlerFunktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
+---
+
+### Beispiel: Security
+
+* <!-- .element: class="demo" --> AddCommentMutation
+  * <!-- .element: class="demo" --> Aus Material kopieren, Handler-Funktion implementieren
+  * <!-- .element: class="demo" --> AuthenticationPrincipal für Member
+  * <!-- .element: class="demo" --> PreAuthorize
+
+---
+
+### Handler-Funktionen mit Security  
+
+* Handler-Funktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
 
 ```java fragment  
 public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal PublyUser user) {
@@ -1290,6 +1342,135 @@ public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal Pu
   return domainService.addStory(storyWrittenById, input.getTitle(), input.getBody());
 })  
 ```
+
+---
+
+### Fehlerbehandlung
+
+* <!-- .element: class="demo" --> Beispiel: Bean Validation
+  * <!-- .element: class="demo" --> @Size und @Valid hinzufügen
+
+---
+
+### Fehlerbehandlung
+
+* Fehler, die nicht in einer Handler-Funktion verarbeitet werden, werden im `errors`-Feld zurückgeliefert:
+* ```json 
+  {
+    "errors": [
+      {
+        "message": "addComment.input.content: Größe muss zwischen 5 und 2147483647 sein",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ],
+        "path": [
+          "addComment"
+        ],
+        "extensions": {
+          "classification": "INTERNAL_ERROR"
+        }
+      }
+    ]
+  }
+  ```
+* ```json 
+  {
+    "errors": [
+      {
+        "message": "Unauthorized",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ],
+        "path": [
+          "addComment"
+        ],
+        "extensions": {
+          "classification": "UNAUTHORIZED"
+        }
+      }
+    ]
+  }
+  ```
+
+---
+
+### Fehlerbehandlung
+
+* Das `errors`-Objekt ist nur eingeschränkt spezifiziert:
+  * `message`: Fehlermeldung
+  * `locations`: Auf welche Code-Stelle im Query bezieht sich der Fehler (wenn vorhanden)
+  * `path`: Pfad zum Feld, das den Fehler verursacht hat (wenn vorhanden)
+  * `extensions`: Proprietäre Erweiterungen (`classification` kommt von Spring GraphQL)
+  * Keines dieser Felder ist im Schema beschrieben!
+* `errors`-Objekt nur für "Request Errors" verwenden, wenn der Query gar nicht
+  oder nicht vernünftig ausgeführt werden kann
+* Sonst lieber "fachliche" Fehler-Objekte zurückliefern
+  * Das ist insbesondere bei Mutations sinnvoll, da hier Fehler nicht unwahrscheinlich sind
+  * Auch für andere Felder überlegen, um API abwärtskompatibel zu halten
+
+---
+
+### Explizite Rückgabetypen
+
+* Beispiel 1: **Query-Ergebnisse**
+* ```graphql
+  type Query { 
+    stories: [Story!]! 
+  }
+  ```
+* Was machen wir, wenn wir dem Ergebnis weitere Informationen hinzufügen wollen, z.B. wie viele Stories gibt es eigentlich?
+* Änderung am Rückgabetyp wäre hier nicht abwärtskompatibel! 😢
+* ```graphql
+  type StoriesPayload {
+    stories: [Story!]!
+
+    maxStories: Int!
+  }
+
+  type Query { 
+    stories: [Story!]! 
+  }
+  ```
+---
+
+### Explizite Rückgabetypen
+
+* Beispiel 2: **Behandlung von Fehlern**  
+* ```graphql
+  type Mutation { 
+    addComment: [Comment!]! 
+  }
+  ```
+* Hier können wir keine Informationen hinterlegen, warum das Anlegen eines Kommentars möglicherweise nicht geklappt hat
+* ```graphql
+  type AddCommentPayload {
+    newComment: Comment
+    errorMessage: String
+  }
+
+  type Mutation { 
+    addComment: AddCommentPayload!
+  }
+  ```
+* Dieses Objekt können wir jederzeit erweitern. 
+* Fehler- und nicht-Fehlerfall sind in diesem Fall zwei unterschiedliche Rückgaben. Das können wir mit einem union-Typen ausdrücken:
+* ```graphql
+  type AddCommentSuccessPayload { newComment: Comment! }
+  type AddCommentFailedPayload { errorMessage: String! }
+  union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
+  type Mutation { 
+    addComment: AddCommentPayload!
+  }
+  ```
+* Der Server liefert je nach Situationen einen der beiden Typen zurück.
+  * Achtung! Umstellung von type- auf union-Type im Rückgabewert ist nicht abwärtskompatibel!
 
 ---
 
