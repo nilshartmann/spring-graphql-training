@@ -1,0 +1,20 @@
+type Comment {
+    id: ID!
+
+    story: Story!
+    writtenBy: Member!
+    content: String!
+}
+
+# comments in Story hinzufügen
+
+input AddCommentInput {
+    storyId: ID!
+    memberId: ID!
+    content: String!
+}
+
+type Mutation {
+    addComment(input: AddCommentInput!): Comment!
+}
+

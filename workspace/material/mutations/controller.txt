@@ -1,0 +1,48 @@
+  static class AddCommentInput {
+    private final Long storyId;
+    private final Long memberId;
+    // @Size(min=5)
+    private final String content;
+
+    public AddCommentInput(Long storyId, Long memberId, String content) {
+      this.storyId = storyId;
+      this.memberId = memberId;
+      this.content = content;
+    }
+
+    public Long getStoryId() {
+      return storyId;
+    }
+
+    public Long getMemberId() {
+      return memberId;
+    }
+
+    public String getContent() {
+      return content;
+    }
+  }
+
+  @MutationMapping
+  public Comment addComment(@Argument AddCommentInput input) {
+    return publyDomainService.addComment(
+      input.getStoryId(),
+      input.getMemberId(),
+      input.getContent()
+    );
+  }
+
+
+  // -----------------------------------
+    @Autowired MemberRepository memberRepository;
+
+    @MutationMapping
+    public Comment addComment(@Argument AddCommentInput input,
+                              @AuthenticationPrincipal User user) {
+      Long memberIdForUserId = memberRepository.getMemberIdForUserId(user.getId());
+      return publyDomainService.addComment(
+        input.getStoryId(),
+        memberIdForUserId,
+        input.getContent()
+      );
+    }

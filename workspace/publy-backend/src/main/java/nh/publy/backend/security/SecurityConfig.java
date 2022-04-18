@@ -21,6 +21,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig  {
+  @Bean
+  public JwtAuthenticationFilter authenticationTokenFilter() {
+    return new JwtAuthenticationFilter();
+  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,6 +34,8 @@ public class SecurityConfig  {
 
     http.sessionManagement()
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+    http.addFilterBefore(authenticationTokenFilter(), BasicAuthenticationFilter.class);
 
     return http.build();
   }
