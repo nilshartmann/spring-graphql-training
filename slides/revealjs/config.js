@@ -21,7 +21,7 @@ Reveal.initialize({
 
   // i need all space i can get
   width: 1900,
-  height: 900,
+  height: 1200,
 
   // there's a bug with Firefox that does not show
   // the cursor again after is has been hidden, so disable
@@ -80,5 +80,12 @@ Reveal.initialize({
   // make all code editable
   document.querySelectorAll("pre code").forEach((n) => {
     n.setAttribute("contenteditable", "true");
+  });
+
+  // small lists
+  document.querySelectorAll("li.small").forEach((n) => {
+    n.classList.remove("small");
+    n.parentNode.classList.add("small");
+    n.remove();
   });
 });

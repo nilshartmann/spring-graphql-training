@@ -125,7 +125,7 @@
 * **Jederzeit:** Fragen und Diskussionen!
 * Motto: Es gibt keine dummen Fragen!
 * Bemerkbar machen per Audio, Chat oder in Teams "Hand erheben"
-* <img width="30%" src="slides/images/zoom-reaktionen.png" />
+* <img width="30%" src="images/teams-hand-heben.png" />
 * Bonuspunkte für eingeschaltetes Video 🥰
 * Ich zeige viel direkt im Editor, aber ihr könnt die Slides als Referenz benutzen
 * Wir machen zwischendurch Übungen, in denen ihr selbst programmieren könnt
@@ -351,7 +351,6 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
   * Id, Titel, Excerpt, Wer hat die Story geschrieben und die ersten zehn Kommentare
 * Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
 * Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
-  <!-- .element: class="todo" -->Untersuche im Netzwerktab, was passiert, wenn du einen Query abschickst. Wie sieht der Request aus? Wie sieht die Antwort aus?
 
 ---
 
@@ -427,7 +426,12 @@ Beschreibung eines *Objekt Types*
 * Beschrieben werden **Felder** mit **Return Types**
 * Ein Ausrufezeichen zeigt an, dass das Feld nicht _nullable_ ist
 
-* Dokumentation mit Markdown und drei doppelten Anführungszeichen
+---
+
+### Dokumentation und Kommentare
+
+* Dokumentation mit drei doppelten Anführungszeichen
+  * Markdown zur Formatierung erlaubt
 * Kommentare mit Hash-Zeichen
   * Dokumentation ist Bestandteil der API, Kommentare nicht
 
@@ -439,7 +443,7 @@ Beschreibung eines *Objekt Types*
     """Identifies this object"""
     id: ID!
 
-    # todo: tags-Feld implementieren!
+    # todo: implement new tags-field (PROJ-666)
   }
   
 </code></pre>
@@ -612,9 +616,9 @@ type Story {
   }
 
   type Story implements Node {
-    id: ID!  # Feld aus Interface
+    id: ID!  # Field defined in Node-Interface
 
-    title: String! # Weitere Story-Felder
+    title: String! # additional Story fields
   }
 
   type Comment implements Node {
@@ -623,8 +627,15 @@ type Story {
     content: String!
   }
 
+  type User {
+    id: ID!
+    email: String
+  }
+
   type Query {
-    node(id: ID!): Node # Liefert Story oder Comment zurück
+    # Returns either Story or Comment, but not User
+
+    node(id: ID!): Node 
   }
 </code></pre>
 
@@ -719,6 +730,7 @@ type Story {
 
 ### Übung: Schema beschreiben
 
+* <!-- .element: class="small" --> 
 * Lege die Datei `resources/graphql/publy.graphqls` an und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
   * **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
@@ -742,9 +754,15 @@ type Story {
 
 ---
 
-## GraphQL Frameworks für Java
+### Die Beispiel-Anwendung
 
-<img src="images/java-graphql-frameworks.png" />
+<img src="images/publy-architektur.png" />
+
+---
+
+### GraphQL Frameworks für Java
+
+<img style="height:350px" src="images/java-graphql-frameworks.png" />
 
 * graphql-java ist die Grundlage aller(?) Java-Frameworks für GraphQL
   * Parsen und Validieren der Queries
@@ -778,18 +796,28 @@ type Story {
   * Hier nur zur Kenntnis, in Spring GraphQL abstrahiert
   * In anderen GraphQL Frameworks auch `Resolver` genannt
 
-```java fragment  
+* ```java  
   interface DataFetcher<T> {
     T get(DataFetchingEnvironment environment); 
   }  
-```  
+  ```  
 
 * Beispiel:
-```java fragment  
-  public class StoryFetchers {
-    public DataFetcher<List<Story>> storiesFetcher = env -> storyRepository.findAll();
+* ```java  
+  public class PublyDataFetchers {
+
+    public DataFetcher<String> pingFetcher = new DataFetcher() {
+
+      @Override
+      public String get(DataFetchingEnvironment env)  {
+
+        String msg = env.getArgumentOrDefault("msg", "Pong!");
+        return msg;
+
+      }
+    };
   }
-```
+  ```
 
 
 * Jeder DataFetcher wird im **RuntimeWiring** einem Feld der API zugewiesen
@@ -1096,7 +1124,7 @@ _Implementiere zwei Handler-Funktionen_
 
 * Wir erweitern den Member-Typen um das User-Objekt:
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type User {
     id: ID!
     name: String!
@@ -1107,9 +1135,18 @@ _Implementiere zwei Handler-Funktionen_
     # ...
     user: User
   }
-</code></pre>
-
+  ```
 * Die `Member`-Klasse hat aber keine Referenz auf den User (nur dessen Id)
+* ```java
+  @Entity
+  public class Member {
+    // ...
+    @NotNull
+    private String userId;
+
+    public String getUserId() { return this.userId };
+  }
+  ```
 * Der User kommt aus dem `UserService` (externer Micro-Service)
 
 
@@ -1166,6 +1203,20 @@ _Implementiere zwei Handler-Funktionen_
 
 * Wir haben sehr viele einzelne Calls zum Micro-Service 😨
 * Wir haben doppelte Aufrufe zum Micro-Service 😱 😱
+
+---
+
+### Problem
+
+<img src="images/dataloader-01.png" />
+
+---
+
+### DataLoder
+
+* Ein `DataLoader` "verzögert" das Laden von Daten
+
+* <img src="images/dataloader-02.png" />
 
 ---
 

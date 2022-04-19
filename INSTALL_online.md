@@ -17,11 +17,14 @@ Auf deinem Laptop/PC sollte installiert sein:
 
 **Während des Trainings**
 
-- Da wir vor und während des Trainings ggf. noch Aktualisierungen installieren müssen, bitte sicherstellen, dass auch während des Trainings auf deinem Computer der Internet-Zugang (logisch, online-Schulung 🙃) funktioniert - und zwar auch **für git und gradle** (Proxies beachten!)
+- Da wir vor und während des Trainings ggf. noch Aktualisierungen installieren müssen, bitte sicherstellen, dass auch während des Trainings auf deinem Computer der Internet-Zugang (logisch, online-Schulung 🙃) funktioniert - und zwar auch **für Git, Gradle und Docker** (Proxies beachten!)
 - **Ich freue mich, wenn Du während des Trainings deine Kamera an hast**, damit wir uns sehen können 🎥. Mikrofon hingegen bitte nur anmachen, wenn Du etwas sagen oder fragen möchtest (was Du natürlich jederzeit darfst!)
 - W-LAN ist bequem, aber gerade bei (langen) Streamings ist ein Kabel-gebundenes Netzwerk stabiler als W-LAN, also im Zweifel lieber das Kabel einstecken (und W-LAN deaktivieren) 😊
 
 # Installation und Vorbereitung des Workspaces für die Schulung
+
+Um Zeit während des Workshops zu sparen, kannst Du im Vorweg schon den Workspace
+klonen und die Projekte installieren.
 
 ## Ports
 
@@ -49,6 +52,23 @@ Im `workspace`-Verzeichnis des Repositories die Datenbank mit `docker-compose` s
 cd workspace
 
 docker-compose up -d
+```
+
+Das Starten der Datenbank beim ersten Mal kann etwas dauern, weil zunächst die
+Test-Daten importiert werden.
+
+Mit `docker logs publy_db_graphql_training` kannst Du im Logfile des Containers nach
+den beiden Zeilen suchen, die den Text `database system was shut down`
+bzw. `database system is ready to accept connections` enthalten. Dann ist Postgres
+komplett gestartet.
+
+Zum Beispiel:
+
+```shell
+$ docker logs publy_db_graphql_training
+
+2022-04-19 09:28:35.924 UTC [56] LOG:  database system was shut down at 2022-04-19 09:28:35 UTC
+2022-04-19 09:28:35.950 UTC [1] LOG:  database system is ready to accept connections
 ```
 
 ## Schritt 3: Testweise den Workspace bauen
