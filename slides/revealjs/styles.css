@@ -123,6 +123,9 @@ li > pre.code-wrapper > code {
   height: 650px;
 }
 
+/* "choice-of-horror": for choices where you can only lose all the time: 
+   - show radio buttons selections when hovered/checked as 😱, when not hovered as "?" 
+*/
 .reveal .choice-of-horror label {
   display: block;
   margin-bottom: 15px;
@@ -161,6 +164,7 @@ li > pre.code-wrapper > code {
 
 /*rgb(196, 215, 240)*/
 
+/* title slide with background image */
 body.title {
   background-position: center;
   background-repeat: no-repeat;
