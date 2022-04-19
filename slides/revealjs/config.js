@@ -20,8 +20,8 @@ Reveal.initialize({
   center: true,
 
   // i need all space i can get
-  width: "100%",
-  height: "100%",
+  width: "1920",
+  height: "1080",
 
   // there's a bug with Firefox that does not show
   // the cursor again after is has been hidden, so disable
