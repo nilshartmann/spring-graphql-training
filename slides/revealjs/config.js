@@ -17,11 +17,11 @@ Reveal.initialize({
   controls: true,
   progress: true,
   history: true,
-  center: true,
+  center: false,
 
   // i need all space i can get
-  width: "1920",
-  height: "1080",
+  width: 1900,
+  height: 900,
 
   // there's a bug with Firefox that does not show
   // the cursor again after is has been hidden, so disable
