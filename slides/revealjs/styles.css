@@ -80,6 +80,15 @@ code span.line-number {
   box-shadow: 0 0 0 0;
 }
 
+/* 
+ * Aufzaehlungen linksbuendig auf einer Slide.
+ * 
+ * Einschalten mit: <!-- .slide: class="left" -->
+ */
+.reveal section.left ul {
+  width: 100%;
+}
+
 .reveal li {
   margin-bottom: 10px;
 }
