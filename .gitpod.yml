@@ -7,20 +7,23 @@ tasks:
   - name: Run UserService
     init: gp sync-await build
     command: java -jar publy-userservice/build/libs/publy-userservice-0.0.1-SNAPSHOT.jar
+  - name: Compile Backend
+    init: |
+      gp sync-await build
+    command: |
+      ./gradlew :publy-backend:build --continuous
   - name: Run Backend
+    openMode: split-right
     init: |
       gp sync-await build
     command: |
       IMAGES_URL=`gp url 9080`
       ./gradlew :publy-backend:bootRun
       # java -Dpubly.profileImageBaseUrl=${IMAGES_URL}/ -jar publy-backend/build/libs/publy-backend-0.0.1-SNAPSHOT.jar
-  - name: Compile Backend
-    init: |
-      gp sync-await build
-    command: |
-      ./gradlew :publy-backend:build --continuous
 ports:
-  - port: 9080
+  - port: 3000-8999
+    onOpen: ignore
+  - port: 8090
     onOpen: open-browser
     visibility: public
 github:
