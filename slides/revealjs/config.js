@@ -19,6 +19,8 @@ Reveal.initialize({
   history: true,
   center: false,
 
+  transition: "none",
+
   // i need all space i can get
   width: 1900,
   height: 1200,

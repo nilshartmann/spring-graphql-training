@@ -37,7 +37,8 @@ CREATE TABLE stories
     written_by_id BIGINT REFERENCES members (id) NOT NULL,
     body_markdown VARCHAR                        NOT NULL,
 
-    title         VARCHAR                        NOT NULL
+    title         VARCHAR                        NOT NULL,
+    tags          VARCHAR
 );
 
 CREATE TABLE comments

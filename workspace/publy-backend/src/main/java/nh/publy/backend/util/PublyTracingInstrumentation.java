@@ -12,12 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static graphql.schema.GraphQLTypeUtil.simplePrint;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * TracingInstrumentation, very similiar to original {@link TracingInstrumentation}
- * but writes durations in ms and adds some other informations
+ * but writes some other informations that I need for for demonstration purposes.
  */
 @Component
 public class PublyTracingInstrumentation extends TracingInstrumentation {
@@ -28,14 +27,28 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
       private final Map<String, Object> parseMap = new LinkedHashMap<>();
       private final Map<String, Object> validationMap = new LinkedHashMap<>();
       private final long startRequestMillis = System.currentTimeMillis();
+      private boolean trace = false;
+      private boolean traceAll = false;
+      private final AtomicInteger counter = new AtomicInteger();
 
       public TracingContext beginField(DataFetchingEnvironment dataFetchingEnvironment, boolean trivialDataFetcher) {
-        if (trivialDataFetcher) {
+        if (dataFetchingEnvironment.getField().getDirectives("trace").size() > 0) {
+          trace = true;
+        }
+
+        if (dataFetchingEnvironment.getField().getDirectives("traceAll").size() > 0) {
+          trace = true;
+          traceAll = true;
+        }
+
+        if (!trace) {
           return () -> {
           };
         }
 
+
         long startFieldFetch = System.currentTimeMillis();
+        final int fetcherNo = trivialDataFetcher ? -1 : counter.incrementAndGet();
         return () -> {
           long now = System.currentTimeMillis();
           long duration = now - startFieldFetch;
@@ -43,13 +56,42 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
           ExecutionStepInfo executionStepInfo = dataFetchingEnvironment.getExecutionStepInfo();
 
           Map<String, Object> fetchMap = new LinkedHashMap<>();
-          fetchMap.put("path", executionStepInfo.getPath().toString());
-          fetchMap.put("fieldName", simplePrint(executionStepInfo.getParent().getUnwrappedNonNullType()) + "." + executionStepInfo.getFieldDefinition().getName());
-          fetchMap.put("startOffset_ms", startOffset);
-          fetchMap.put("duration_ms", duration);
-          fetchMap.put("thread", Thread.currentThread().getName());
+          String fieldName = executionStepInfo.getPath().toString();
 
-          fieldData.add(fetchMap);
+          String source = GraphQLUtils.getFieldContext(dataFetchingEnvironment);
+
+          if (!traceAll) {
+            if (!trivialDataFetcher) {
+              // "structured" format: only trace non-trivial datafetchers
+              fetchMap.put("fetcher_start_no", fetcherNo);
+              fetchMap.put("field", fieldName);
+              if (source != null) {
+                fetchMap.put("description", source);
+              }
+              fetchMap.put("startedAt_ms", startOffset);
+              fetchMap.put("took_ms", duration);
+              fetchMap.put("thread", Thread.currentThread().getName());
+            }
+          } else {
+            // "Text"-Format: Trace in more human readable form,
+            // also include trivial fetcher,
+            // so that we can have a form of "logging" in the extensions field,
+            // to see what's going on at-all
+
+            String msg = String.format("fetched by %s datafetcher in %sms at %sms on thread %s",
+              trivialDataFetcher ? "trivial" : "CUSTOM",
+              duration,
+              startOffset,
+              Thread.currentThread().getName());
+            fetchMap.put(fieldName, msg);
+            if (source != null) {
+              fetchMap.put("source", source);
+            }
+          }
+
+          if (!fetchMap.isEmpty()) {
+            fieldData.add(fetchMap);
+          }
         };
       }
 
@@ -85,12 +127,13 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
        * @return a snapshot of the tracing data
        */
       public Map<String, Object> snapshotTracingData() {
+        if (fieldData.isEmpty()) {
+          return null;
+        }
+
         Map<String, Object> traceMap = new LinkedHashMap<>();
-        traceMap.put("version", 1L);
-        traceMap.put("OVERALL_DURATION_MS", System.currentTimeMillis() - startRequestMillis);
-        traceMap.put("parsing", copyMap(parseMap));
-        traceMap.put("validation", copyMap(validationMap));
-        traceMap.put("execution", executionData());
+        traceMap.put("overall_query_execution_time", System.currentTimeMillis() - startRequestMillis);
+        traceMap.put("datafetchers", ImmutableList.copyOf(fieldData));
 
         return traceMap;
       }
@@ -99,13 +142,12 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
         return new LinkedHashMap<>(map);
       }
 
-      private Map<String, Object> executionData() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        List<Map<String, Object>> list = ImmutableList.copyOf(fieldData);
-        map.put("datafetchers", list);
-        return map;
-      }
+//      private Map<String, Object> executionData() {
+//        Map<String, Object> map = new LinkedHashMap<>();
+//        List<Map<String, Object>> list = ImmutableList.copyOf(fieldData);
+//        map.put("datafetchers", list);
+//        return map;
+//      }
     };
-
   }
 }

@@ -80,6 +80,13 @@ code span.line-number {
   box-shadow: 0 0 0 0;
 }
 
+.reveal a {
+  letter-spacing: 1.1;
+}
+
+
+
+
 /* 
  * Aufzaehlungen linksbuendig auf einer Slide.
  * 
@@ -88,6 +95,7 @@ code span.line-number {
 .reveal section.left ul {
   width: 100%;
 }
+
 
 .reveal li {
   margin-bottom: 10px;
@@ -191,6 +199,11 @@ body.title b,
 body.title .transparent-bg {
   background-color: rgba(189, 215, 238, 0.5);
   padding: 5px 10px;
+}
+
+body.title a.Link {
+  font-family: 'Courier New', Courier, monospace;  
+  font-weight: bold;
 }
 
 .language-graphql .hljs-punctuation {

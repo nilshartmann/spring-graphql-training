@@ -1,0 +1,7 @@
+  @SchemaMapping
+  public CompletableFuture<String> einwohner(City city) {
+    return CompletableFuture.supplyAsync( () -> {
+      DemoConfig.slowDown("City " + city.id);
+      return String.valueOf(city.id * 1000);
+    } );
+  }
