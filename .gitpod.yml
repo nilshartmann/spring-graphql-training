@@ -13,7 +13,7 @@ tasks:
     command: |
       IMAGES_URL=`gp url 9080`
       java -Dpubly.profileImageBaseUrl=${IMAGES_URL}/ -jar publy-backend/build/libs/publy-backend-0.0.1-SNAPSHOT.jar
-  ports:
+ports:
   - port: 9080
     onOpen: open-browser
     visibility: public
@@ -31,4 +31,3 @@ github:
     addComment: true
     # add a "Review in Gitpod" button to the pull request's description (defaults to false)
     addBadge: true
-
