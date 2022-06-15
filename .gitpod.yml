@@ -1,4 +1,4 @@
-workspaceLocation: "./workspace"
+workspaceLocation: "./spring-graphql-training/workspace"
 tasks:
   - name: Build
     init: |
