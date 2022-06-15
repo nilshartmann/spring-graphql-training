@@ -1,0 +1,34 @@
+workspaceLocation: "workspace"
+tasks:
+  - name: Build
+    init: |
+      ./gradlew -x test clean bootJar
+      gp sync-done build
+  - name: Run UserService
+    init: gp sync-await build
+    command: java -jar publy-userservice/build/libs/publy-userservice-0.0.1-SNAPSHOT.jar
+  - name: Run Backend
+    init: |
+      gp sync-await build
+    command: |
+      IMAGES_URL=`gp url 9080`
+      java -Dpubly.profileImageBaseUrl=${IMAGES_URL}/ -jar publy-backend/build/libs/publy-backend-0.0.1-SNAPSHOT.jar
+  ports:
+  - port: 9080
+    onOpen: open-browser
+    visibility: public
+github:
+  prebuilds:
+    # enable for the default branch (defaults to true)
+    master: true
+    # enable for all branches in this repo
+    branches: true
+    # enable for pull requests coming from this repo (defaults to true)
+    pullRequests: true
+    # add a check to pull requests (defaults to true)
+    addCheck: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
+    # add a "Review in Gitpod" button to the pull request's description (defaults to false)
+    addBadge: true
+
