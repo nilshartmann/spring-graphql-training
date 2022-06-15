@@ -12,7 +12,13 @@ tasks:
       gp sync-await build
     command: |
       IMAGES_URL=`gp url 9080`
-      java -Dpubly.profileImageBaseUrl=${IMAGES_URL}/ -jar publy-backend/build/libs/publy-backend-0.0.1-SNAPSHOT.jar
+      ./gradlew :publy-backend:bootRun
+      # java -Dpubly.profileImageBaseUrl=${IMAGES_URL}/ -jar publy-backend/build/libs/publy-backend-0.0.1-SNAPSHOT.jar
+  - name: Compile Backend
+    init: |
+      gp sync-await build
+    command: |
+      ./gradlew :publy-backend:build --continuous
 ports:
   - port: 9080
     onOpen: open-browser
