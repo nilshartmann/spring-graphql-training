@@ -2,6 +2,16 @@
 
 Hier findest Du alles, was Du zur Vorbereitung auf den GraphQL Workshop wissen musst.
 
+## Arbeiten mit dem Workspace
+
+Es gibt zwei Wege, wie Du den Workspace während des Workshops
+für Übungen und Experimente verwenden kannst:
+
+- **lokal**: dafür musst Du JDK, Editor, Git etc. auf deinem Laptop installiert haben. Mehr dazu, siehe unten.
+- **GitPod**: GitPod ist eine Cloud-basierte Web-IDE, die du direkt aus deinem Browser starten kannst. Die Schritte für GitPod findest Du in [README-gitpod.md](./README-gitpod.md).
+
+# Lokale Installation
+
 ## Voraussetzungen
 
 **Für deinen Laptop/PC**
@@ -16,8 +26,6 @@ Auf deinem Laptop/PC sollte installiert sein:
 **Internetzugang**
 
 - Bitte überprüfe, dass dein Internet-Zugang auch **für Git und Gradle/Maven** funktioniert (Proxies, VPN, Firewall beachten!)
-
-# Installation
 
 ## Ports
 
