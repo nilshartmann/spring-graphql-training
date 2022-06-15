@@ -19,12 +19,19 @@ To create your own workspace in the cloud, please click on the `Open in GitPod` 
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/nilshartmann/spring-graphql-training)
 
-After clicking the button, it might take some seconds until your workspace is created. Please stay tuned. And remember: GitPod will
+After clicking the button, you will be asked to "Continue with GitHub" in order to login. Please click on the button and then (if asked for) enter your GitHub credentials.
+
+![Continue with GitHub](./gitpod-authorize-with-github.png)
+
+After login, it might take some seconds until your workspace is created. Please stay tuned. And remember: GitPod will
 open at least one additional browser tab, please do not deny this.
+
+![Your workspace in the Browser](./gitpod-vscode.png)
 
 ## Using the workspace
 
-When GitPod has created your own workspace, it will open a VS Code editor instance in your browser with [Java support](https://code.visualstudio.com/docs/languages/java) installed.
+When GitPod has created your own workspace, it will open a VS Code editor instance in your browser with [Java support](https://code.visualstudio.com/docs/languages/java) installed. The Java Tooling
+is powered by JDT, that forms the base of the Eclipse IDE Java Tooling, so it's quite powerful.
 
 You can browse around, make changes (it compiles automatically when you save a file using Ctrl/Cmd+S), everything as it would be your
 own, local workspace 😊. If you close the browser tab by accident, you can re-open the workspace simply by pressing the "Open in GitPod"-Button again.
