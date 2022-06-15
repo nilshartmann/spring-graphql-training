@@ -1,4 +1,4 @@
-workspaceLocation: "workspace"
+workspaceLocation: "./workspace"
 tasks:
   - name: Build
     init: |
