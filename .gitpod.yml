@@ -44,3 +44,4 @@ vscode:
   extensions:
     - pivotal.vscode-spring-boot
     - graphql.vscode-graphql
+    - msnilshartmann.blue-light
