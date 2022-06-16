@@ -1,6 +1,5 @@
 package nh.publy.backend.security;
 
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public final class PublicKeyResponse {

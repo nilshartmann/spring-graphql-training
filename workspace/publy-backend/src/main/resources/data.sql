@@ -1,5 +1,6 @@
 INSERT INTO members (id, version, created_at, user_id, profile_image, location, bio, skills, currently_learning, works)
-VALUES (1, 1, '2019-05-01T21:39:24.849Z', 'U1', 'avatars/nils.jpg', 'Hamburg', 'Software-Developer from Hamburg', 'Beer and GraphQL', 'How to teach GraphQL', 'Freelancer');
+VALUES (1, 1, '2019-05-01T21:39:24.849Z', 'U1', 'avatars/nils.jpg', 'Hamburg', 'Software-Developer from Hamburg',
+        'Beer and GraphQL', 'How to teach GraphQL', 'Freelancer');
 INSERT INTO members (id, version, created_at, user_id, profile_image, location, bio, skills, currently_learning, works)
 VALUES (2, 1, '2021-10-08T20:32:15.761Z', 'U2', 'avatars/avatar_U2.png',
         'Longmont, VN', 'quaerat-nihil-eveniet', 'WordPress, Visual Basic, Linux, C#', null, null);
@@ -11,7 +12,8 @@ VALUES (4, 1, '2021-04-27T01:00:24.481Z', 'U4', 'avatars/avatar_U4.png',
         'Seattle, CI', null, 'Spring', 'Omnis eos mollitia aperiam eos voluptas at consequatur.', null);
 INSERT INTO members (id, version, created_at, user_id, profile_image, location, bio, skills, currently_learning, works)
 VALUES (5, 1, '2020-08-28T14:58:47.401Z', 'U5', 'avatars/avatar_U5.png',
-        'Carrollton, UM', 'provident-sunt-minima', 'GraphQL', 'Quisquam dolore exercitationem laboriosam aut maiores aut sint.', 'Bode Group');
+        'Carrollton, UM', 'provident-sunt-minima', 'GraphQL',
+        'Quisquam dolore exercitationem laboriosam aut maiores aut sint.', 'Bode Group');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (1, 1, '2021-10-09T04:40:50.027Z', 1,

@@ -1,6 +1,5 @@
 package nh.publy.backend.domain;
 
-import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,7 +120,7 @@ public class Story implements Identifiable {
 
   /**
    * Same as getBodyMarkdown.
-   *
+   * <p>
    * This only exists twice for different GraphQL workshops
    */
   public String getBody() {
