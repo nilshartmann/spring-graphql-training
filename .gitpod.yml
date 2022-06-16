@@ -4,6 +4,9 @@ tasks:
     init: |
       ./gradlew -x test clean bootJar
       gp sync-done build
+  - name: Open Java File
+    command: |
+      gp open publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java
   - name: Run UserService
     init: gp sync-await build
     command: java -jar publy-userservice/build/libs/publy-userservice-0.0.1-SNAPSHOT.jar

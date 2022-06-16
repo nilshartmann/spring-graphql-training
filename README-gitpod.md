@@ -11,7 +11,7 @@ training workspace).
 Before you open your own training workspace with GitPod in the cloud, please make sure:
 
 - You need a **GitHub** account to use GitPod. GitPod will use your GitHub account for authorization.
-- When opening the workspace GitPod tries to open at least one new browser tab. Make sure you allow gitpod to open this new tab.
+- When opening the workspace GitPod tries to open at least one new browser tab. Make sure you allow gitpod to open this new tab. You can find more informations in the [GitPod docs on Browser Settings](https://www.gitpod.io/docs/configure/browser-settings).
 
 ## Creating and opening the Workspace
 
