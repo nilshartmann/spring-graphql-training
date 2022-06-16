@@ -6,5 +6,6 @@
         "**/.h2": true,
         "**/bin": true,
         "**/build": true
-    }
+    },
+    "files.autoSave": "off"
 }
