@@ -1,0 +1,1 @@
+schema: "./publy-backend/src/main/resources/graphql/publy.graphqls"
