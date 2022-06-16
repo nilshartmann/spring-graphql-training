@@ -136,17 +136,6 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
 
         return traceMap;
       }
-
-      private Object copyMap(Map<String, Object> map) {
-        return new LinkedHashMap<>(map);
-      }
-
-//      private Map<String, Object> executionData() {
-//        Map<String, Object> map = new LinkedHashMap<>();
-//        List<Map<String, Object>> list = ImmutableList.copyOf(fieldData);
-//        map.put("datafetchers", list);
-//        return map;
-//      }
     };
   }
 }
