@@ -69,7 +69,22 @@ opened using Ctrl+Space (as in most IDEs).
 
 ![Code Completion](./gitpod-vscode-intellisense.png)
 
-### Creating new classes
+### **IMPORTANT: Saving files (also: avoid unwanted loss of changes**)
+
+> **Warning**
+> Per default setting, this workspace' VS Code **DOES NOT SAVE YOUR FILES AUTOMATICALLY**! If you by accident
+> close your browser tab, your changes are gone 😰
+
+In my experience the Auto Save feature too often saves files, which in turn leads to lots of (unnecessary and
+unsuccesful) re-compilations.
+
+So, please keep in mind that you regulary save your files (either Ctrl+S/Cmd+S or from file menu).
+
+If you want the Auto Save feature back, you can enable it from the File menu.
+
+![](./gitpod-vscode-auto-save.png)
+
+### Creating new Java classes
 
 To create a new Java class, simply right click on the package/folder
 the new class should belong into and select "New File". Then enter the
