@@ -40,3 +40,7 @@ github:
     addComment: true
     # add a "Review in Gitpod" button to the pull request's description (defaults to false)
     addBadge: true
+vscode:
+  extensions:
+    - pivotal.vscode-spring-boot
+    - graphql.vscode-graphql
