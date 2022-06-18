@@ -25,7 +25,7 @@ After clicking the button, you will be asked to "Continue with GitHub" in order 
 
 After login, GitPod asks you what IDE you want to use. I recommend to choose "VS Code (Browser)", as this is in my opionion the most stable option currently.
 
-![Select IDE](./gitpod-vscode-select-ide.png)
+<img src="./gitpod-vscode-select-ide.png" width="350px"/>
 
 Then it might take some seconds until your workspace is created. Please stay tuned. And remember: GitPod will
 open at least one additional browser tab, please allow this.
@@ -37,21 +37,21 @@ open at least one additional browser tab, please allow this.
 > VS Code sometimes shows some messages about missing Java extensions and prompts you to install those extensions.
 > **Please just ignore this pop-up dialogs**, all needed developer extensions are installed automatically. The popup dialogs are known problem in GitPod.
 
-![Dev Tools](./gitpod-vscode-dev-tools.png)
+<img src="./gitpod-vscode-dev-tools.png" width="350px"/>
 
-![Dev Tools](./gitpod-vscode-dev-tools-02.png)
+<img src="./gitpod-vscode-dev-tools-02.png" width="350px"/>
 
-![Dev Tools](./gitpod-vscode-dev-tools-03.png)
+<img src="./gitpod-vscode-dev-tools-03.png" width="350px"/>
 
 Finally, VS Code will show the message **Projects are imported
 into workspace**. Now your workspace is correctly started and
 setup and you can start working with it! 😊
 
-![Dev Tools](./gitpod-vscode-dev-tools-04.png)
-
-![Your workspace in the Browser](./gitpod-vscode.png)
+<img src="./gitpod-vscode-dev-tools-04.png" width="350px"/>
 
 ## Using the workspace
+
+<img src="./gitpod-vscode.png" width="450px"/>
 
 When GitPod has created your own workspace, it will open a VS Code editor instance in your browser with [Java support](https://code.visualstudio.com/docs/languages/java) installed. The Java Tooling
 is powered by JDT, that forms the base of the Eclipse IDE Java Tooling, so it's quite powerful.
@@ -62,7 +62,7 @@ own, local workspace 😊. If you close the browser tab by accident, you can re-
 In case you press the GitPod button and there is a workspace still running, you can deceide to re-open the running workspace
 or to create a fresh new one.
 
-![Re-open a workspace or create a new one](./gitpod-reopen-workspace.png)
+<img src="./gitpod-reopen-workspace.png" width="350px"/>
 
 ## Services in the workspace
 
