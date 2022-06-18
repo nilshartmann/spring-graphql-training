@@ -23,8 +23,31 @@ After clicking the button, you will be asked to "Continue with GitHub" in order 
 
 ![Continue with GitHub](./gitpod-authorize-with-github.png)
 
-After login, it might take some seconds until your workspace is created. Please stay tuned. And remember: GitPod will
-open at least one additional browser tab, please do not deny this.
+After login, GitPod asks you what IDE you want to use. I recommend to choose "VS Code (Browser)", as this is in my opionion the most stable option currently.
+
+![Select IDE](./gitpod-vscode-select-ide.png)
+
+Then it might take some seconds until your workspace is created. Please stay tuned. And remember: GitPod will
+open at least one additional browser tab, please allow this.
+
+### **Setting up VS Code**
+
+> **Warning**
+> When VS Code is starting in the browser, it also take some time until your project is completly imported into VS Code. During this time
+> VS Code sometimes shows some messages about missing Java extensions and prompts you to install those extensions.
+> **Please just ignore this pop-up dialogs**, all needed developer extensions are installed automatically. The popup dialogs are known problem in GitPod.
+
+![Dev Tools](./gitpod-vscode-dev-tools.png)
+
+![Dev Tools](./gitpod-vscode-dev-tools-02.png)
+
+![Dev Tools](./gitpod-vscode-dev-tools-03.png)
+
+Finally, VS Code will show the message **Projects are imported
+into workspace**. Now your workspace is correctly started and
+setup and you can start working with it! 😊
+
+![Dev Tools](./gitpod-vscode-dev-tools-04.png)
 
 ![Your workspace in the Browser](./gitpod-vscode.png)
 
