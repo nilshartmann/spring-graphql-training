@@ -13,7 +13,7 @@ type LoginStatus = {
   running?: boolean;
 };
 
-const showLoginHint = process.env.REACT_APP_SHOW_LOGIN_HINT;
+const showLoginHint = true;
 
 export default function LoginPage() {
   const auth = useAuthContext();

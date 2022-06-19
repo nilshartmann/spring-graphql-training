@@ -1,0 +1,5 @@
+# Ab IntelliJ 2022.2
+
+GRAPHQL http://localhost:8080/graphql
+
+{ story { id } }
