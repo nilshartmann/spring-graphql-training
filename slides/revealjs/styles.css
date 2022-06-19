@@ -204,6 +204,9 @@ body.title .transparent-bg {
 body.title a.Link {
   font-family: 'Courier New', Courier, monospace;  
   font-weight: bold;
+  font-size: 4rem;
+  padding: 0.5rem;
+  background-color: rgba(189, 215, 238, 0.5);
 }
 
 .language-graphql .hljs-punctuation {

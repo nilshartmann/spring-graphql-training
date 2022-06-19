@@ -21,7 +21,7 @@
     <div class="reveal">
       <div class="slides">
         <section data-state="title">
-          <h4 style="margin-bottom: 3rem">
+          <h4 style="margin-bottom: 3rem;font-size:3rem">
             <span class="transparent-bg">
               <a href="https://nilshartmann.net" target="_blank"
                 >Nils Hartmann</a
@@ -47,19 +47,15 @@
 
 
           <div style="margin-top: 6rem">
-            <h3><span class="transparent-bg">Repository</span></h3>
-            <p>
-              <span class="transparent-bg"
-                ><a class="Link" href="https://github.com/nilshartmann/spring-graphql-training">https://graphql.schule/github-repo</a></span
-              >
-            </p>
-          </div>
-          <div style="margin-top: 2rem">
             <h3><span class="transparent-bg">Slides (online)</span></h3>
             <p>
-              <span class="transparent-bg"
-                ><a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</span
-              >
+              <a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</a>
+            </p>
+          </div>
+          <div style="margin-top: 6rem">
+            <h3><span class="transparent-bg">Workspace Installation</span></h3>
+            <p>
+              <a class="Link" href="https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md">https://graphql.schule/install</a>
             </p>
           </div>
 
@@ -113,23 +109,21 @@
 
 ## Agenda
 
-* Teil 1: GraphQL
-  * Was ist GraphQL?
-  * Die Abfragesprache
-  * APIs beschreiben
+* Was ist GraphQL?
 
-  
-* Teil 2: Spring GraphQL  
-  * GraphQL APIs mit Spring-GraphQL implementieren
-  * Optimierungen
-  * Testen
+* Die Abfragesprache
+* APIs beschreiben
+* GraphQL APIs mit Spring for GraphQL implementieren
 
 ---
 
 ## Zeitplan
 
-* 13:30 bis 17:00
-* Zwischendurch Pausen ☕️ 😴
+* 13:30 bis 15:00  Teil 1
+
+* 15:00-15:30 Kaffeepause ☕️ 🍰
+
+* 15:30 bis 17:00 Teil 2
 
 ---
 
@@ -139,7 +133,13 @@
 * **Jederzeit:** Fragen und Diskussionen!
 * Motto: Es gibt keine dummen Fragen!
 * Ich zeige viel direkt im Editor, aber ihr könnt die Slides als Referenz benutzen
-* Wir machen zwischendurch Übungen, in denen ihr selbst programmieren könnt
+
+---
+
+# GraphQL
+
+
+_"GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data"_ ([https://graphql.org](https://graphql.org))
 
 ---
 
@@ -173,7 +173,7 @@ _"GraphQL is a query language for APIs and a runtime for fulfilling those querie
 * Kein fertiges Produkt, keine fertige Bibliothek
    * Es gibt Bibliotheken, die dir helfen, GraphQL APIs zu implementieren und bereitzustellen
    * Die abgefragten Daten müssen wir selbst ermitteln
-   * GraphQL macht keine Aussage darüber, wo diese Daten herkommen (lokal, Datenbank, Micro-Service, ...)
+   * GraphQL macht keine Aussage darüber, wo diese Daten herkommen (Datenbank, Micro-Service, Berechnung ...)
 
 ---
 
@@ -192,7 +192,7 @@ _"GraphQL is a query language for APIs and a runtime for fulfilling those querie
   * <!-- .element: class="demo" --> GraphQL.md im publy-Verzeichnis
   * <!-- .element: class="demo" --> language=GraphQL in einer leeren Java-Datei
 
-* <!-- .element: class="demo" --> TypeScript
+* <!-- .element: class="demo" --> TypeScript (optional)
   * <!-- .element: class="demo" --> publy-frontend, npm run codegen:watch
   * <!-- .element: class="demo" --> StoryPage.query.graphql zeigen und story-Feld entfernen
 
@@ -355,11 +355,10 @@ query {
 
 _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
-* Öffne GraphiQL auf meinem Computer (URL gibt's im Chat)
+* Öffne GraphiQL auf meinem Computer (URL gebe ich euch)
 * Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert
-  * Id, Titel, Excerpt, Wer hat die Story geschrieben und die ersten zehn Kommentare
+  * Id, Titel, Excerpt, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
 * Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
-* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
 
 ---
 

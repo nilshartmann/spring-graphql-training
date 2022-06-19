@@ -18,7 +18,7 @@ für Übungen und Experimente verwenden kannst:
 
 Auf deinem Laptop/PC sollte installiert sein:
 
-- Git (zum klonen des Workspaces)
+- Git (zum Klonen des Workspaces)
 - Java JDK (mindestens Version 11)
 - Browser
 - Eine Java IDE, zum Beispiel [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) (Evaluationsversion reicht)
@@ -44,21 +44,31 @@ Bitte achte darauf, dass diese Ports nicht belegt sind.
 git clone https://github.com/nilshartmann/spring-graphql-training
 ```
 
-## Schritt 2: Testweise den Workspace bauen
+**Achtung:** Aus dem Repository werden wir nur das `workspace` Unterverzeichnis verwenden. Bitte nicht das ganze Repository in der IDE öffnen (siehe unten).
 
-1. Im Verzeichnis **workspace** des Repositories einmal den Gradle-Build ausführen, damit werden dann auch gleich alle benötigten Module geladen:
+## Schritt 2: Öffnen in der IDE
 
-```
-cd workspace
+Importiere nun das **`workspace`-Unterverzeichnis** in deiner IDE. Dort sollten zwei (Gradle-)Projekte erkannt und compiliert werden: `publy-backend` und `publy-userservice`.
 
-./gradlew build
-```
+- IntelliJ: `File -> Open` und dann das `workspace` Verzeichnis auswählen
+- Eclipse: `File -> Import... -> Gradle -> Existing Gradle Project`. Dann das `workspace`-Verzeichnis auswählen. Keine weiteren Anpassungen im Eclipse Wizard machen, einfach `Finish` klicken.
 
-## Schritt 3: Öffnen in der IDE
+Die anderen Top-Level-Verzeichnisse in diesem Repository bitte _nicht_ in der IDE zu öffnen. Wir arbeiten ausschließlich in dem `workspace`-Verzeichnis.
 
-Wenn Du möchstest, kannst Du das `workspace`-Verzeichnis in deiner IDE öffnen. Dort sollten zwei (Gradle-)Projekte erkannt und compiliert werden: `publy-backend` und `publy-userservice`.
+## Schritt 3: Anwendungen starten
 
-Die anderen Verzeichnisse in diesem Repository brauchst Du _nicht_ in der IDE zu öffnen. Wir arbeiten ausschliesslich in dem `workspace`-Verzeichnis.
+Bitte starte aus deiner IDE auf dem gewohnten Weg die beiden Java Anwendungen:
+
+- `nh.publy.backend.PublyApplication`
+- `nh.graphql.publy.userservice.UserserviceApplication`
+
+Die beiden Anwendungen belegen die Ports `8090` bzw `8091`. Diese Ports sollten also vorher nicht belegt sein.
+
+## Schritt 5: Source-Code bearbeiten
+
+Du kannst die Sourcen in deiner IDE wie gewohnt bearbeiten. Nach dem Speichern bzw. Compilieren/Build wird die PublyApplication automatisch neu gestartet.
+
+Hinweis: wir werden Änderungen nur im Modul `publy-backend` machen.
 
 **Das ist alles!**
 
