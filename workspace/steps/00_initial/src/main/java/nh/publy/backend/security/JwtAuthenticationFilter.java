@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       user,
       null,
       Arrays.stream(
-        user.getRoles()).map(
+          user.getRoles()).map(
           SimpleGrantedAuthority::new)
         .collect(Collectors.toList())
     );

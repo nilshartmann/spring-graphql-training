@@ -711,32 +711,11 @@ type Story {
 
 ### Vorbereitung: Das Repository
 
-* Git Repo klonen: `git clone https://github.com/nilshartmann/spring-graphql-training`
-* `workspace`: Hier arbeiten wir, bitte in der IDE öffnen
-  * `workspace/publy-backend`: Spring Boot-Projekt, in dem wir die GraphQL API implementieren
-  * `workspace/publy-userservice`: Spring Boot-Projekt mit dem UserService
-  * `workspace/steps`: Lösungen für die einzelnen Übungen
+* Workspace klonen und Anwendungen starten: [https://graphql.schule/install](https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md)
 
----
+### Übung: Schema beschreiben <!-- .element: class="fragment" --> 
 
-### Vorbereitung: Starten der Anwendung
-
-* Verzeichnis `workspace` in der IDE öffnen
-* Dort sind zwei Spring Boot-Anwendungen vorhanden: `publy-userservice` und `publy-backend`
-
-* Schritt 1: User Service starten
-  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
-  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
-* Schritt 2: Backend starten
-  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
-  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
-  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
-
----
-
-### Übung: Schema beschreiben
-
-* <!-- .element: class="small" --> 
+* <!-- .element: class="very-small" --> 
 * Lege die Datei `resources/graphql/publy.graphqls` an und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
   * **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
@@ -744,7 +723,7 @@ type Story {
 * Lege den Query-Typen mit folgenden Feldern an:
   * `stories`: Liefert eine Liste der `Story`-Objekte zurück. Nicht nullable.
   * `story`: Liefert eine einzelne Story zurück. Das Feld soll ein Argument haben: `storyId`. Das Feld kann `null` zurückgeben
-* Füge für ein oder zwei Felder oder Typen Dokumentation hinzu
+* Füge für ein oder zwei Felder Dokumentation hinzu
 * Die Implementierung für die API machen wir später! Du musst also nichts programmieren.
 * Sieh dir das API-Schema in GraphiQL an (http://localhost:8090).
   * Prüfe, ob Code Completion funktioniert und ob die Dokumentation im "Docs"-Tab findest
@@ -752,7 +731,7 @@ type Story {
     die Seite im Browser neu laden.
   * Du kannst mal probieren, was passiert, wenn Du einen `stories` bzw `story`-Query ausführst.    
     * Eine gültige ID für eine Story ist z.B. `1`
-* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
+* Eine mögliche Lösung findest Du in `steps/01-schema`    
 
 ---
 
@@ -967,7 +946,7 @@ type Story {
 _Implementiere zwei Handler-Funktionen_
 
 * Eine Handler-Funktion `Query.stories` und für `Query.story(id: ID!)`
-* Lege dazu eine neue Controller-Klasse an (`PublyGraphQLController`)
+* Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
 * Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
   * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
 * Folgende Queries sollten danach funktionieren:
@@ -995,6 +974,8 @@ _Implementiere zwei Handler-Funktionen_
     }
   }
 </code></pre>
+
+* Eine mögliche Lösung findest Du in `steps/10_handler_function`
 
 ---
 
@@ -1151,7 +1132,7 @@ _Implementiere zwei Handler-Funktionen_
   }
 </code></pre>
 
-* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
+* Eine mögliche Lösung findest Du in `steps/15_schema-mapping`
 
 ---
 

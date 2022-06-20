@@ -1,13 +1,9 @@
 package nh.publy.backend.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -20,7 +16,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig  {
+public class SecurityConfig {
   @Bean
   public JwtAuthenticationFilter authenticationTokenFilter() {
     return new JwtAuthenticationFilter();
@@ -36,6 +32,10 @@ public class SecurityConfig  {
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     http.addFilterBefore(authenticationTokenFilter(), BasicAuthenticationFilter.class);
+
+//    http.csrf().ignoringAntMatchers("/h2-console/**");
+    //this will allow frames with same origin which is much more safe
+    http.headers().frameOptions().sameOrigin();
 
     return http.build();
   }

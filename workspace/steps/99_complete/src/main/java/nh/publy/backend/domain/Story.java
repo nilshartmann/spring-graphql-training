@@ -1,6 +1,5 @@
 package nh.publy.backend.domain;
 
-import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +39,6 @@ public class Story implements Identifiable {
   @Column(name = "title")
   private String title;
 
-  @Column(name = "tags")
-  @NotNull
-  @Size(min = 1)
-  @Type(type = "nh.publy.backend.util.PostgreSqlStringArrayType")
-  private String[] tags;
-
   @NotNull
   @Size(min = 10)
   @Column(name = "body_markdown")
@@ -60,12 +53,11 @@ public class Story implements Identifiable {
   protected Story() {
   }
 
-  public Story(Long id, Member writtenBy, String title, String[] tags, String body) {
+  public Story(Long id, Member writtenBy, String title, String body) {
     this.id = id;
     this.writtenBy = writtenBy;
     this.createdAt = LocalDateTime.now();
     this.title = title;
-    this.tags = tags;
     this.bodyMarkdown = body;
   }
 
@@ -101,10 +93,6 @@ public class Story implements Identifiable {
     this.bodyMarkdown = body;
   }
 
-  public String[] getTags() {
-    return tags;
-  }
-
   public Set<Comment> getComments() {
     return comments;
   }
@@ -132,7 +120,7 @@ public class Story implements Identifiable {
 
   /**
    * Same as getBodyMarkdown.
-   *
+   * <p>
    * This only exists twice for different GraphQL workshops
    */
   public String getBody() {

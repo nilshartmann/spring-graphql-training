@@ -90,4 +90,11 @@ Reveal.initialize({
     n.parentNode.classList.add("small");
     n.remove();
   });
+
+  // very-small lists
+  document.querySelectorAll("li.very-small").forEach((n) => {
+    n.classList.remove("very-small");
+    n.parentNode.classList.add("very-small");
+    n.remove();
+  });
 });

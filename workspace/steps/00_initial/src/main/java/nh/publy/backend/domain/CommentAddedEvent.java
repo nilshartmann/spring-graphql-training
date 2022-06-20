@@ -1,7 +1,5 @@
 package nh.publy.backend.domain;
 
-import org.springframework.context.ApplicationEvent;
-
 public class CommentAddedEvent {
   private final Long storyId;
   private final Long commentId;

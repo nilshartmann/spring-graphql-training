@@ -106,6 +106,12 @@ code span.line-number {
   margin-bottom: 10px;
 }
 
+.reveal ul.very-small > li {
+  font-size: 80%;
+  margin-bottom: 10px;
+}
+
+
 .reveal li > ul {
   margin-top: 10px;
   margin-bottom: 20px;

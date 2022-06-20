@@ -30,8 +30,8 @@ public class AbstractPublyGraphQLTest {
 
   final Member member = new Member(1L, "U1", "avatar.png");
   final User user = new User("U1", "susi", "Susi Mueller", "susi@example.com" );
-  final Story story1 = new Story(1L, member, "A great Story #1", new String[]{"graphql"}, "Lorem ipsum");
-  final Story story2 = new Story(2L, member, "A second great story", new String[]{"graphql"}, "Lirum larum loeffelstiel");
+  final Story story1 = new Story(1L, member, "A great Story #1", "Lorem ipsum");
+  final Story story2 = new Story(2L, member, "A second great story", "Lirum larum loeffelstiel");
 
   // ---------- Some mock repository configs your can use (or setup your own) ----------------------------------------
   void given_storyOneIsReturned() {

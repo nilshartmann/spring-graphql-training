@@ -95,23 +95,21 @@ public class PublyDomainService {
   public Story addStory(
     @NotNull Long memberId,
     @Size(min = 10) String title,
-    @Size(min = 1) String[] tags,
     @Size(min = 10) String body) {
     Long storyId = storyRepository.getNextStoryId();
     Member member = memberRepository.findById(memberId).orElseThrow();
-    Story story = new Story(storyId, member, title, tags, body);
+    Story story = new Story(storyId, member, title, body);
     return storyRepository.save(story);
   }
 
   @Transactional
   @PreAuthorize("hasRole('ROLE_EDITOR')")
   public Story addStory(@Size(min = 10) String title,
-                        @Size(min = 1) String[] tags,
                         @Size(min = 10) String body) {
     Member member = getCurrentMember();
 
     Long storyId = storyRepository.getNextStoryId();
-    Story story = new Story(storyId, member, title, tags, body);
+    Story story = new Story(storyId, member, title, body);
 
     return storyRepository.save(story);
   }
