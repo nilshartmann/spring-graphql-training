@@ -1,0 +1,36 @@
+
+
+toggle reaction:
+
+{ "Authorization": "Bearer eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJ7XCJpZFwiOlwiVTFcIixcInVzZXJuYW1lXCI6XCJuaWxzXCIsXCJuYW1lXCI6XCJOaWxzIEhhcnRtYW5uXCIsXCJlbWFpbFwiOlwia29udGFrdEBuaWxzaGFydG1hbm4ubmV0XCIsXCJyb2xlc1wiOltcIlJPTEVfVVNFUlwiLFwiUk9MRV9FRElUT1JcIl0sXCJndWVzdFwiOmZhbHNlfSIsImlhdCI6MTY0MTM2OTg0NywiZXhwIjozMjMyOTg3OTg3fQ.lsLAqfAdMID_2QFL7OimWEHcunaPy18zWVYZUDiEJYVwR9PQG5qf8_gRrNAwkd9w33dwunJC3bswR1W0zMtTID9DyeaXGLws2AtmwF_ZecD6x5TVDEBcFJV1-WrRt2yRWoo-hNywGqDUqR49dJoICoQ-aoP_7GOgYo5zYIYCRe2Xbn4DbX0xzGLyiRNzJzZhq8l6KE_Hb5Ern0hTZhTZXq4jmrCjf8wztuF37rsRJ-nZ9vozUaQU7vwhl93g1gvAMb3zJWBo_m9ujd3RKSZ5fjMuOVb-kVQI6NP9hLoEYO2mkcDSoHNIXBgJHr3TYNzeGtJ3Nt3bTXp-o_P-bSzXYQ" }
+
+mutation {
+  toggleReaction(input: {
+    storyId:1,
+    reactionType:like
+  }) {
+    updatedStory {id reactions {
+      nodes {
+        type
+        givenBy { id }
+      }
+    }}
+  }
+}
+
+
+addComment (mit Union)
+
+mutation {
+  addComment(input:{
+    storyId:1,
+    content:"Very well written!"
+  }) {
+    ...on AddCommentSuccessPayload {
+      newComment {
+        id
+        content
+      }
+    }
+  }
+}

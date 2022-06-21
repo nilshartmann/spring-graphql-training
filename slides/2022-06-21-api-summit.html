@@ -181,9 +181,18 @@ _"GraphQL is a query language for APIs and a runtime for fulfilling those querie
 
 <img style="border: 1px solid grey" src="images/publy-screenshot.png" />
 
+[http://localhost:3000](http://localhost:3000)
+
+---
+
+## Beispiel: GraphiQL
+
+<img style="border: 1px solid grey" src="images/screenshot-graphiql.png" />
+
 [http://localhost:8080](http://localhost:8080)
 
 ---
+
 
 ## Beispiel: GraphQL Tooling
 
@@ -356,9 +365,11 @@ query {
 _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
 * Öffne GraphiQL auf meinem Computer (URL gebe ich euch)
-* Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert
-  * Id, Titel, Excerpt, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
+* Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert, und folgende Felder abfragt:
+  * Id, Titel, Excerpt, Veröffentlichungsdatum, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
+  * Kannst Du den Query so erweitern, dass er die ersten zehn _neusten_ Stories zurückliefert?
 * Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
+* Mögliche Lösung: [https://graphql.schule/queries](https://graphql.schule/queries)
 
 ---
 
@@ -392,6 +403,7 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 * GraphQL APIs müssen in einem Schema beschrieben werden.
 * In dem Schema werden Objekte (Typen) mit Feldern beschrieben.
 * Das Schema selbst ist zur Laufzeit mit einem _Introspection Query_ abfragbar
+  * 🧑‍💻 Beispiel in GraphiQL
 * Je nach Framework gibt's unterschiedliche Möglichkeiten, das Schema zu definieren
   * **Schema-first**: erst Schema beschreiben, dann implementieren
   * **Code-first**: Schema wird aus (Java-)Code generiert
@@ -405,16 +417,16 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 * Per [Java API](https://www.graphql-java.com/documentation/schema) in
   GraphQL-Java 
 * In der Regel wird die **SDL** verwendet 
-  * Java API nur für _Type Resolver_ und eigene Skalare
 
 ---
 
 ### Die SDL
 
 * <!-- .element: class="demo" --> Demo: Schema-Definition 
-  * <!-- .element: class="demo" --> ping-Feld
+  * <!-- .element: class="demo" --> ping-Feld mit Message Object
   * <!-- .element: class="demo" --> Argument!
   * <!-- .element: class="demo" --> Rückgabewert-String
+  * <!-- .element: class="demo" --> Doku
 
 ---
 
@@ -716,7 +728,7 @@ type Story {
 ### Übung: Schema beschreiben <!-- .element: class="fragment" --> 
 
 * <!-- .element: class="very-small" --> 
-* Lege die Datei `resources/graphql/publy.graphqls` an und beschreibe darin eine API, die folgende Objekt-Typen enthält:
+* Vervollständige die Datei `resources/graphql/publy.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
   * **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
   * Alle Felder in den beiden Typen sind Pflicht (non-nullable), das `id`-Feld ist vom Typ `ID` alle anderen Strings
