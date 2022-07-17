@@ -1,4 +1,12 @@
 """
+Set 'complexity' of a field
+
+ * Use with nh.publy.backend.graphql.runtime.PublyGraphQLConfig.PublyFieldComplexityCalculator
+ * To try it, enable the `maxQueryComplexityInstrumentation` bean in `PublyGraphQLConfig`
+"""
+directive @Complexity(complexity: Int!) on FIELD_DEFINITION
+
+"""
 `DateTime`-Fields send/receive a date as an ISO 8601 timestamp format
 """
 scalar DateTime
