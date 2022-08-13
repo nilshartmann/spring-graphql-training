@@ -13,6 +13,14 @@ type LoginStatus = {
   running?: boolean;
 };
 
+type RedirectState = {
+  redirectTo: string;
+};
+
+function isRedirectState(state: unknown): state is RedirectState {
+  return state !== null && typeof state === "object" && "redirect" in state;
+}
+
 const showLoginHint = true;
 
 export default function LoginPage() {
@@ -49,8 +57,8 @@ export default function LoginPage() {
       console.log("PAYLOAD", payload);
       const { token } = payload;
       auth.setToken(token);
-      if (state?.redirectTo) {
-        navigate(state?.redirectTo, {
+      if (isRedirectState(state)) {
+        navigate(state.redirectTo, {
           replace: true,
         });
       } else {

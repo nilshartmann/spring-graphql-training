@@ -7,11 +7,14 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prettier:check": "prettier --check src"
+    "prettier:check": "prettier --check src",
+    "codegen": "graphql-codegen --config codegen.yml && prettier --write src/generated/**",
+    "codegen:watch": "graphql-codegen --config codegen.yml --watch src/**/*.graphql"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@heroicons/react": "^1.0.6",
+    "@types/remarkable": "^2.0.3",
     "classnames": "^2.3.1",
     "graphql": "^16.5.0",
     "graphql-ws": "^5.10.0",

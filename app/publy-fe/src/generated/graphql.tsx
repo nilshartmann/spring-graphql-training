@@ -1,6 +1,5 @@
-import * as Apollo from "@apollo/client";
 import { gql } from "@apollo/client";
-
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -12,7 +11,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>;
 };
-const defaultOptions = {};
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -20,6 +19,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** `DateTime`-Fields send/receive a date as an ISO 8601 timestamp format */
+  DateTime: any;
 };
 
 /** Represents an error message when a comment could not be added */
@@ -54,6 +55,78 @@ export type AddCommentSuccessPayload = {
   newComment: Comment;
 };
 
+/** A single violation that occurred when creating a new `Story` */
+export type AddStoryConstraintViolation = {
+  __typename?: "AddStoryConstraintViolation";
+  field?: Maybe<StoryConstrationViolationField>;
+  message: Scalars["String"];
+};
+
+/**
+ * Result object when a new `Story` could not be created, because one or
+ * more fields have violated constraints
+ */
+export type AddStoryConstraintViolationPayload = {
+  __typename?: "AddStoryConstraintViolationPayload";
+  /** A list of all violations that occured when adding a new `Story` */
+  violations: Array<AddStoryConstraintViolation>;
+};
+
+/**
+ * Input for a new `Story`
+ *
+ * See field description for constraints
+ */
+export type AddStoryInput = {
+  /**
+   * The story body, i.e. its main content.
+   *
+   * - the body might contain markdown code
+   * - the body must be at least 10 characters long
+   */
+  body: Scalars["String"];
+  /**
+   * The tags for the story.
+   *
+   * - Tags are free text (should be only one word though)
+   * - You must specify at least one tag
+   */
+  tags: Array<Scalars["String"]>;
+  /**
+   * The story title.
+   *
+   * - Must have at least 10 characters
+   */
+  title: Scalars["String"];
+};
+
+/**
+ * Result object, when a `Story` could not be created, because the
+ * `Member` has not the suffient credentials
+ *
+ * Note that you must be logged in to add a new `Story` and your User
+ * must habe the `ROLE_USER` role.
+ */
+export type AddStoryInvalidCredentialsPayload = {
+  __typename?: "AddStoryInvalidCredentialsPayload";
+  /** The currently logged in `Member` or `null` if no member is logged in */
+  member?: Maybe<Member>;
+  /** The error message */
+  message: Scalars["String"];
+};
+
+/** Result type for adding a new story */
+export type AddStoryPayload =
+  | AddStoryConstraintViolationPayload
+  | AddStoryInvalidCredentialsPayload
+  | AddStorySuccessPayload;
+
+/** Result object when a new `Story` has been created successfully */
+export type AddStorySuccessPayload = {
+  __typename?: "AddStorySuccessPayload";
+  newStory: Story;
+};
+
 /**
  * A Comment is written by a Member for a Story of another member
  *
@@ -68,7 +141,7 @@ export type Comment = Node & {
    */
   content: Scalars["String"];
   /** When was this comment written? */
-  createdAt: Scalars["String"];
+  createdAt: Scalars["DateTime"];
   id: Scalars["ID"];
   /** The `story` this comment referres to */
   story: Story;
@@ -92,6 +165,14 @@ export type CommentConnection = {
   __typename?: "CommentConnection";
   /** Returns all `CommentEdge`s that this connection represents. Might be empty, but never null. */
   edges: Array<CommentEdge>;
+  /**
+   * Returns all `Comment` fetched with this connection.
+   *
+   * This is similiar to the way the GitHub GraphQL API works:
+   * - you can received the `edges` (your resulting object graph is deeper, but you also have the cursors for each edge)
+   * - you can use this `nodes` to directly access only the node objects, if you don't need the cursors
+   */
+  nodes: Array<Comment>;
   /** Information of the page that this connection represents */
   pageInfo: PageInfo;
   /** total number of objects that is selected by the criteria that was used to create this connection */
@@ -140,11 +221,12 @@ export type Member = Node & {
    * - ou cannot request more than 10 comments at a time
    */
   comments: CommentConnection;
+  createdAt: Scalars["DateTime"];
   /** What is this Member currently learning? */
   currentlyLearning?: Maybe<Scalars["String"]>;
   id: Scalars["ID"];
   /** Date, when this Member first joined our service */
-  joined: Scalars["String"];
+  joined: Scalars["DateTime"];
   /** Location, where the Member currenty lives */
   location?: Maybe<Scalars["String"]>;
   /** URL to the profile image of this Member */
@@ -155,8 +237,8 @@ export type Member = Node & {
    * The stories this Member has written.
    *
    * Note:
-   *   - you have to specify at least `first` or `last` argument
-   *   - ou cannot request more than 10 stories at a time
+   * - you have to specify at least `first` or `last` argument
+   * - ou cannot request more than 10 stories at a time
    */
   stories: StoryConnection;
   /**
@@ -226,11 +308,22 @@ export type Mutation = {
    * - in case of success, a `OnNewCommentEvent` is raised to inform clients about this new comment
    */
   addComment: AddCommentPayload;
+  /**
+   * Add a new story.
+   *
+   * - The `AddStoryInput` must contain valid values!
+   * - You must be logged in to create stories (with a user with role `ROLE_USER`)
+   */
+  addStory: AddStoryPayload;
   toggleReaction: ToggleReactionPayload;
 };
 
 export type MutationAddCommentArgs = {
   input: AddCommentInput;
+};
+
+export type MutationAddStoryArgs = {
+  input: AddStoryInput;
 };
 
 export type MutationToggleReactionArgs = {
@@ -243,6 +336,8 @@ export type MutationToggleReactionArgs = {
  * All objects in our API implement this Node. Nodes can be queried using the `node` `Query`-field
  */
 export type Node = {
+  /** The timestamp, when this node has been created */
+  createdAt: Scalars["DateTime"];
   /**
    * The unique identifier of this node.
    *
@@ -254,7 +349,6 @@ export type Node = {
 /** This event is raised when a new `Comment` has been successfully added to a `Story` */
 export type OnNewCommentEvent = {
   __typename?: "OnNewCommentEvent";
-  id: Scalars["ID"];
   /** The newly added Comment object */
   newComment: Comment;
   /**
@@ -297,6 +391,8 @@ export type Query = {
   member?: Maybe<Member>;
   /** Returns Publy's registered members */
   members: MemberPage;
+  /** Return a `Node` by it's id or null, if not found */
+  node?: Maybe<Node>;
   /**
    * Find stories, ordered and matched by specified criterias
    *
@@ -338,6 +434,10 @@ export type QueryMembersArgs = {
   size?: InputMaybe<Scalars["Int"]>;
 };
 
+export type QueryNodeArgs = {
+  id: Scalars["ID"];
+};
+
 export type QueryStoriesArgs = {
   after?: InputMaybe<Scalars["ID"]>;
   before?: InputMaybe<Scalars["ID"]>;
@@ -359,7 +459,7 @@ export type QueryStoryArgs = {
  */
 export type Reaction = Node & {
   __typename?: "Reaction";
-  createdAt: Scalars["String"];
+  createdAt: Scalars["DateTime"];
   /** What member has given this reaction? */
   givenBy: Member;
   id: Scalars["ID"];
@@ -378,6 +478,14 @@ export type ReactionConnection = {
   __typename?: "ReactionConnection";
   /** Returns all `ReactionEdge`s that this connection represents. Might be empty, but never null. */
   edges: Array<ReactionEdge>;
+  /**
+   * Contains the list of `Reactions` of this connection.
+   *
+   * This is similiar to the way the GitHub GraphQL API works:
+   * - you can received the `edges` (your resulting object graph is deeper, but you also have the cursors for each edge)
+   * - you can use this `nodes` to directly access only the node objects, if you don't need the cursors
+   */
+  nodes: Array<Reaction>;
   pageInfo: PageInfo;
   totalCount: Scalars["Int"];
 };
@@ -391,6 +499,7 @@ export type ReactionEdge = {
 export type ReactionSummary = {
   __typename?: "ReactionSummary";
   reactionsByType: Array<ReactionByType>;
+  totalCount: Scalars["Int"];
 };
 
 /** Classification of a `Reaction` that is given to a `Story` */
@@ -412,15 +521,29 @@ export enum ReactionType {
  */
 export type Story = Node & {
   __typename?: "Story";
+  /**
+   * list all comments of this story
+   *
+   * Note:
+   * - if you neither specify `first` nor `last`, `first` is set to `10` by default.
+   * - you must not specify both  `first` and `last` (only specify one)
+   * - you cannot load more than `10` comments in one query
+   * @deprecated Use comments instead
+   */
+  allComments: CommentConnection;
   /** The actual story text. Can contain markdown for formatting */
   body: Scalars["String"];
   /**
    * list all comments of this story
    *
-   * Note that you have to specify either `first` or `last` and you cannot query for more than 10 comments at once
+   * Note:
+   * - if you neither specify `first` nor `last`, `first` is set to `10` by default.
+   * - you must not specify both  `first` and `last` (only specify one)
+   * - you cannot load more than `10` comments in one query
    */
   comments: CommentConnection;
-  createdAt: Scalars["String"];
+  /** Time and date when this story has been written and published */
+  createdAt: Scalars["DateTime"];
   /**
    * Returns a short _excerpt_ of this Story's body.
    *
@@ -430,22 +553,31 @@ export type Story = Node & {
   id: Scalars["ID"];
   /** A summary of all reactions given to this Story by Reaction type */
   reactionSummary: ReactionSummary;
-  /**
-   * list all reactions of this story
-   *
-   * Note that you have to specify either `first` or `last` and you cannot query for more than 10 reactions at once
-   */
+  /** list all reactions of this story */
   reactions: ReactionConnection;
   /**
    * A `Tag` is a free-form word that categories this Story.
    *
-   * Stories can be searched by their tags. This way Memebers can find stories they're interessted in.
+   * Stories can be searched by their tags. This way Members can find stories they're interessted in.
    */
   tags: Array<Scalars["String"]>;
   /** The title of this Story, should be short and precise */
   title: Scalars["String"];
   /** Who has written this story */
   writtenBy: Member;
+};
+
+/**
+ * A `Story` is the main object in our service.
+ *
+ * Stories are written and published by `Member`s. Other members can leave a `Comment` or give a `Reaction`
+ */
+export type StoryAllCommentsArgs = {
+  after?: InputMaybe<Scalars["ID"]>;
+  before?: InputMaybe<Scalars["ID"]>;
+  first?: InputMaybe<Scalars["Int"]>;
+  last?: InputMaybe<Scalars["Int"]>;
+  orderBy?: InputMaybe<CommentOrder>;
 };
 
 /**
@@ -467,7 +599,16 @@ export type StoryCommentsArgs = {
  * Stories are written and published by `Member`s. Other members can leave a `Comment` or give a `Reaction`
  */
 export type StoryExcerptArgs = {
-  maxLength?: InputMaybe<Scalars["Int"]>;
+  maxLength?: Scalars["Int"];
+};
+
+/**
+ * A `Story` is the main object in our service.
+ *
+ * Stories are written and published by `Member`s. Other members can leave a `Comment` or give a `Reaction`
+ */
+export type StoryReactionSummaryArgs = {
+  type?: InputMaybe<ReactionType>;
 };
 
 /**
@@ -487,17 +628,46 @@ export type StoryCondition = {
   value: Scalars["String"];
 };
 
+/**
+ * Specified fields on a `Story` that can be used to
+ * filter/search for stories using a condition (for example
+ * to find only Stories that are written by a specific `Member`)
+ */
 export enum StoryConditionField {
+  /** Returns Stories that are newer than the specified date */
+  NewerThan = "newerThan",
+  /** Returns Stories that contain a specified `Tag` */
   Tag = "tag",
+  /**
+   * Selects Stories that are written by the specified `Member`.
+   *
+   * The `value` for this condition must be the `Id` of a `Member`
+   */
+  WrittenBy = "writtenBy",
 }
 
 export type StoryConnection = {
   __typename?: "StoryConnection";
   /** Returns all `StoryEdges` that this connection represents. Might be empty, but never null. */
   edges: Array<StoryEdge>;
+  /**
+   * Contains the list of `Stories` of this connection.
+   *
+   * This is similiar to the way the GitHub GraphQL API works:
+   * - you can received the `edges` (your resulting object graph is deeper, but you also have the cursors for each edge)
+   * - you can use this `nodes` to directly access only the node objects, if you don't need the cursors
+   */
+  nodes: Array<Story>;
   pageInfo: PageInfo;
   totalCount: Scalars["Int"];
 };
+
+export enum StoryConstrationViolationField {
+  Body = "body",
+  Other = "other",
+  Tags = "tags",
+  Title = "title",
+}
 
 export type StoryEdge = {
   __typename?: "StoryEdge";
@@ -557,7 +727,7 @@ export type TopTags = {
  *
  * Authorization is done in a separate process that also stores other User information, like credentials and roles
  */
-export type User = Node & {
+export type User = {
   __typename?: "User";
   /** The user's E-Mail adress */
   email: Scalars["String"];
@@ -578,7 +748,7 @@ export type FeedPageQuery = {
     __typename?: "StoryConnection";
     pageInfo: {
       __typename?: "PageInfo";
-      endCursor?: string | null | undefined;
+      endCursor?: string | null;
       hasNextPage: boolean;
     };
     edges: Array<{
@@ -586,7 +756,7 @@ export type FeedPageQuery = {
       node: {
         __typename?: "Story";
         id: string;
-        createdAt: string;
+        createdAt: any;
         title: string;
         excerpt: string;
         tags: Array<string>;
@@ -594,10 +764,7 @@ export type FeedPageQuery = {
           __typename?: "Member";
           id: string;
           profileImageUrl: string;
-          user?:
-            | { __typename?: "User"; id: string; name: string }
-            | null
-            | undefined;
+          user?: { __typename?: "User"; id: string; name: string } | null;
         };
         comments: { __typename?: "CommentConnection"; totalCount: number };
         reactions: { __typename?: "ReactionConnection"; totalCount: number };
@@ -628,70 +795,55 @@ export type MemberPageQueryVariables = Exact<{
 
 export type MemberPageQuery = {
   __typename?: "Query";
-  member?:
-    | {
-        __typename?: "Member";
-        id: string;
-        profileImageUrl: string;
-        bio?: string | null | undefined;
-        joined: string;
-        currentlyLearning?: string | null | undefined;
-        location?: string | null | undefined;
-        skills?: string | null | undefined;
-        works?: string | null | undefined;
-        user?:
-          | { __typename?: "User"; name: string; email: string }
-          | null
-          | undefined;
-        stories: {
-          __typename?: "StoryConnection";
-          totalCount: number;
-          edges: Array<{
-            __typename?: "StoryEdge";
-            node: {
-              __typename?: "Story";
-              id: string;
-              createdAt: string;
-              title: string;
-              excerpt: string;
-              tags: Array<string>;
-              writtenBy: {
-                __typename?: "Member";
-                id: string;
-                profileImageUrl: string;
-                user?:
-                  | { __typename?: "User"; id: string; name: string }
-                  | null
-                  | undefined;
-              };
-              comments: {
-                __typename?: "CommentConnection";
-                totalCount: number;
-              };
-              reactions: {
-                __typename?: "ReactionConnection";
-                totalCount: number;
-              };
-            };
-          }>;
+  member?: {
+    __typename?: "Member";
+    id: string;
+    profileImageUrl: string;
+    bio?: string | null;
+    joined: any;
+    currentlyLearning?: string | null;
+    location?: string | null;
+    skills?: string | null;
+    works?: string | null;
+    user?: { __typename?: "User"; name: string; email: string } | null;
+    stories: {
+      __typename?: "StoryConnection";
+      totalCount: number;
+      edges: Array<{
+        __typename?: "StoryEdge";
+        node: {
+          __typename?: "Story";
+          id: string;
+          createdAt: any;
+          title: string;
+          excerpt: string;
+          tags: Array<string>;
+          writtenBy: {
+            __typename?: "Member";
+            id: string;
+            profileImageUrl: string;
+            user?: { __typename?: "User"; id: string; name: string } | null;
+          };
+          comments: { __typename?: "CommentConnection"; totalCount: number };
+          reactions: { __typename?: "ReactionConnection"; totalCount: number };
         };
-        comments: {
-          __typename?: "CommentConnection";
-          totalCount: number;
-          edges: Array<{
-            __typename?: "CommentEdge";
-            node: {
-              __typename?: "Comment";
-              id: string;
-              createdAt: string;
-              content: string;
-              story: { __typename?: "Story"; id: string; title: string };
-            };
-          }>;
+      }>;
+    };
+    comments: {
+      __typename?: "CommentConnection";
+      totalCount: number;
+      edges: Array<{
+        __typename?: "CommentEdge";
+        node: {
+          __typename?: "Comment";
+          id: string;
+          createdAt: any;
+          content: string;
+          story: { __typename?: "Story"; id: string; title: string };
         };
-      }
-    | null
-    | undefined;
+      }>;
+    };
+  } | null;
 };
 
 export type AddCommentMutationVariables = Exact<{
@@ -709,7 +861,7 @@ export type AddCommentMutation = {
           __typename?: "Comment";
           content: string;
           id: string;
-          createdAt: string;
+          createdAt: any;
           writtenBy: {
             __typename?: "Member";
             id: string;
@@ -732,16 +884,13 @@ export type OnNewCommentSubscription = {
       node: {
         __typename?: "Comment";
         id: string;
-        createdAt: string;
+        createdAt: any;
         content: string;
         writtenBy: {
           __typename?: "Member";
           id: string;
           profileImageUrl: string;
-          user?:
-            | { __typename?: "User"; id: string; name: string }
-            | null
-            | undefined;
+          user?: { __typename?: "User"; id: string; name: string } | null;
         };
       };
     };
@@ -753,16 +902,13 @@ export type StoryCommentEdgeFragment = {
   node: {
     __typename?: "Comment";
     id: string;
-    createdAt: string;
+    createdAt: any;
     content: string;
     writtenBy: {
       __typename?: "Member";
       id: string;
       profileImageUrl: string;
-      user?:
-        | { __typename?: "User"; id: string; name: string }
-        | null
-        | undefined;
+      user?: { __typename?: "User"; id: string; name: string } | null;
     };
   };
 };
@@ -781,16 +927,13 @@ export type StoryCommentsQuery = {
       node: {
         __typename?: "Comment";
         id: string;
-        createdAt: string;
+        createdAt: any;
         content: string;
         writtenBy: {
           __typename?: "Member";
           id: string;
           profileImageUrl: string;
-          user?:
-            | { __typename?: "User"; id: string; name: string }
-            | null
-            | undefined;
+          user?: { __typename?: "User"; id: string; name: string } | null;
         };
       };
     }>;
@@ -803,43 +946,37 @@ export type StoryPageQueryVariables = Exact<{
 
 export type StoryPageQuery = {
   __typename?: "Query";
-  story?:
-    | {
-        __typename?: "Story";
-        id: string;
-        createdAt: string;
-        title: string;
-        tags: Array<string>;
-        body: string;
-        writtenBy: {
-          __typename?: "Member";
-          bio?: string | null | undefined;
-          id: string;
-          profileImageUrl: string;
-          user?:
-            | { __typename?: "User"; id: string; name: string }
-            | null
-            | undefined;
-        };
-        reactionSummary: {
-          __typename?: "ReactionSummary";
-          reactionsByType: Array<{
-            __typename?: "ReactionByType";
-            type: ReactionType;
-            totalCount: number;
-            givenByMe: boolean;
-          }>;
-        };
-        reactions: {
-          __typename?: "ReactionConnection";
-          edges: Array<{
-            __typename?: "ReactionEdge";
-            node: { __typename?: "Reaction"; createdAt: string; id: string };
-          }>;
-        };
-      }
-    | null
-    | undefined;
+  story?: {
+    __typename?: "Story";
+    id: string;
+    createdAt: any;
+    title: string;
+    tags: Array<string>;
+    body: string;
+    writtenBy: {
+      __typename?: "Member";
+      bio?: string | null;
+      id: string;
+      profileImageUrl: string;
+      user?: { __typename?: "User"; id: string; name: string } | null;
+    };
+    reactionSummary: {
+      __typename?: "ReactionSummary";
+      reactionsByType: Array<{
+        __typename?: "ReactionByType";
+        type: ReactionType;
+        totalCount: number;
+        givenByMe: boolean;
+      }>;
+    };
+    reactions: {
+      __typename?: "ReactionConnection";
+      edges: Array<{
+        __typename?: "ReactionEdge";
+        node: { __typename?: "Reaction"; createdAt: any; id: string };
+      }>;
+    };
+  } | null;
 };
 
 export type ToggleReactionMutationVariables = Exact<{
@@ -881,7 +1018,7 @@ export type TagListQuery = {
       node: {
         __typename?: "Story";
         id: string;
-        createdAt: string;
+        createdAt: any;
         title: string;
         excerpt: string;
         tags: Array<string>;
@@ -889,10 +1026,7 @@ export type TagListQuery = {
           __typename?: "Member";
           id: string;
           profileImageUrl: string;
-          user?:
-            | { __typename?: "User"; id: string; name: string }
-            | null
-            | undefined;
+          user?: { __typename?: "User"; id: string; name: string } | null;
         };
         comments: { __typename?: "CommentConnection"; totalCount: number };
         reactions: { __typename?: "ReactionConnection"; totalCount: number };
@@ -905,22 +1039,19 @@ export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
   __typename?: "Query";
-  me?:
-    | {
-        __typename?: "Member";
-        id: string;
-        profileImageUrl: string;
-        user?: { __typename?: "User"; name: string } | null | undefined;
-      }
-    | null
-    | undefined;
+  me?: {
+    __typename?: "Member";
+    id: string;
+    profileImageUrl: string;
+    user?: { __typename?: "User"; name: string } | null;
+  } | null;
 };
 
 export type BasicMemberFragment = {
   __typename?: "Member";
   id: string;
   profileImageUrl: string;
-  user?: { __typename?: "User"; id: string; name: string } | null | undefined;
+  user?: { __typename?: "User"; id: string; name: string } | null;
 };
 
 export type TeaserListFragment = {
@@ -930,7 +1061,7 @@ export type TeaserListFragment = {
     node: {
       __typename?: "Story";
       id: string;
-      createdAt: string;
+      createdAt: any;
       title: string;
       excerpt: string;
       tags: Array<string>;
@@ -938,10 +1069,7 @@ export type TeaserListFragment = {
         __typename?: "Member";
         id: string;
         profileImageUrl: string;
-        user?:
-          | { __typename?: "User"; id: string; name: string }
-          | null
-          | undefined;
+        user?: { __typename?: "User"; id: string; name: string } | null;
       };
       comments: { __typename?: "CommentConnection"; totalCount: number };
       reactions: { __typename?: "ReactionConnection"; totalCount: number };
@@ -952,7 +1080,7 @@ export type TeaserListFragment = {
 export type StoryTeaserFragment = {
   __typename?: "Story";
   id: string;
-  createdAt: string;
+  createdAt: any;
   title: string;
   excerpt: string;
   tags: Array<string>;
@@ -960,7 +1088,7 @@ export type StoryTeaserFragment = {
     __typename?: "Member";
     id: string;
     profileImageUrl: string;
-    user?: { __typename?: "User"; id: string; name: string } | null | undefined;
+    user?: { __typename?: "User"; id: string; name: string } | null;
   };
   comments: { __typename?: "CommentConnection"; totalCount: number };
   reactions: { __typename?: "ReactionConnection"; totalCount: number };
@@ -1064,7 +1192,6 @@ export function useFeedPageQuery(
     options
   );
 }
-
 export function useFeedPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     FeedPageQuery,
@@ -1077,7 +1204,6 @@ export function useFeedPageLazyQuery(
     options
   );
 }
-
 export type FeedPageQueryHookResult = ReturnType<typeof useFeedPageQuery>;
 export type FeedPageLazyQueryHookResult = ReturnType<
   typeof useFeedPageLazyQuery
@@ -1128,7 +1254,6 @@ export function useFeedSidebarQuery(
     options
   );
 }
-
 export function useFeedSidebarLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     FeedSidebarQuery,
@@ -1141,7 +1266,6 @@ export function useFeedSidebarLazyQuery(
     options
   );
 }
-
 export type FeedSidebarQueryHookResult = ReturnType<typeof useFeedSidebarQuery>;
 export type FeedSidebarLazyQueryHookResult = ReturnType<
   typeof useFeedSidebarLazyQuery
@@ -1220,7 +1344,6 @@ export function useMemberPageQuery(
     options
   );
 }
-
 export function useMemberPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     MemberPageQuery,
@@ -1233,7 +1356,6 @@ export function useMemberPageLazyQuery(
     options
   );
 }
-
 export type MemberPageQueryHookResult = ReturnType<typeof useMemberPageQuery>;
 export type MemberPageLazyQueryHookResult = ReturnType<
   typeof useMemberPageLazyQuery
@@ -1297,7 +1419,6 @@ export function useAddCommentMutation(
     options
   );
 }
-
 export type AddCommentMutationHookResult = ReturnType<
   typeof useAddCommentMutation
 >;
@@ -1357,7 +1478,6 @@ export function useOnNewCommentSubscription(
     OnNewCommentSubscriptionVariables
   >(OnNewCommentDocument, options);
 }
-
 export type OnNewCommentSubscriptionHookResult = ReturnType<
   typeof useOnNewCommentSubscription
 >;
@@ -1407,7 +1527,6 @@ export function useStoryCommentsQuery(
     options
   );
 }
-
 export function useStoryCommentsLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     StoryCommentsQuery,
@@ -1420,7 +1539,6 @@ export function useStoryCommentsLazyQuery(
     options
   );
 }
-
 export type StoryCommentsQueryHookResult = ReturnType<
   typeof useStoryCommentsQuery
 >;
@@ -1488,7 +1606,6 @@ export function useStoryPageQuery(
     options
   );
 }
-
 export function useStoryPageLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
     StoryPageQuery,
@@ -1501,7 +1618,6 @@ export function useStoryPageLazyQuery(
     options
   );
 }
-
 export type StoryPageQueryHookResult = ReturnType<typeof useStoryPageQuery>;
 export type StoryPageLazyQueryHookResult = ReturnType<
   typeof useStoryPageLazyQuery
@@ -1561,7 +1677,6 @@ export function useToggleReactionMutation(
     ToggleReactionMutationVariables
   >(ToggleReactionDocument, options);
 }
-
 export type ToggleReactionMutationHookResult = ReturnType<
   typeof useToggleReactionMutation
 >;
@@ -1614,7 +1729,6 @@ export function useTagListQuery(
     options
   );
 }
-
 export function useTagListLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>
 ) {
@@ -1624,7 +1738,6 @@ export function useTagListLazyQuery(
     options
   );
 }
-
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<
@@ -1664,14 +1777,12 @@ export function useMeQuery(
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
 }
-
 export function useMeLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
 ) {
   const options = { ...defaultOptions, ...baseOptions };
   return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
 }
-
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
