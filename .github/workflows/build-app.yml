@@ -43,3 +43,5 @@ jobs:
         run: pnpm install
       - name: Check Prettier
         run: pnpm run prettier:check
+      - name: Install dependencies
+        run: pnpm build
