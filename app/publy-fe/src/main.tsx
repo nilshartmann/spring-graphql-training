@@ -6,78 +6,30 @@ import {
   ApolloLink,
   ApolloProvider,
   createHttpLink,
-  FetchResult,
   InMemoryCache,
-  Observable,
-  Operation,
   split,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { Client, ClientOptions, createClient } from "graphql-ws";
-import { GraphQLError, print } from "graphql";
+import { createClient } from "graphql-ws";
 import {
   getMainDefinition,
   relayStylePagination,
 } from "@apollo/client/utilities";
 import { onError } from "@apollo/client/link/error";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import App from "./App";
 import "./index.css";
 
 import { graphqlApiUrl, graphqlWsApiUrl } from "./urls";
 
-class GraphQLWsWebSocketLink extends ApolloLink {
-  private client: Client;
-
-  constructor(options: ClientOptions) {
-    super();
-    this.client = createClient(options);
-  }
-
-  public request(operation: Operation): Observable<FetchResult> {
-    return new Observable((sink) => {
-      return this.client.subscribe<FetchResult>(
-        { ...operation, query: print(operation.query) },
-        {
-          next: sink.next.bind(sink),
-          complete: sink.complete.bind(sink),
-          error: (err) => {
-            if (err instanceof Error) {
-              console.error("WebSocket Error", err);
-              return sink.error(err);
-            }
-
-            if (err instanceof CloseEvent) {
-              console.error("WebSocket Closed", err);
-              return sink.error(
-                // reason will be available on clean closes
-                new Error(
-                  `Socket closed with event ${err.code} ${err.reason || ""}`
-                )
-              );
-            }
-
-            return sink.error(
-              new Error(
-                (err as GraphQLError[]).map(({ message }) => message).join(", ")
-              )
-            );
-          },
-        }
-      );
-    });
-  }
-}
-
 const httpLink = createHttpLink({
   uri: graphqlApiUrl,
 });
-
-const wsLink = new GraphQLWsWebSocketLink({
-  url: graphqlWsApiUrl,
-  connectionParams: () => {
-    return {};
-  },
-});
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: graphqlWsApiUrl,
+  })
+);
 
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
