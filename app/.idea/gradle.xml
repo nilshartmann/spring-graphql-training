@@ -14,7 +14,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/publy-backend" />
-            <option value="$PROJECT_DIR$/publy-frontend" />
+            <option value="$PROJECT_DIR$/publy-fe" />
             <option value="$PROJECT_DIR$/publy-userservice" />
           </set>
         </option>

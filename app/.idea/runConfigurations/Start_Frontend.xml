@@ -1,11 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start Frontend" type="js.build_tools.npm">
-    <package-json value="$PROJECT_DIR$/publy-frontend/package.json" />
+    <package-json value="$PROJECT_DIR$/publy-fe/package.json" />
     <command value="run" />
     <scripts>
-      <script value="start" />
+      <script value="dev" />
     </scripts>
     <node-interpreter value="project" />
+    <package-manager value="pnpm" />
     <envs />
     <method v="2" />
   </configuration>

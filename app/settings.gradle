@@ -12,5 +12,5 @@ rootProject.name = 'publy'
 
 include 'publy-userservice'
 include 'publy-backend'
-include 'publy-frontend'
+include 'publy-fe'
 
