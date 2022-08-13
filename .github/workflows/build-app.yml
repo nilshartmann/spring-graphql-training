@@ -41,7 +41,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+      - name: Run Codegen
+        run: pnpm run codegen
       - name: Check Prettier
         run: pnpm run prettier:check
-      - name: Install dependencies
+      - name: Build application
         run: pnpm build
