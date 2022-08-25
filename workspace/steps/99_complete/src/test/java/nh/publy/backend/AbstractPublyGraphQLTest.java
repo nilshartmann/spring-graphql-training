@@ -1,8 +1,6 @@
 package nh.publy.backend;
 
-import nh.publy.backend.domain.Member;
-import nh.publy.backend.domain.Story;
-import nh.publy.backend.domain.StoryRepository;
+import nh.publy.backend.domain.*;
 import nh.publy.backend.domain.user.User;
 import nh.publy.backend.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,12 @@ public class AbstractPublyGraphQLTest {
 
   @MockBean
   StoryRepository storyRepository;
+
+  @MockBean
+  PublyDomainService publyDomainService;
+
+  @MockBean
+  MemberRepository memberRepository;
 
   @MockBean
   UserService userService;

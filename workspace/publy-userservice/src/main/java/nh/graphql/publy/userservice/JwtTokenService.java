@@ -62,10 +62,6 @@ public class JwtTokenService {
     User user = Users.users().get(0);
     String userToken = createToken(user, issued.getTime(), expiry.getTime());
 
-    // ROLE_GUEST => cannot create stories
-    User guest = Users.users().stream().filter(User::isGuest).findFirst().orElseThrow(() -> new IllegalStateException("No user with guest role found"));
-    String guestToken = createToken(guest, issued.getTime(), expiry.getTime());
-
     logger.info("        ===============================================================\n" +
         "        NEVER EXPIRING JWT TOKENS\n" +
         "        ===============================================================\n" +
@@ -73,17 +69,9 @@ public class JwtTokenService {
         "        login: '{}'\n" +
         "\n" +
         "        {\"Authorization\": \"Bearer {}\"}\n" +
-        "\n" +
-        "        ROLE_GUEST (cannot create stories, but leave comments and reactions)\n" +
-        "        login: '{}'\n" +
-        "         \n" +
-        "        {\"Authorization\": \"Bearer {}\"}\n" +
-        "\n" +
         "        ===============================================================\n",
       user.getUsername(),
-      userToken,
-      guest.getUsername(),
-      guestToken);
+      userToken);
 
   }
 

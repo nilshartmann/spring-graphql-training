@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a33a630c-bf81-4842-b310-9e6a4253fc9c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/PublyTracingInstrumentation.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/PublyTracingInstrumentation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/steps/00_initial/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/steps/00_initial/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +76,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.PublyApplication (1)">
+  <component name="RunManager" selected="Spring Boot.UserserviceApplication (1)">
     <configuration name="2022-09-06-graphql-fullstack.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/spring-graphql-training/slides/2022-09-06-graphql-fullstack.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -108,8 +106,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserserviceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="spring-graphql-training.app.publy-userservice.main" />
+    <configuration name="UserserviceApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="spring-graphql-training.workspace.publy-userservice.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="nh.graphql.publy.userservice.UserserviceApplication" />
       <extension name="coverage">
         <pattern>
@@ -133,11 +131,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.UserserviceApplication (1)" />
         <item itemvalue="Spring Boot.PublyApplication (1)" />
         <item itemvalue="npm.start" />
         <item itemvalue="JavaScript Debug.2022-09-06-graphql-fullstack.html" />
         <item itemvalue="Spring Boot.PublyApplication" />
-        <item itemvalue="Spring Boot.UserserviceApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -150,7 +148,7 @@
       <option name="presentableId" value="Default" />
       <updated>1661426559613</updated>
       <workItem from="1661426561725" duration="1727000" />
-      <workItem from="1661434907477" duration="8299000" />
+      <workItem from="1661434907477" duration="8819000" />
     </task>
     <servers />
   </component>
