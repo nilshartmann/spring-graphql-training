@@ -37,15 +37,26 @@ aufmachen und Queries und Mutations ausführen.
 
 **Schritt 5: Frontend starten (optional)**
 
-Achtung! Port 3000 darf nicht belegt sein:
+Achtung! Port 3000 darf nicht belegt sein.
 
+Voraussetzung: Der Package-Manager [pnpm](https://pnpm.io/) (Version 7.9.5) ist installiert.
+ - Installation von pnpm siehe: https://pnpm.io/installation
+ - Bei mir habe ich pnpm wie folgt installiert:
+   ```bash
+   corepack enable
+   corepack prepare pnpm@7.9.5 --activate
+   ```
+- (Möglicherweise funktioniert das Starten auch mit yarn oder npm, aber ich teste mit pnpm).
+
+
+Installieren der Packages und starten des Frontends:
 ```bash
 
 cd publy-frontend
 
-yarn install
+pnpm install
 
-yarn start
+pnpm start
 ```
 
 Du kannst nun das Frontend über `http://localhost:3000` in deinem Browser öffnen.
