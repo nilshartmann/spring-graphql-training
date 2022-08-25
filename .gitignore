@@ -1,0 +1,11 @@
+# Ignore Gradle project-specific cache directory
+.gradle/
+
+.h2/
+
+# Ignore Gradle build output directory
+build/
+
+# GitPod Time Tracing
+time.txt
+time-backend.txt
