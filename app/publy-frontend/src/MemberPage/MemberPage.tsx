@@ -25,7 +25,10 @@ function ProfileHeader({ member }: ProfileHeaderProps) {
     <div className={"bg-orange-50 rounded-md border border-orange-100"}>
       <div className={"flex flex-col items-center p-8"}>
         <div className={"w-1/6"}>
-          <img src={member.profileImageUrl} />
+          <img
+            alt={"Profile of " + member.user?.name}
+            src={member.profileImageUrl}
+          />
         </div>
         <h2 className={"text-2xl text-orange-500 font-bold font-metro mt-2"}>
           {member.user?.name}

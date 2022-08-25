@@ -1,5 +1,3 @@
-declare var process: any;
-
 const backendHost = window.__publy__backend_host__.replace(
   "__BACKEND__",
   "http://localhost:8080"

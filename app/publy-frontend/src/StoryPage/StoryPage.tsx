@@ -32,7 +32,10 @@ function MemberCard({ member }: MemberCardProps) {
       <div className={"h-4 bg-rose-500 border-rose-500 border-1"}>&nbsp;</div>
       <div className={"flex justify-center  mt-2"}>
         <div className={"w-1/6 mr-4"}>
-          <img src={member.profileImageUrl} />
+          <img
+            alt={"Profile image of " + member.user?.name}
+            src={member.profileImageUrl}
+          />
         </div>
         <CardHeader to={`/u/${member.id}`} title={member.user?.name || "na"} />
       </div>
@@ -92,7 +95,10 @@ function Author({ story }: SingleStoryProps) {
   return (
     <Stack orientation={"horizontal"}>
       <div className={"w-1/12"}>
-        <img src={story.writtenBy.profileImageUrl} />
+        <img
+          alt={"Profile image of " + story.writtenBy.user?.name}
+          src={story.writtenBy.profileImageUrl}
+        />
       </div>
       <Stack>
         <div>
