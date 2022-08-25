@@ -18,7 +18,7 @@
 
 Im `publy`-Verzeichnis des Repositories:
 
-- `docker-compose -f docker-compose -f docker-compose.yml up -d`
+- `docker-compose up -d`
 
 **Schritt 3: Userservice starten**
 
