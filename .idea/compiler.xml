@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11">
-      <module name="spring-graphql-training.app.publy-backend" target="17" />
-      <module name="spring-graphql-training.app.publy-backend.main" target="17" />
-      <module name="spring-graphql-training.app.publy-backend.test" target="17" />
-      <module name="spring-graphql-training.app.publy-userservice" target="17" />
-      <module name="spring-graphql-training.app.publy-userservice.main" target="17" />
-      <module name="spring-graphql-training.app.publy-userservice.test" target="17" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>

@@ -80,22 +80,14 @@ code span.line-number {
   box-shadow: 0 0 0 0;
 }
 
-.reveal a {
-  letter-spacing: 1.1;
-}
-
-
-
-
-/* 
+/*
  * Aufzaehlungen linksbuendig auf einer Slide.
- * 
+ *
  * Einschalten mit: <!-- .slide: class="left" -->
  */
 .reveal section.left ul {
   width: 100%;
 }
-
 
 .reveal li {
   margin-bottom: 10px;
@@ -105,12 +97,6 @@ code span.line-number {
   font-size: 90%;
   margin-bottom: 10px;
 }
-
-.reveal ul.very-small > li {
-  font-size: 80%;
-  margin-bottom: 10px;
-}
-
 
 .reveal li > ul {
   margin-top: 10px;
@@ -151,8 +137,8 @@ li > pre.code-wrapper > code {
   height: 650px;
 }
 
-/* "choice-of-horror": for choices where you can only lose all the time: 
-   - show radio buttons selections when hovered/checked as 😱, when not hovered as "?" 
+/* "choice-of-horror": for choices where you can only lose all the time:
+   - show radio buttons selections when hovered/checked as 😱, when not hovered as "?"
 */
 .reveal .choice-of-horror label {
   display: block;
@@ -207,14 +193,6 @@ body.title .transparent-bg {
   padding: 5px 10px;
 }
 
-body.title a.Link {
-  font-family: 'Courier New', Courier, monospace;  
-  font-weight: bold;
-  font-size: 4rem;
-  padding: 0.5rem;
-  background-color: rgba(189, 215, 238, 0.5);
-}
-
 .language-graphql .hljs-punctuation {
   color: #268bd2;
 }
@@ -226,18 +204,18 @@ body.title a.Link {
 
 li.demo:before {
   content: "👨‍💻 ";
-} 
+}
 
 li.demo li.demo:before {
   content: none;
-} 
+}
 
 
 li.note {
   margin-top: 5px;
   font-weight: bold;
   list-style-type: none;
-  
+
 }
 
 li.note:before {

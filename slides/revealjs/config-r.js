@@ -19,6 +19,7 @@ Reveal.initialize({
   history: true,
   center: false,
 
+  // no slide transitions by default
   transition: "none",
 
   // i need all space i can get
@@ -102,13 +103,6 @@ Reveal.initialize({
   document.querySelectorAll("li.small").forEach((n) => {
     n.classList.remove("small");
     n.parentNode.classList.add("small");
-    n.remove();
-  });
-
-  // very-small lists
-  document.querySelectorAll("li.very-small").forEach((n) => {
-    n.classList.remove("very-small");
-    n.parentNode.classList.add("very-small");
     n.remove();
   });
 });
