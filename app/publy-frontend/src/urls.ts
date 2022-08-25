@@ -1,14 +1,10 @@
 declare var process: any;
 
-const _backendHost = window.__publy__backend_host__ || "http://localhost:8080";
-const _userserviceHost =
-  window.__publy__userservice_host__ || "http://localhost:8081";
-
-const backendHost = _backendHost.replace(
+const backendHost = window.__publy__backend_host__.replace(
   "__BACKEND__",
   "http://localhost:8080"
 );
-const userserviceHost = _userserviceHost.replace(
+const userserviceHost = window.__publy__userservice_host__.replace(
   "__USERSERVICE__",
   "http://localhost:8081"
 );

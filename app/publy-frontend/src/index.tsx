@@ -1,20 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client"
+
 import { BrowserRouter } from "react-router-dom";
-import {
-  ApolloClient,
-  ApolloLink,
-  ApolloProvider,
-  createHttpLink,
-  InMemoryCache,
-  split,
-} from "@apollo/client";
+import { ApolloClient, ApolloLink, ApolloProvider, createHttpLink, InMemoryCache, split } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { createClient } from "graphql-ws";
-import {
-  getMainDefinition,
-  relayStylePagination,
-} from "@apollo/client/utilities";
+import { getMainDefinition, relayStylePagination } from "@apollo/client/utilities";
 import { onError } from "@apollo/client/link/error";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import App from "./App";
@@ -23,11 +14,11 @@ import "./index.css";
 import { graphqlApiUrl, graphqlWsApiUrl } from "./urls";
 
 const httpLink = createHttpLink({
-  uri: graphqlApiUrl,
+  uri: graphqlApiUrl
 });
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: graphqlWsApiUrl,
+    url: graphqlWsApiUrl
   })
 );
 
@@ -69,26 +60,27 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: `Bearer ${token}`,
-    },
+      Authorization: `Bearer ${token}`
+    }
   };
 });
 
 const client = new ApolloClient({
-  link: ApolloLink.from([errorLink, authLink, remoteLink]),
+  link:  ApolloLink.from([errorLink, authLink, remoteLink]),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
           //https://www.apollographql.com/docs/react/pagination/cursor-based/#relay-style-cursor-pagination
-          stories: relayStylePagination(),
-        },
-      },
-    },
-  }),
+          stories: relayStylePagination()
+        }
+      }
+    }
+  })
 });
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+
+createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
       <ApolloProvider client={client}>
