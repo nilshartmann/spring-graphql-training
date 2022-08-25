@@ -1,0 +1,9 @@
+rootProject.name = 'spring-graphql-training'
+
+
+include 'app:publy-userservice'
+include 'app:publy-backend'
+include 'app:publy-frontend'
+
+include 'workspace:publy-userservice'
+include 'workspace:publy-backend'
