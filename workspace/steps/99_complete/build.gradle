@@ -1,5 +1,5 @@
 plugins {
-  id 'org.springframework.boot' version '2.7.0-M3'
+  id 'org.springframework.boot' version '2.7.3'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
 }
@@ -10,11 +10,6 @@ sourceCompatibility = '11'
 
 repositories {
   mavenCentral()
-  maven { url 'https://repo.spring.io/milestone' }
-}
-
-ext {
-  set('testcontainersVersion', "1.16.2")
 }
 
 dependencies {
@@ -30,14 +25,10 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
-  runtimeOnly 'org.postgresql:postgresql'
+  runtimeOnly 'com.h2database:h2'
 
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.graphql:spring-graphql-test'
-
-  testImplementation 'org.testcontainers:junit-jupiter'
-  testImplementation 'org.testcontainers:postgresql'
-
 
   implementation 'org.commonmark:commonmark:0.18.1'
 
@@ -50,12 +41,6 @@ dependencies {
   runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
   runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-}
-
-dependencyManagement {
-  imports {
-    mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-  }
 }
 
 test {

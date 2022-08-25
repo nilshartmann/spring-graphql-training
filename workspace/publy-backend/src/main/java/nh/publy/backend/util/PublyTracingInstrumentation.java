@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * TracingInstrumentation, very similiar to original {@link TracingInstrumentation}
  * but writes some other informations that I need for for demonstration purposes.
  */
-@Component
+//@Component
 public class PublyTracingInstrumentation extends TracingInstrumentation {
   @Override
   public InstrumentationState createState() {
@@ -26,28 +26,11 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
       private final Map<String, Object> parseMap = new LinkedHashMap<>();
       private final Map<String, Object> validationMap = new LinkedHashMap<>();
       private final long startRequestMillis = System.currentTimeMillis();
-      private boolean trace = false;
-      private boolean traceAll = false;
       private final AtomicInteger counter = new AtomicInteger();
 
-      public TracingContext beginField(DataFetchingEnvironment dataFetchingEnvironment, boolean trivialDataFetcher) {
-        if (dataFetchingEnvironment.getField().getDirectives("trace").size() > 0) {
-          trace = true;
-        }
-
-        if (dataFetchingEnvironment.getField().getDirectives("traceAll").size() > 0) {
-          trace = true;
-          traceAll = true;
-        }
-
-        if (!trace) {
-          return () -> {
-          };
-        }
-
-
+      public TracingContext beginField(DataFetchingEnvironment dataFetchingEnvironment, boolean isTrivialDataFetcher) {
         long startFieldFetch = System.currentTimeMillis();
-        final int fetcherNo = trivialDataFetcher ? -1 : counter.incrementAndGet();
+        final int fetcherNo = isTrivialDataFetcher ? -1 : counter.incrementAndGet();
         return () -> {
           long now = System.currentTimeMillis();
           long duration = now - startFieldFetch;
@@ -59,33 +42,17 @@ public class PublyTracingInstrumentation extends TracingInstrumentation {
 
           String source = GraphQLUtils.getFieldContext(dataFetchingEnvironment);
 
-          if (!traceAll) {
-            if (!trivialDataFetcher) {
-              // "structured" format: only trace non-trivial datafetchers
-              fetchMap.put("fetcher_start_no", fetcherNo);
-              fetchMap.put("field", fieldName);
-              if (source != null) {
-                fetchMap.put("description", source);
-              }
-              fetchMap.put("startedAt_ms", startOffset);
-              fetchMap.put("took_ms", duration);
-              fetchMap.put("thread", Thread.currentThread().getName());
-            }
-          } else {
-            // "Text"-Format: Trace in more human readable form,
-            // also include trivial fetcher,
-            // so that we can have a form of "logging" in the extensions field,
-            // to see what's going on at-all
-
-            String msg = String.format("fetched by %s datafetcher in %sms at %sms on thread %s",
-              trivialDataFetcher ? "trivial" : "CUSTOM",
-              duration,
-              startOffset,
-              Thread.currentThread().getName());
-            fetchMap.put(fieldName, msg);
+          if (!isTrivialDataFetcher) {
+            // "structured" format: only trace non-trivial datafetchers
+            fetchMap.put("fetcher_start_no", fetcherNo);
+            fetchMap.put("field", fieldName);
             if (source != null) {
-              fetchMap.put("source", source);
+              fetchMap.put("description", source);
             }
+            fetchMap.put("startedAt_ms", startOffset);
+            fetchMap.put("took_ms", duration);
+            fetchMap.put("thread", Thread.currentThread().getName());
+
           }
 
           if (!fetchMap.isEmpty()) {

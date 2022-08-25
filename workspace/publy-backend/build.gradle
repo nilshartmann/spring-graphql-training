@@ -1,5 +1,5 @@
 plugins {
-  id 'org.springframework.boot' version '2.7.0'
+  id 'org.springframework.boot' version '2.7.3'
   id 'io.spring.dependency-management' version '1.0.11.RELEASE'
   id 'java'
 }
@@ -10,11 +10,6 @@ sourceCompatibility = '11'
 
 repositories {
   mavenCentral()
-  maven { url 'https://repo.spring.io/milestone' }
-}
-
-ext {
-  set('testcontainersVersion', "1.16.2")
 }
 
 dependencies {
@@ -46,12 +41,6 @@ dependencies {
   runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
   runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-}
-
-dependencyManagement {
-  imports {
-    mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-  }
 }
 
 test {

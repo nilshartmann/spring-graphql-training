@@ -5,133 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a33a630c-bf81-4842-b310-9e6a4253fc9c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/publy-frontend/src/create-apollo-client.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slides/2022-09-06-graphql-fullstack.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slides/revealjs/config-r.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/slides/revealjs/styles-r.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/.npmrc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/.prettierignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/.prettierrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/codegen.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/patch-index-html.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/pnpm-lock.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/postcss.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/public/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/public/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/public/logo192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/public/logo512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/public/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/public/robots.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/App.test.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/App.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/FeedPage/FeedPage.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/FeedPage/FeedPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/FeedPage/FeedSidebar.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/LoginPage/LoginPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/MemberPage/MemberPage.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/MemberPage/MemberPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/NotFoundPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/AddComment.mutation.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/NewComment.subscription.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/StoryCommentEdge.fragment.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/StoryComments.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/StoryPage.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/StoryPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/StoryPage/ToggleReaction.mutation.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/TagListPage/TagList.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/TagListPage/TagListPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Button.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/ButtonBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Card.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Heading.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Input.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Label.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Link.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/LoadingIndicator.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Markdown.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Me.query.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Nav.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/PageHeader.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/PageLayout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Paginator.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Section.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Select.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Stack.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/StoryTeaser.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/StoryTeaserList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/Table.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/components/TagLine.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/create-apollo-client.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/README.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/generator_config.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-bold-demo.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-bold-webfont.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-bold-webfont.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-extrabold-demo.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-extrabold-webfont.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-extrabold-webfont.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-regular-demo.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-regular-webfont.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/metropolis-regular-webfont.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-600.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-600.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-600.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-600.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-600.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-700.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-700.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-700.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-700.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-700.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-italic.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-italic.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-italic.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-italic.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-italic.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-regular.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-regular.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-regular.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/open-sans-v17-latin/open-sans-v17-latin-regular.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/specimen_files/grid_12-825-55-15.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/specimen_files/specimen_stylesheet.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-700.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-700.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-700.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-700.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-700.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-regular.eot" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-regular.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-regular.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/fonts/work-sans-v5-latin/work-sans-v5-latin-regular.woff2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/generated/graphql.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/global.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/react-app-env.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/reportWebVitals.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/setupTests.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/shared/AuthContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/shared/Member.fragment.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/shared/StoryTeaser.fragment.graphql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/shared/useMe.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/urls.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/src/utils/formatDateTime.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/tailwind.config.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workspace/publy-frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/publy-frontend/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/publy-frontend/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slides/revealjs/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/slides/revealjs/config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/slides/revealjs/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/slides/revealjs/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/PublyTracingInstrumentation.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/PublyTracingInstrumentation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/steps/00_initial/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/steps/00_initial/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -177,7 +54,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/nils/develop/spring-graphql-training/workspace/publy-frontend/src",
+    "last_opened_file_path": "/Users/nils/develop/spring-graphql-training",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
@@ -188,6 +65,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/workspace/publy-frontend/src" />
       <recent name="$PROJECT_DIR$/workspace/publy-frontend" />
       <recent name="$PROJECT_DIR$/slides" />
@@ -200,9 +78,22 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="npm.start">
+  <component name="RunManager" selected="Spring Boot.PublyApplication (1)">
     <configuration name="2022-09-06-graphql-fullstack.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/spring-graphql-training/slides/2022-09-06-graphql-fullstack.html" useBuiltInWebServerPort="true">
       <method v="2" />
+    </configuration>
+    <configuration name="PublyApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="spring-graphql-training.workspace.publy-backend.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="nh.publy.backend.PublyApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="nh.publy.backend.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="PublyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="spring-graphql-training.app.publy-backend.main" />
@@ -242,6 +133,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.PublyApplication (1)" />
         <item itemvalue="npm.start" />
         <item itemvalue="JavaScript Debug.2022-09-06-graphql-fullstack.html" />
         <item itemvalue="Spring Boot.PublyApplication" />
@@ -258,7 +150,7 @@
       <option name="presentableId" value="Default" />
       <updated>1661426559613</updated>
       <workItem from="1661426561725" duration="1727000" />
-      <workItem from="1661434907477" duration="6728000" />
+      <workItem from="1661434907477" duration="8299000" />
     </task>
     <servers />
   </component>
