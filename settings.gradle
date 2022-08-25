@@ -7,3 +7,4 @@ include 'app:publy-frontend'
 
 include 'workspace:publy-userservice'
 include 'workspace:publy-backend'
+include 'workspace:publy-frontend'

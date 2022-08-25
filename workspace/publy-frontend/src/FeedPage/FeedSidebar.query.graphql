@@ -1,0 +1,12 @@
+query FeedSidebar {
+  topTags {
+    tagName
+    stories {
+      id
+      title
+      comments {
+        totalCount
+      }
+    }
+  }
+}

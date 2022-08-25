@@ -1,0 +1,25 @@
+fragment TeaserList on StoryConnection {
+  edges {
+    node {
+      ...StoryTeaser
+    }
+  }
+}
+fragment StoryTeaser on Story {
+  id
+  createdAt
+  title
+  excerpt
+  writtenBy {
+    ...BasicMember
+  }
+
+  comments {
+    totalCount
+  }
+  reactions {
+    totalCount
+  }
+
+  tags
+}

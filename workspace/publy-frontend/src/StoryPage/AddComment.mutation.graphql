@@ -1,0 +1,18 @@
+mutation AddComment($storyId: ID!, $content: String!) {
+  result: addComment(input: { content: $content, storyId: $storyId }) {
+    ... on AddCommentSuccessPayload {
+      newComment {
+        content
+        id
+        createdAt
+        writtenBy {
+          id
+          profileImageUrl
+        }
+      }
+    }
+    ... on AddCommentFailurePayload {
+      msg
+    }
+  }
+}

@@ -1,0 +1,10 @@
+fragment StoryCommentEdge on CommentEdge {
+  node {
+    id
+    writtenBy {
+      ...BasicMember
+    }
+    createdAt
+    content
+  }
+}

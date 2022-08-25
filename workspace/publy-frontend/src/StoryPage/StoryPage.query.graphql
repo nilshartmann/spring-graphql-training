@@ -1,0 +1,32 @@
+query StoryPage($storyId: ID!) {
+  story(id: $storyId) {
+    id
+    createdAt
+    title
+    tags
+    body
+
+    writtenBy {
+      ...BasicMember
+
+      bio
+    }
+
+    reactionSummary {
+      reactionsByType {
+        type
+        totalCount
+        givenByMe
+      }
+    }
+
+    reactions(first: 10) {
+      edges {
+        node {
+          createdAt
+          id
+        }
+      }
+    }
+  }
+}

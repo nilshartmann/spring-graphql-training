@@ -1,0 +1,14 @@
+query TagList($tagName: String!) {
+  stories(
+    first: 10
+    condition: { field: tag, value: $tagName }
+    orderBy: { field: createdAt, direction: desc }
+  ) {
+    totalCount
+    edges {
+      node {
+        ...StoryTeaser
+      }
+    }
+  }
+}

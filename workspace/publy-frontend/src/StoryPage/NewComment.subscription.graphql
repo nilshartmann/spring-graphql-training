@@ -1,0 +1,19 @@
+subscription OnNewComment($storyId: ID!) {
+  onNewComment(storyId: $storyId) {
+    newCommentEdge {
+      node {
+        id
+        writtenBy {
+          id
+          user {
+            id
+            name
+          }
+          profileImageUrl
+        }
+        createdAt
+        content
+      }
+    }
+  }
+}
