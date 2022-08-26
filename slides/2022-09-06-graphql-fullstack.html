@@ -992,8 +992,7 @@ _Implementiere zwei Handler-Funktionen_
 * Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
   * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
 * Folgende Queries sollten danach funktionieren:
-
-<pre class="fragment"><code class="graphql">
+* ```graphql
   query {
     stories {
       id title body
@@ -1003,9 +1002,8 @@ _Implementiere zwei Handler-Funktionen_
       }
     }
   }
-</code></pre>
-
-<pre class="fragment"><code class="graphql">
+  ```
+* ```graphql
   query {
     story(storyId: 1) {
       id title body
@@ -1015,7 +1013,7 @@ _Implementiere zwei Handler-Funktionen_
       }
     }
   }
-</code></pre>
+  ```
 
 * Eine mögliche Lösung findest Du in `steps/10_handler_function`
 
@@ -1092,13 +1090,6 @@ _Implementiere zwei Handler-Funktionen_
 
 
 ---
-The default GraphQlSource builder enables support for a
-            DataFetcher to return `Mono` or `Flux` which adapts those to a `CompletableFuture` where Flux values are
-            aggregated and turned into a List, unless the request is a GraphQL subscription request,
-            in which case the return value remains a Reactive Streams Publisher for streaming GraphQL responses.
-            "https://docs.spring.io/spring-graphql/docs/current/reference/html/#execution-reactive-datafetcher"
-
----
 
 ### Asynchrone Handler-Funktionen
 
@@ -1107,7 +1098,7 @@ The default GraphQlSource builder enables support for a
   * `Flowable`-Objekte aus rxjava können mit `Flux.from` bzw. `Mono.from` konvertiert werden
 * Dann werden mehrere Handler-Funktionen parallel ausgeführt
 
-```java fragment  
+* ```java fragment
   @Service
   public class DomainService {
     @Async
@@ -1125,7 +1116,7 @@ The default GraphQlSource builder enables support for a
       return domainService.determineExcerpt(story, maxLength); // asynchron bzw. reaktiv
     }
   }
-```
+  ```
 
 ---
 
