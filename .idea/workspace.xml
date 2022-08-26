@@ -5,8 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a33a630c-bf81-4842-b310-9e6a4253fc9c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/prettier.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/publy-frontend/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/publy-frontend/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/OnNewCommentEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/OnNewCommentEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/PublyDomainService.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/PublyDomainService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoCommentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoCommentGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoNumberPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoNumberPublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/test/java/nh/publy/backend/AbstractPublyGraphQLTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/test/java/nh/publy/backend/AbstractPublyGraphQLTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +38,13 @@
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -56,8 +72,9 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
-    "settings.editor.selected.configurable": "editing.templates",
-    "spring.configuration.checksum": "5a927a35f74effacfe266553a9934cec",
+    "prettierjs.PrettierConfiguration.Package": "/Users/nils/develop/spring-graphql-training/app/publy-frontend/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "spring.configuration.checksum": "4f06c3d0a3f54fbda1f60d0a6a24d32d",
     "ts.external.directory.path": "/Users/nils/develop/spring-graphql-training/app/publy-frontend/node_modules/typescript/lib"
   }
 }]]></component>
@@ -76,25 +93,35 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserserviceApplication (1)">
+  <component name="RunManager" selected="Spring Boot.PublyApplication (1)">
+    <configuration name="PublyGraphQLTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":workspace:publy-backend:test" />
+            <option value="--tests" />
+            <option value="&quot;nh.publy.backend.PublyGraphQLTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="2022-09-06-graphql-fullstack.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/spring-graphql-training/slides/2022-09-06-graphql-fullstack.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <configuration name="PublyApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="spring-graphql-training.workspace.publy-backend.main" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="nh.publy.backend.PublyApplication" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="nh.publy.backend.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PublyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="spring-graphql-training.app.publy-backend.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="nh.publy.backend.PublyApplication" />
       <extension name="coverage">
         <pattern>
@@ -119,6 +146,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UserserviceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="spring-graphql-training.app.publy-userservice.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="nh.graphql.publy.userservice.UserserviceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/app/publy-frontend/package.json" />
       <command value="run" />
@@ -131,11 +165,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.UserserviceApplication (1)" />
+        <item itemvalue="Gradle.PublyGraphQLTest" />
         <item itemvalue="Spring Boot.PublyApplication (1)" />
+        <item itemvalue="Spring Boot.UserserviceApplication (1)" />
         <item itemvalue="npm.start" />
         <item itemvalue="JavaScript Debug.2022-09-06-graphql-fullstack.html" />
-        <item itemvalue="Spring Boot.PublyApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -149,6 +183,7 @@
       <updated>1661426559613</updated>
       <workItem from="1661426561725" duration="1727000" />
       <workItem from="1661434907477" duration="8819000" />
+      <workItem from="1661497801076" duration="30608000" />
     </task>
     <servers />
   </component>
@@ -165,5 +200,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
