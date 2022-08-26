@@ -1287,7 +1287,7 @@ The default GraphQlSource builder enables support for a
   ```
 ---
 
-### Übung: addComment Mutation implementieren 
+### Übung: addComment Mutation implementieren
 #### Teil 1: Schema erweitern
 * Ergänze das Schema um den `Comment`-Type und die `addComment` Mutation
   * `Comment`-Type soll die Felder haben: `id` (`ID`), `story`, `member` und `content` (`String`)
@@ -1327,7 +1327,58 @@ The default GraphQlSource builder enables support for a
 
 
 * Eine mögliche Lösung findest Du in `steps/17_mutations`
+---
+### Subscriptions
 
+* Subscriptions liefern einen Strom von Daten
+* Eine Subscription kann Argumente entgegennehmen, wie Query und Mutation auch
+* Der Rückgabewert in Java muss ein [Reactive Streams](https://www.reactive-streams.org/) `Publisher`-Objekt sein:
+  * `Flux`- (oder `Mono`)-Objekt aus [Project Reactor](https://projectreactor.io/) (häufig in Spring verwendet)
+  * `Flowable` aus [RxJava](https://github.com/ReactiveX/RxJava)
+---
+
+### Interaktiv: Eine Subscription
+* <!-- .element: class="demo" --> onNewNumber liefert Zahlen zurück
+  * <!-- .element: class="demo" --> Wie sieht das Schema aus?
+  * <!-- .element: class="demo" --> Wie können wir die Zahlen filtern, so dass z.B. nur gerade oder ungerade Zahlen kommen?
+---
+### Eine Subscription für neue Kommentare
+<!-- .slide: class="left" -->
+* ```graphql
+  type OnNewCommentEvent {
+    newComment: Comment!
+  }
+
+  type Subscription {
+    onNewComment(storyId: ID!): OnNewCommentEvent!
+  }
+  ```
+
+---
+
+### Übung: Eine Subscription für neue Kommentare
+#### Baue eine Subscription, die ein `OnNewCommentEvent` mit einem neuen Kommentar für   eine ausgewählte Story zurückliefert
+* Erweiter das Schema:
+  * Die Subscription soll die `storyId` als Argument haben
+  * Das `OnNewCommentEvent` soll ein Feld `newComment` mit dem neuen Kommentar (`Comment`) haben
+* Implementiere die `SubscriptionMapping`-Funktion
+  * Am `PublyDomainService` gibt es eine Methode, `getOnNewCommentEventPublisher`, die ein `Flowable`
+            zurückliefert, dass neue Kommentare publiziert
+* Um zu testen, kannst Du den `DemoCommentGenerator` verwenden
+  * Der erzeugt jede Sekunde einen neuen Kommentar für die Story `1`
+  * Einschalten mit `publy.dummyContentGenerator.enable-auto=true` in der `application.properties`-Datei
+* Danach sollte folgende Subscription funktionieren
+* ```graphql
+  subscription {
+    onNewComment(storyId:1) {
+      newComment {
+        id content
+        story { id title }
+      }
+    }
+  }
+```
+* Mögliche Lösung in `steps/18_subscriptions`
 ---
 
 ## Optimierungen

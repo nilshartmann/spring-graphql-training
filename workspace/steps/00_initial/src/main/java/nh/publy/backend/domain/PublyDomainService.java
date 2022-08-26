@@ -1,12 +1,19 @@
 package nh.publy.backend.domain;
 
+import io.reactivex.rxjava3.core.Flowable;
 import nh.publy.backend.domain.user.UserService;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
+import reactor.util.concurrent.Queues;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,6 +29,8 @@ public class PublyDomainService {
   private final StoryRepository storyRepository;
   private final ReactionRepository reactionRepository;
   private final UserService userService;
+  private final Sinks.Many<OnNewCommentEvent> sink;
+
 
   public PublyDomainService(ApplicationEventPublisher applicationEventPublisher, MemberRepository memberRepository, CommentRepository commentRepository, StoryRepository storyRepository, ReactionRepository reactionRepository, UserService userService) {
     this.applicationEventPublisher = applicationEventPublisher;
@@ -30,6 +39,10 @@ public class PublyDomainService {
     this.storyRepository = storyRepository;
     this.reactionRepository = reactionRepository;
     this.userService = userService;
+
+    this.sink = Sinks.many()
+      .multicast()
+      .onBackpressureBuffer(Queues.SMALL_BUFFER_SIZE, false);
   }
 
   @Transactional
@@ -118,6 +131,26 @@ public class PublyDomainService {
     return userService.getCurrentUser()
       .map(user -> memberRepository.getByUserId(user.getId()))
       .orElseThrow();
+  }
+
+  @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void onNewComment(CommentAddedEvent event) {
+    log.trace("onNewComment received event for comment {} and story {}, currentSubscriberCount {}",
+      event.getCommentId(),
+      event.getStoryId(),
+      this.sink.currentSubscriberCount()
+    );
+
+    this.sink.emitNext(new OnNewCommentEvent(
+      commentRepository,
+      event.getStoryId(),
+      event.getCommentId()
+    ), Sinks.EmitFailureHandler.FAIL_FAST);
+  }
+
+  public Flowable<OnNewCommentEvent> getOnNewCommentEventPublisher() {
+    return Flowable.fromPublisher(this.sink.asFlux());
   }
 
 }
