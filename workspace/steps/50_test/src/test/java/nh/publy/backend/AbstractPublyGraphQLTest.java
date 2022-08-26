@@ -1,8 +1,6 @@
 package nh.publy.backend;
 
-import nh.publy.backend.domain.Member;
-import nh.publy.backend.domain.Story;
-import nh.publy.backend.domain.StoryRepository;
+import nh.publy.backend.domain.*;
 import nh.publy.backend.domain.user.User;
 import nh.publy.backend.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +22,20 @@ public class AbstractPublyGraphQLTest {
   StoryRepository storyRepository;
 
   @MockBean
+  PublyDomainService publyDomainService;
+
+  @MockBean
+  MemberRepository memberRepository;
+
+  @MockBean
   UserService userService;
 
   // ---------- Some sample data you can use in your own test (or create your own) -----------------------------------
 
   final Member member = new Member(1L, "U1", "avatar.png");
   final User user = new User("U1", "susi", "Susi Mueller", "susi@example.com" );
-  final Story story1 = new Story(1L, member, "A great Story #1", new String[]{"graphql"}, "Lorem ipsum");
-  final Story story2 = new Story(2L, member, "A second great story", new String[]{"graphql"}, "Lirum larum loeffelstiel");
+  final Story story1 = new Story(1L, member, "A great Story #1", "Lorem ipsum");
+  final Story story2 = new Story(2L, member, "A second great story", "Lirum larum loeffelstiel");
 
   // ---------- Some mock repository configs your can use (or setup your own) ----------------------------------------
   void given_storyOneIsReturned() {

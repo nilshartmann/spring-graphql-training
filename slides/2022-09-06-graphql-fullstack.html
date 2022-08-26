@@ -1824,30 +1824,30 @@ The default GraphQlSource builder enables support for a
   * Mit JSON-Path ausdrücken kann auf Teile des Ergebnisses zugegriffen werden
   * Die Teile können in unterschiedliche Formate konvertiert werden
 
-```java fragment
+* ```java fragment
 
-@GraphQlTest
-public class PublyGraphQLControllerTest {
+  @GraphQlTest
+  public class PublyGraphQLControllerTest {
 
-  // ausgelassen: Mocks konfigurieren, z.B. für Repositories mit @MockBean
+    // ausgelassen: Mocks konfigurieren, z.B. für Repositories mit @MockBean
 
-  @Autowired
-  GraphQlTester graphQlTester;
+    @Autowired
+    GraphQlTester graphQlTester;
 
-  private final String query = "query { ping }";
+    private final String query = "query { ping }";
 
-  @Test
-  void pingReturnsPong() {
-    // Query ausführen
-    GraphQlTester.Response response = graphQlTester.document(query)
-      .execute();
+    @Test
+    void pingReturnsPong() {
+      // Query ausführen
+      GraphQlTester.Response response = graphQlTester.document(query)
+        .execute();
 
-    // Ergebnis validieren
-    response
-      .path("ping").entity(String.class).isEqualTo("pong");
+      // Ergebnis validieren
+      response
+        .path("ping").entity(String.class).isEqualTo("pong");
 
-  }
-```
+    }
+  ```
 
 ---
 
@@ -1856,16 +1856,16 @@ public class PublyGraphQLControllerTest {
 * Der Query kann entweder direkt als String übergeben werden (wie gesehen)
 * oder in einer Datei abgelegt werden (`xyz.graphql`), die im Klassenpfad sein muss
 
-```fragment java
-@Test
-void pingReturnsPong() {
+* ```java
+  @Test
+  void pingReturnsPong() {
 
-  graphQlTester.document("query { ping } "); // ...
+    graphQlTester.document("query { ping } "); // ...
 
-  graphQlTester.documentName("ping-test-query"); // erwartet ping-test-query.graphql im Klassenpfad
-}
+    graphQlTester.documentName("ping-test-query"); // erwartet ping-test-query.graphql im Klassenpfad
+  }
 
-```
+  ```
 
 ---
 
@@ -1877,22 +1877,22 @@ void pingReturnsPong() {
 * Die Testklasse muss außerdem mit `@AutoConfigureHttpGraphQlTester` annotiert werden
 * API ansonsten wie GraphQlTester
 
-```java fragment
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureHttpGraphQlTester
-public class PublyGraphQLControllerWebTest {
-  @Autowired
-  private WebGraphQlTester webGraphQlTester;
+* ```java
+  @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  @AutoConfigureHttpGraphQlTester
+  public class PublyGraphQLControllerWebTest {
+    @Autowired
+    private WebGraphQlTester webGraphQlTester;
 
-  @Test
-  void pingReturnsPong() {
-    // Query ausführen
-    webGraphQlTester.document("query { ping }")
-      .execute()
-      .validate(/* ... */);
+    @Test
+    void pingReturnsPong() {
+      // Query ausführen
+      webGraphQlTester.document("query { ping }")
+        .execute()
+        .validate(/* ... */);
+    }
   }
-}
-```
+  ```
 
 ---
 
@@ -1902,13 +1902,13 @@ public class PublyGraphQLControllerWebTest {
 * Kann aber pro Request angepasst werden, z.B. um HTTP Header zu setzen
 * dazu muss eine neue Instanz mit `mutate` erzeugt werden
 
-```java fragment
+* ```java
   graphQlTester
       .mutate() // erzeugt neue Instant, die konfiguriert werden kann
       .header("Authorization", "Bearer user-mock-token")
       .build()
       .document(query) /* konfigurierte Instanz verwenden... */
-```
+  ```
 
 ---
 
@@ -1916,7 +1916,7 @@ public class PublyGraphQLControllerWebTest {
 
 _Schreibe einen Test für unsere GraphQL-API_
 
-* Der Test kann z.B. eine einzelne Story mit einer ID abfragen, und sicherstellen, dass die abgefragten Felder korrekt in der Antwort enthalten sind:
+* <!-- .element: class="small" --> Der Test kann z.B. eine einzelne Story mit einer ID abfragen, und sicherstellen, dass die abgefragten Felder korrekt in der Antwort enthalten sind:
   * ```graphql
 
     query {
@@ -1928,13 +1928,16 @@ _Schreibe einen Test für unsere GraphQL-API_
       }
     }
     ```
+
 * Verwende den `@GraphlTest`
   * Der Controller wird dabei erzeugt, aber die Repositories müssen gemockt werden
 * Im Workspace findest Du im `test`-Verzeichnis eine Klasse `AbstractPublyGraphQLTest`, die Du als Basis verwenden kannst
   * Darin sind schon die Mock-Beans konfiguriert
-  * Es gibt Hilfsfunktionen zum Konfigurieren der Mocks mit Mockito
-  * Du kannst diese Funktionen in deinen Testfällen aufrufen oder selbst mit Mockito mocken
-* Wenn Du fertig bist, bitte Hand in Teams heben 🙋🏻‍♀️ 🙋‍♂️
+  * Es gibt Hilfsfunktionen zum Aufsetzen der Mockdaten (`given_`), die Du je nach Testfall aufrufen kannst
+  * Du kannst natürlich auch eigene Mocks für andere Tests schreiben
+* Leite deine Testklasse davon ab
+  * Du musst deine Testklasse mit `@GraphQlTest` annotieren
+* Bespiele findest Du in `steps/50_test`
 
 
 
