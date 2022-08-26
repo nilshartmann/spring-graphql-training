@@ -859,7 +859,7 @@ type Story {
 
 * [Spring for GraphQL](https://spring.io/projects/spring-graphql) bietet eine Abstraktion von GraphQL-Java an
 * Erstes Release von Spring GraphQL enthalten in Spring Boot 2.7 (Mai 2022)
-  * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.0-M3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden
+  * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden
 
 * Features:
   * Automatische Konfiguration des RuntimeWirings
@@ -867,7 +867,7 @@ type Story {
   * GraphiQL Integration per Property
   * Gewohntes Spring-Programmiermodell mit Annotationen etc.
   * Integration in Spring Stack (z.B. Bean Validation, Security)
-  * [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/2.7.0-SNAPSHOT/reference/htmlsingle/#web.graphql) für Spring Boot
+  * [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/2.7.3/reference/htmlsingle/#web.graphql) für Spring Boot
   * Actuator-Endpunkte für Spring Boot
 
 ---
@@ -1058,8 +1058,7 @@ _Implementiere zwei Handler-Funktionen_
 * ```java
   @Controller
   class GraphQLController {
-
-    @SchemaMapping  
+    @SchemaMapping
     public String excerpt(Story source, @Argument int maxLength) {
       return source.getBody().substring(0, maxLength);
     }
@@ -1067,7 +1066,7 @@ _Implementiere zwei Handler-Funktionen_
   ```
 
 * Wenn die als Parameter übergebene Klasse nicht so heißt, wie im GraphQL Schema,
-  kann mit `typename` der Typ explizit gesetzt werden
+  kann mit `typename` der GraphQL-Typ explizit gesetzt werden
 
 * ```java
   @SchemaMapping(typeName="Story")
@@ -1076,9 +1075,10 @@ _Implementiere zwei Handler-Funktionen_
   }
   ```
 
-* `@QueryMapping` und `@MutationMapping` sind nur Aliase für 
-  * `@SchemaMapping(typeName="Query")` bzw.
+* `@QueryMapping`, `@SubscriptionMapping` und `@MutationMapping` sind nur Aliase für
+  * `@SchemaMapping(typeName="Query")`
   * `@SchemaMapping(typeName="Mutation")`
+  * `@SchemaMapping(typeName="Subscription")`
 
   
 ---
@@ -1092,11 +1092,19 @@ _Implementiere zwei Handler-Funktionen_
 
 
 ---
+The default GraphQlSource builder enables support for a
+            DataFetcher to return `Mono` or `Flux` which adapts those to a `CompletableFuture` where Flux values are
+            aggregated and turned into a List, unless the request is a GraphQL subscription request,
+            in which case the return value remains a Reactive Streams Publisher for streaming GraphQL responses.
+            "https://docs.spring.io/spring-graphql/docs/current/reference/html/#execution-reactive-datafetcher"
+
+---
 
 ### Asynchrone Handler-Funktionen
 
 * Handler-Funktionen werden grundsätzlich nacheinander ausgeführt 
 * Handler-Funktionen können aber `CompletableFuture`, `Flux` oder `Mono`-Objekte zurückliefern
+  * `Flowable`-Objekte aus rxjava können mit `Flux.from` bzw. `Mono.from` konvertiert werden
 * Dann werden mehrere Handler-Funktionen parallel ausgeführt
 
 ```java fragment  
@@ -1182,6 +1190,143 @@ _Implementiere zwei Handler-Funktionen_
 </code></pre>
 
 * Eine mögliche Lösung findest Du in `steps/15_schema-mapping`
+
+---
+
+## Mutation und Subscriptions
+
+* Funktionieren analog zum `QueryMapping` nur für den Mutation- und Subscription-Type
+* Bei Mutations dürfen wir Daten verändern, ansonsten völlig identisch zu `QueryMapping`
+* Bei Subscriptions werden die Daten erst zum Server geschickt, nachdem sie erzeugt wurde
+  * Etwas tricktreich, deswegen etwas später
+
+---
+
+### Interaktiv: eine addPerson-Mutation
+
+* <!-- .element: class="demo" --> AddPersonMutation, die eine Person mit firstName und lastName hinzufügt
+  * <!-- .element: class="demo" --> Wie sieht das Schema aus?
+  * <!-- .element: class="demo" --> Wie sieht die Java Implementierung für `input` aus?
+  * <!-- .element: class="demo" --> Wie sieht die Java Implementierung für Rückgabewert aus?
+
+---
+
+### Eine Mutation, um Kommentare hinzuzufügen
+
+* Eine Story hat mehrere Kommentare:
+* ```graphql
+  type Comment {
+      id: ID!
+
+      story: Story!
+      writtenBy: Member!
+      content: String!
+  }
+
+  type Story {
+    # ...
+    comments: [Comment!]!
+  }
+  ```
+* 🤔 wie könnte eine Mutation aussehen, mit der ein Kommentar hinzugefügt wird
+
+---
+
+### Eine Mutation, um Kommentare hinzuzufügen
+
+* Eingabe-Parameter werden mit einem `input-Type ausgedrückt, der alle notwendigen Informationen entgegen nimmt
+* ```graphql
+  input AddCommentInput {
+      storyId: ID!
+      memberId: ID!
+      content: String!
+  }
+
+  type Mutation {
+    addComment(input: AddCommentInput!): Comment!
+  }
+  ```
+* 🤔 Ist der Rückgabe-Typ hier so gut?
+  * Was könnte problematisch sein oder werden?
+
+---
+
+### API Design von Mutations
+
+* Wie ihr die Mutation designed ist natürlich Euch überlassen, es gibt aber Best-Practices:
+  * Anstatt n einzelne Argumente zu verwenden, **ein** Input-Objekt
+    * Das Objekt heißt immer wie die Mutation mit `Input` am Ende
+    * Das Argument heißt _immer_ `input`
+  * Der Rückgabe-Typ sollte ebenfalls ein eigenes Objekt sein
+    * Es heißt wie die Mutation mit `Payload` am Ende
+    * Dieses Objekt enthält dann das erzeugte neue Objekt
+    * Ihr könnt später diesen Typen um weitere Informationen, etwa zu Fehlern erweitern
+      * Dazu später mehr
+* Dadurch ist die API einheitlich und man findet sich schnell zurecht
+* Diese Regeln könntet ihr grundsätzlich auch für Queries und Subscriptions verwenden
+
+---
+
+### Eine Mutation, um Kommentare hinzuzufügen
+<!-- .slide: class="left" -->
+* Fertige Mutation
+* ```graphql
+  input AddCommentInput {
+      storyId: ID!
+      memberId: ID!
+      content: String!
+  }
+
+  type AddCommentPayload {
+    newComment: Comment!
+  }
+
+  type Mutation {
+    addComment(input: AddCommentInput!): AddCommentPayload!
+  }
+  ```
+---
+
+### Übung: addComment Mutation implementieren 
+#### Teil 1: Schema erweitern
+* Ergänze das Schema um den `Comment`-Type und die `addComment` Mutation
+  * `Comment`-Type soll die Felder haben: `id` (`ID`), `story`, `member` und `content` (`String`)
+    * Alle Felder Pflicht (non-nullable)
+  * Der `Story`-Type soll eine Feld `comments` bekommen, das eine Liste von `Comment`-Objekten zurückliefert
+  * Der folgende Query sollte nun funktionieren und einen Kommentar zurückliefern:
+    * ```graphql
+      query {
+        story(storyId:"2") {
+          comments { id content }
+        }
+      }
+    ```
+  * Die `addComment`-Mutation soll ein `input`-Argument haben, das ein Objekt ist, das `storyId`, `memberId` (jeweils `ID!`)
+            und `content` (`String!`) enthält
+  * Der Rückgabewert soll `AddCommentPayload` heißen, mit einem Feld `newComment`, das den neuen Kommentar enthält
+---
+
+### Übung: addComment Mutation implementieren
+#### Teil 2: Implementieren in Java
+  * Erweitere den `PublyGraphQLController` um die `MutationMapping`-Funktion
+    * Baue dir jeweils eine Java-Klasse für das `input`-Argument und den Rückgabetyp
+      * Wichtig: die benötigen jeweils einen Constructor, in den alle Daten übergeben werden können (Argumente so benennen wie in GraphQL!)
+    * Du kannst dir über den `PublyGraphQLController`-Konstruktor den fertigen `PublyDomainService` übergeben lassen
+      * Daran gibt es eine Methode `addComment`, der einen Kommentar in der DB speichert
+      * Ruf diese Methode auf und gib das Ergebnis an GraphQL zurück
+  * Danach sollte folgende Mutation funktionieren:
+    * ```graphql
+      mutation {
+        addComment(input:{
+          storyId:1, memberId:1, content: "tolle story!"
+        }) {
+        newComment {id content}
+        }
+    }
+    ```
+
+
+* Eine mögliche Lösung findest Du in `steps/17_mutations`
 
 ---
 
