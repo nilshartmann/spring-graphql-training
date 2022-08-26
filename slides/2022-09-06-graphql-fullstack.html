@@ -1205,6 +1205,7 @@ The default GraphQlSource builder enables support for a
 ### Interaktiv: eine addPerson-Mutation
 
 * <!-- .element: class="demo" --> AddPersonMutation, die eine Person mit firstName und lastName hinzufügt
+  * <!-- .element: class="demo" --> Material dazu in `material/Person.txt`
   * <!-- .element: class="demo" --> Wie sieht das Schema aus?
   * <!-- .element: class="demo" --> Wie sieht die Java Implementierung für `input` aus?
   * <!-- .element: class="demo" --> Wie sieht die Java Implementierung für Rückgabewert aus?
@@ -1385,19 +1386,16 @@ The default GraphQlSource builder enables support for a
 
 ---
 
-### DataLoader
+### Ein einfacher Query...
 
-* Was passiert, wenn wir folgenden Query ausführen:
-
-<pre class="fragment"><code class="graphql">
+* 🤔 Was passiert, wenn wir folgenden Query ausführen:
+* ```graphql
   query {
     stories {
       writtenBy { user { id email } }
     }
   }
-</code></pre>
-
-
+  ```
 * Wir haben sehr viele einzelne Calls zum Micro-Service 😨
 * Wir haben doppelte Aufrufe zum Micro-Service 😱 😱
 
@@ -1425,25 +1423,26 @@ The default GraphQlSource builder enables support for a
 * Wenn alle IDs eingesammelt wurden, wird die Implementierung des DataLoaders aufgerufen
 * In der Implementierung bekommst Du alle IDs übergeben und kannst einen optimierten Call machen
   * Zum Beispiel Zusammenfassung in SQL-Statements (`where ID in ...`)
-  * Du bekommmst jede ID auch nur einmal übergeben
-
+* DataLoader sind ein allgemeines GraphQL-Konzept
+  * Nicht in der Spec, aber de-facto Standard
+* Java-Implementierung kommt aus dem [java-dataloader](https://github.com/graphql-java/java-dataloader)-Project
+  * Wie bei `graphql-java` abstrahiert Spring for GraphQL davon
 ---
 
 ### Verwenden vom DataLoader
 
-* Den DataLoader kannst Du dir in deine Handler-Funktionen übergebenlassen
+* Den DataLoader kannst Du dir in deine Handler-Funktionen übergeben lassen
 * Es handelt sich dabei um ein Interface mit zwei Typ-Parametern:
   * `Key`: Typ des Keys, den Du beim Verwenden an den DataLoader übergeben willst
   * `Value`: Typ des Java-Objekts, das der DataLoader für einen Key zurückliefert
+* Die Handler-Funktion *muss* dann ein `CompletableFuture` zurückliefern
+* ```java
+  public CompletableFuture<User> user(Member member, DataLoader<String, User> userLoader) {
+    String userId = member.getUserId();  // userId ist in DB gespeichert
 
-
-```java fragment
-public CompletableFuture<User> user(Member member, DataLoader<String, User> userLoader) {
-  String userId = member.getUserId();  // UserId ist in DB gespeichert
-
-  return userLoader.load(userId); // Laden des Users wird verzögert
-}
-```
+    return userLoader.load(userId); // Laden des Users wird verzögert
+  }
+  ```
 
 ---
 
@@ -1455,15 +1454,16 @@ public CompletableFuture<User> user(Member member, DataLoader<String, User> user
 * Die `BatchLoaderRegistry` steht als Spring Bean zur Verfügung
 * Mit `forTypePair` registrierst Du einen BatchLoader für ein Key-Value-Paar
 * Die Methode erwartet eine Callback-Funktion:
-*  zwei Parameter: die Liste mit den Keys und das `BatchLoaderEnvironment`
-*  Rückgabe: die Liste mit den geladenen Objekten als Flux
+  *  zwei Parameter: die Liste mit den Keys und das `BatchLoaderEnvironment`
+  *  Rückgabe: die Liste mit den geladenen Objekten als [Flux](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html)
 * ```java
   public PublyGraphQLController(/* ... */, BatchLoaderRegistry registry) {
 
     registry.forTypePair(String.class, User.class).registerBatchLoader(
 
       (List<String> keys, BatchLoaderEnvironment env) -> {
-        // findUsers liefert Flux<User> zurück. 
+        // hier zum Beispiel DB-Aufruf oder REST-Aufruf
+        // findUsers liefert Flux<User> zurück.
         return userService.findUsers(keys);
       }
     );
@@ -1484,86 +1484,126 @@ public CompletableFuture<User> user(Member member, DataLoader<String, User> user
 
 * Der BatchLoader liefert eine _Liste_ von Objekten zurück
 * Die enthaltenen Objekte müssen in derselben Menge und Reihenfolge wie die Keys zurückgeliefert werden.
-* Alternativ kann ein `MappedBatchLoader` verwendet werden, der ein Mono-Objekt mit einer Map zurückliefert
+* Alternativ kann ein `MappedBatchLoader` verwendet werden, der ein [Mono](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html)-Objekt mit einer Map zurückliefert
 * Die Map enthält dann Key-Value-Paare mit einem gelesenen Objekt jeweils für einen Key. Objekte, die nicht gefunden
-  wurden werden auch nicht in die Map aufgenommen.
+  wurden werdenauch nicht in die Map aufgenommen.
+* ```java
+  public PublyGraphQLController(/*... */, BatchLoaderRegistry registry) {
 
-```java fragment  
-public PublyGraphQLController(/*... */, BatchLoaderRegistry registry) {
+    registry.forTypePair(String.class, User.class).registerMappedBatchLoader(
 
-  registry.forTypePair(String.class, User.class).registerMappedBatchLoader(
+      (List<String> keys, BatchLoaderEnvironment env) -> {
+        // zurückgeben: Mono<Map<String, User>>
+      }
 
-    (List<String> keys, BatchLoaderEnvironment env) -> {
-      // zurückgeben: Mono<Map<String, User>>
-    }
-
-  );
-}
-```
+    );
+  }
+  ```
 
 
 ---
 
 ### BatchMapping
 
-* In einfachen Fällen kann der MappedBatchLoader mit einer BatchMapping-Funktion implementiert werden
-* Das ist eine Handler-Funktion, der automatisch eine Liste von Objekten übergeben wird (zum Beispiel Liste von Member-Objekten)
-* Die Handler-Funktion liefert dann entweder ein Mono mit einer Map oder ein Flux mit Objekten zurück (wie vorher gesehen).
+* In einfachen Fällen kann der `MappedBatchLoader` mit einer BatchMapping-Funktion implementiert werden
+* Das ist eine Handler-Funktion, der automatisch eine Liste von Objekten übergeben wird (zum Beispiel Liste von `Member`-Objekten)
+* Die Handler-Funktion liefert dann entweder ein `Mono` mit einer `Map` oder ein `Flux` mit Objekten zurück (wie vorher gesehen).
 * Achtung! Darauf achten, dass `equals` und `hashCode`-Methoden in den Objekten, die als Keys verwendet werden, korrekt implementiert sind!
+* ```java
+  @Controller
+  public class PublyGraphQLController {
 
-```java fragment  
-@Controller
-public class PublyGraphQLController {
+    @BatchMapping
+    public Flux<User> user(List<Member> member) {
+      List<String> keys = member.stream().map(Member::getUserId).collect(Collectors.toList());
 
-  @BatchMapping
-  public Flux<User> user(List<Member> member) {
-    List<String> keys = member.stream().map(Member::getUserId).collect(Collectors.toList());
+      return userService.findUsers(keys);
+    }
 
-    return userService.findUsers(keys);
+    // -- oder: --
+
+    @BatchMapping
+    public Mono<Map<Member, User>> user(List<Member> member) {
+      // ...
+    }
+
+
+    // BatchLoaderRegistry und SchemaMapping für User-Feld entfallen jetzt
   }
+  ```
 
-  // -- oder: --
+---
 
-  @BatchMapping
-  public Mono<Map<Member, User>> user(List<Member> member) {
-    // ...
-  }
+### Optimierung 2
 
-
-  // BatchLoaderRegistry und SchemaMapping für User-Feld entfallen jetzt
-}
-```
+* Ein Query...
+  * ```graphql
+    query {
+      story(storyId: 1) {
+        title
+        body
+      }
+    }
+  ```
+* Ein anderer Query...
+  * ```graphql
+    query {
+      story(storyId: 1) {
+        title
+        body
+        comments { id content }
+      }
+    }
+  ```
+* 🤔 Wie generieren wir optimale Datenbank-Zugriffe
+  * Je nach Query mit oder ohne Comments?
 
 ---
 
 ### DataFetchingFieldSelectionSet
 
-* Das `DataFetchingFieldSelectionSet` enthält eine Liste aller Felder, die im aktuellen Query abgefragt sind
+* Das `DataFetchingFieldSelectionSet` aus `graphql-java` enthält eine Liste aller Felder, die im aktuellen Query unterhalb des Feldes einer Handler-Funktion abgefragt sind
+* Das `DataFetchingFieldSelectionSet` kannst Du an deine Handler-Funktionen übergeben lassen.
+* Mit `contains` kannst Du mit einem Pattern fragen, ob bestimmte Felder im Query vorhanden sind
 * Hiermit kannst Du weitere Optimierungen der Query-Verarbeitung vornehmen, zum Beispiel optimale
   SQL-Queries generieren
-* Das `DataFetchingFieldSelectionSet` kannst Du an deine Handler-Funktionen übergeben lassen.
+* ```java
+  @QueryMapping
+  List<Story> stories(DataFetchingFieldSelectionSet selectionSet) {
 
-```java fragment  
-@QueryMapping List<Story> stories(DataFetchingFieldSelectionSet selectionSet) {
+    if (s.contains("comments/**") ) {
+      // SQL Statement mit JOIN auf Comment-Tabelle
+      return ...;
+    }
 
-  if (s.contains("comments") ) {
-    // SQL Statement mit JOIN auf Comment-Tabelle
+    // SQL Statement nur mit Stories
     return ...;
-  }
 
-  // SQL Statement nur mit Stories
-  return ...;
-  
-}  
-```
-  
+  }
+  ```
+
+---
+### Übung: DataLoader
+#### Implementiere den DataLoader zum Laden des Users für einen Member aus dem User-Microservice
+
+* Stelle die Implementierung der `SchemaMapping`-Funktion von `user` für den `Member`-Typen auf den DataLoader um
+  * Als neuen, zweiten Parameter benötigt die Methode einen DataLoader, der für die User-Keys die User laden kann.
+  * Denk dran, dass Du den Rückgabetyp der Funktion auch anpassen musst!
+* Erweitere den Konstruktur von `PublyGraphQLController` und füge als neuen Parameter die `BatchLoaderRegistry` hinzu
+* Registriere an der `BatchLoaderRegistry` einen BatchLoader, der für die Keys der User die entsprechenden User laden kann
+  * Zum Laden der User kannst Du wieder die Klasse `UserService` verwenden
+* Eine Lösung findest Du in `steps/20_dataloader`
+* Optional: kannst Du die Funktion auf eine `@BatchMapping`-Funktion umstellen?
+  * Dann brauchst Du die `BatchLoaderRegistry` nicht mehr
+  * Eine Lösung findest Du in `steps/25_batchmapping`
+
 ---
 
 
-### Security
+## Security
 
 * Wie üblich Spring Security verwenden
-* Überlegung: wo wird GraphQL API abgesichert?
+* 🤔Überlegung: wo wird GraphQL API abgesichert?
   * /graphql-Endpunkt absichern
   * und/oder einzelne Handler-Funktionen mit `@PreAuthorize` absichern
   * und/oder Domain-Layer absichern mit `@PreAuthorize` absichern
@@ -1573,7 +1613,6 @@ public class PublyGraphQLController {
 ### Beispiel: Security
 
 * <!-- .element: class="demo" --> AddCommentMutation
-  * <!-- .element: class="demo" --> Aus Material kopieren, Handler-Funktion implementieren
   * <!-- .element: class="demo" --> AuthenticationPrincipal für Member
   * <!-- .element: class="demo" --> PreAuthorize
 
@@ -1583,20 +1622,21 @@ public class PublyGraphQLController {
 
 * Handler-Funktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
 
-```java fragment
-public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal PublyUser user) {
-  Long storyWrittenById = user.getId();
+* ```java fragment
+  public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal User user) {
+    Long storyWrittenById = user.getId();
 
-  return domainService.addStory(storyWrittenById, input.getTitle(), input.getBody());
-})
-```
+    return domainService.addStory(storyWrittenById, input.getTitle(), input.getBody());
+  })
+  ```
 
 ---
 
 ### Fehlerbehandlung
 
-* <!-- .element: class="demo" --> Beispiel: Bean Validation
+* <!-- .element: class="demo" --> Beispiel: Bean Validation mit `addPerson`-Mutation
   * <!-- .element: class="demo" --> @Size und @Valid hinzufügen
+  * <!-- .element: class="demo" --> Optionen für Fehlerbehandlung durchspielen: addComent-Mutation aufgreifen, error-Feld vs. Union-Type diskutieren
 
 ---
 
@@ -1720,6 +1760,10 @@ public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal Pu
 * Der Server liefert je nach Situationen einen der beiden Typen zurück.
   * Achtung! Umstellung von type- auf union-Type im Rückgabewert ist nicht abwärtskompatibel!
 
+---
+### Übung: Union Types
+#### Stelle die `addComment`-Mutation auf einen Union-Type um
+* Füge den `AddCommentSuccess` und `AddCommentFailed` Typen
 ---
 
 # GraphQL APIs testen
