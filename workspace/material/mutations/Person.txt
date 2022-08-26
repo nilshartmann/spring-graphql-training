@@ -1,0 +1,17 @@
+record AddPersonInput (String id, String firstName, String lastName) {}
+record AddPersonPayload(Person newPerson) {}
+
+type Person {
+  id: ID!
+  firstName: String!
+  lastName: String!
+}
+
+type AddPersonInput {
+  firstName: String!
+  lastName: String!
+  }
+
+type Mutation {
+  addPerson(input: AddPersonInput!): AddPersonPayload!
+}
