@@ -7,6 +7,15 @@ type Story  {
     body: String!
 
     writtenBy: Member!
+    comments: [Comment!]!
+}
+
+type Comment {
+    id: ID!
+
+    story: Story!
+    writtenBy: Member!
+    content: String!
 }
 
 type User {
@@ -27,5 +36,27 @@ type Query {
     story(storyId: ID): Story
 
     stories: [Story!]!
+}
+
+input AddCommentInput {
+    storyId: ID!
+    memberId: ID!
+    content: String!
+}
+
+type AddCommentPayload {
+    newComment: Comment!
+}
+
+type Mutation {
+    addComment(input: AddCommentInput!): AddCommentPayload!
+}
+
+type OnNewCommentEvent {
+    newComment: Comment!
+}
+
+type Subscription {
+    onNewComment(storyId: ID!): OnNewCommentEvent!
 }
 

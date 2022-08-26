@@ -40,13 +40,18 @@ type Query {
 
 input AddCommentInput {
     storyId: ID!
-    memberId: ID!
     content: String!
 }
 
-type AddCommentPayload {
+type AddCommentSuccessPayload {
     newComment: Comment!
 }
+
+type AddCommentFailedPayload {
+    errorMsg: String!
+}
+
+union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
 
 type Mutation {
     addComment(input: AddCommentInput!): AddCommentPayload!

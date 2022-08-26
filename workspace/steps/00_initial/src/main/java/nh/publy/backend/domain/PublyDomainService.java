@@ -1,6 +1,7 @@
 package nh.publy.backend.domain;
 
 import io.reactivex.rxjava3.core.Flowable;
+import nh.publy.backend.domain.user.User;
 import nh.publy.backend.domain.user.UserService;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -151,6 +152,10 @@ public class PublyDomainService {
 
   public Flowable<OnNewCommentEvent> getOnNewCommentEventPublisher() {
     return Flowable.fromPublisher(this.sink.asFlux());
+  }
+
+  public Long getMemberForUser(User user) {
+    return memberRepository.getMemberIdForUserId(user.getId());
   }
 
 }

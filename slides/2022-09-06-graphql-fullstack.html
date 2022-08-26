@@ -1586,12 +1586,21 @@ The default GraphQlSource builder enables support for a
 ### Übung: DataLoader
 #### Implementiere den DataLoader zum Laden des Users für einen Member aus dem User-Microservice
 
-* Stelle die Implementierung der `SchemaMapping`-Funktion von `user` für den `Member`-Typen auf den DataLoader um
+* <!-- .element: class="small" --> Stelle die Implementierung der `SchemaMapping`-Funktion von `user` für den `Member`-Typen auf den DataLoader um
   * Als neuen, zweiten Parameter benötigt die Methode einen DataLoader, der für die User-Keys die User laden kann.
   * Denk dran, dass Du den Rückgabetyp der Funktion auch anpassen musst!
 * Erweitere den Konstruktur von `PublyGraphQLController` und füge als neuen Parameter die `BatchLoaderRegistry` hinzu
 * Registriere an der `BatchLoaderRegistry` einen BatchLoader, der für die Keys der User die entsprechenden User laden kann
   * Zum Laden der User kannst Du wieder die Klasse `UserService` verwenden
+* Führe folgenden Query aus. Wieviele `User` sind im Ergebnis vorhanden? Wieviele User(-Ids) werden im BatchLoader geladen?
+* ```graphql
+  query {
+    stories {
+      writtenBy { user { id name } }
+      comments { writtenBy { user { id name } } }
+    }
+  }
+  ```
 * Eine Lösung findest Du in `steps/20_dataloader`
 * Optional: kannst Du die Funktion auf eine `@BatchMapping`-Funktion umstellen?
   * Dann brauchst Du die `BatchLoaderRegistry` nicht mehr
@@ -1600,42 +1609,11 @@ The default GraphQlSource builder enables support for a
 ---
 
 
-## Security
-
-* Wie üblich Spring Security verwenden
-* 🤔Überlegung: wo wird GraphQL API abgesichert?
-  * /graphql-Endpunkt absichern
-  * und/oder einzelne Handler-Funktionen mit `@PreAuthorize` absichern
-  * und/oder Domain-Layer absichern mit `@PreAuthorize` absichern
-
----
-
-### Beispiel: Security
-
-* <!-- .element: class="demo" --> AddCommentMutation
-  * <!-- .element: class="demo" --> AuthenticationPrincipal für Member
-  * <!-- .element: class="demo" --> PreAuthorize
-
----
-
-### Handler-Funktionen mit Security
-
-* Handler-Funktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
-
-* ```java fragment
-  public Story addStory(@Argument AddStoryInput input, @AuthenticationPrincipal User user) {
-    Long storyWrittenById = user.getId();
-
-    return domainService.addStory(storyWrittenById, input.getTitle(), input.getBody());
-  })
-  ```
-
----
-
-### Fehlerbehandlung
+## Fehlerbehandlung
 
 * <!-- .element: class="demo" --> Beispiel: Bean Validation mit `addPerson`-Mutation
   * <!-- .element: class="demo" --> @Size und @Valid hinzufügen
+            errors-Objekt!!!!!!!!!!
   * <!-- .element: class="demo" --> Optionen für Fehlerbehandlung durchspielen: addComent-Mutation aufgreifen, error-Feld vs. Union-Type diskutieren
 
 ---
@@ -1730,42 +1708,109 @@ The default GraphQlSource builder enables support for a
 ### Explizite Rückgabetypen
 
 * Beispiel 2: **Behandlung von Fehlern**
-* ```graphql
-  type Mutation {
-    addComment: [Comment!]!
-  }
-  ```
-* Hier können wir keine Informationen hinterlegen, warum das Anlegen eines Kommentars möglicherweise nicht geklappt hat
-* ```graphql
-  type AddCommentPayload {
-    newComment: Comment
-    errorMessage: String
-  }
+* Hier können wir keine Informationen hinterlegen, warum das Anlegen eines Kommentars möglicherweise nicht geklappt hat:
+  * ```graphql
+    type Mutation {
+      addComment: [Comment!]!
+    }
+    ```
+* Mit einem eigenen Rückgabe-Objekt können wir weitere Informationen hinzufügen:
+  * ```graphql
+    type AddCommentPayload {
+      newComment: Comment
+      errorMessage: String
+    }
 
-  type Mutation {
-    addComment: AddCommentPayload!
-  }
-  ```
-* Dieses Objekt können wir jederzeit erweitern.
-* Fehler- und nicht-Fehlerfall sind in diesem Fall zwei unterschiedliche Rückgaben. Das können wir mit einem union-Typen ausdrücken:
-* ```graphql
-  type AddCommentSuccessPayload { newComment: Comment! }
-  type AddCommentFailedPayload { errorMessage: String! }
-  union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+    type Mutation {
+      addComment: AddCommentPayload!
+    }
+    ```
+* Dieses Objekt können wir jederzeit erweitern, ohne das Clients angepasst werden müssen.
+---
 
-  type Mutation {
-    addComment: AddCommentPayload!
-  }
-  ```
+### Explizite Rückgabetypen
+* Fehler- und nicht-Fehlerfall können mit jeweils eigenen Typen ausgedrückt werden.
+* Zusammengefasst werden sie in einem `union`-Typen:
+  * ```graphql
+    type AddCommentSuccessPayload { newComment: Comment! }
+    type AddCommentFailedPayload { errorMsg: String! }
+    union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
+    type Mutation {
+      addComment(inpit: AddCommentInput!): AddCommentPayload!
+    }
+    ```
 * Der Server liefert je nach Situationen einen der beiden Typen zurück.
+  * ```graphql
+    mutation {
+      addComment(input: {storyId: 1, memberId: 1, content: "Toll"}) {
+        ... on AddCommentSuccessPayload {
+          newComment { id content }
+        }
+        ... on AddCommentFailedPayload { errorMsg }
+      }
+    }
+  ```
   * Achtung! Umstellung von type- auf union-Type im Rückgabewert ist nicht abwärtskompatibel!
 
 ---
 ### Übung: Union Types
 #### Stelle die `addComment`-Mutation auf einen Union-Type um
-* Füge den `AddCommentSuccess` und `AddCommentFailed` Typen
+* Passe das Schema an:
+  * Füge den `AddCommentSuccessPayload` und `AddCommentFailedPayload` Typen hinzu
+    * Bennene `AddCommentPayload in `AddCommentSuccessPayload` um
+    * `AddCommentFailedPayload` soll ein `String!` Feld `errorMsg` haben
+  * Definiere den `union`-Typen `AddCommentPayload` der aus den beiden Typen besteht
+* Passe die Implementierung der `addComment`-Mutation an
+  * Deinen bestehenden Java-Typen für `AddCommentPayload` kannst Du in `AddCommentSuccessPayload` umbennen
+  * Du brauchst einen neuen Java-Typen für `AddCommentFailedPayload`
+  * Wenn beim Aufruf des `PublyDomainService` eine Exception fliegt, gib `AddCommentFailedPayload` zurück mit einer Fehlermeldung
+  * Sonst gib den neuen Kommentar in `AddCommentSuccessPayload` zurück
+* Führe `addComment` aus und frag den neuen Kommentar bzw. die `errorMsg` ab
+  * Um den Fehlerfall zu testen, kannst Du einen Kommentar speichern, der kürzer als fünf Zeichen ist.
+* Mögliche Lösung: `steps/30_error_handling`
+---
+## Security
+
+* Wie üblich Spring Security verwenden
+* 🤔Überlegung: wo wird GraphQL API abgesichert?
+  * /graphql-Endpunkt absichern
+  * und/oder einzelne Handler-Funktionen mit `@PreAuthorize` absichern
+  * und/oder Domain-Layer absichern mit `@PreAuthorize` absichern
+
 ---
 
+### Beispiel: Security
+
+* <!-- .element: class="demo" --> AddCommentMutation
+  * <!-- .element: class="demo" --> AuthenticationPrincipal für Member
+  * <!-- .element: class="demo" --> PreAuthorize
+
+---
+
+### Handler-Funktionen mit Security
+
+* Handler-Funktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
+
+* ```java
+  @MutationMapping
+  @PreAuthorize("hasRole('USER')")
+  public AddCommentPayload addComment(@Argument AddCommentInput input, @AuthenticationPrincipal User user) {
+
+    Long memberId = publyDomainService.getMemberForUser(user);
+
+    // ...
+    Comment newComment = publyDomainService.addComment(
+      input.getStoryId(),
+      memberId,
+      input.getContent()
+    );
+
+    return ...;
+  }
+  ```
+
+---
 # GraphQL APIs testen
 
 ---

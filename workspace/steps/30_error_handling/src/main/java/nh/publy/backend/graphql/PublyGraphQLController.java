@@ -10,13 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.*;
 import org.springframework.graphql.execution.BatchLoaderRegistry;
 import org.springframework.stereotype.Controller;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Controller
 public class PublyGraphQLController {
@@ -25,10 +22,15 @@ public class PublyGraphQLController {
   private final UserService userService;
   private final PublyDomainService publyDomainService;
 
-  public PublyGraphQLController(StoryRepository storyRepository, UserService userService, PublyDomainService publyDomainService) {
+  public PublyGraphQLController(StoryRepository storyRepository, UserService userService, PublyDomainService publyDomainService, BatchLoaderRegistry batchLoaderRegistry) {
     this.storyRepository = storyRepository;
     this.userService = userService;
     this.publyDomainService = publyDomainService;
+
+    batchLoaderRegistry.forTypePair(String.class, User.class).registerBatchLoader((keys, env) -> {
+      log.info("Loading Users with keys {}", keys);
+      return userService.findUsers(keys);
+    });
   }
 
   @QueryMapping
@@ -41,11 +43,11 @@ public class PublyGraphQLController {
     return storyRepository.findById(storyId);
   }
 
-  @BatchMapping
-  public Flux<User> user(List<Member> members) {
-    List<String> keys = members.stream().map(Member::getUserId).collect(Collectors.toList());
-    log.info("Loading Users with ids {} in BatchMapping", keys);
-    return userService.findUsers(keys);
+  @SchemaMapping
+  public CompletableFuture<User> user(Member member, DataLoader<String, User> userDataLoader) {
+    String userId = member.getUserId();
+    log.info("Delegating load with user id {} to DataLoader", userId);
+    return userDataLoader.load(userId);
   }
 
   static class AddCommentInput {
@@ -72,10 +74,13 @@ public class PublyGraphQLController {
     }
   }
 
-  static class AddCommentPayload {
+  interface AddCommentPayload {
+  }
+
+  static class AddCommentSuccessPayload implements AddCommentPayload{
     private final Comment newComment;
 
-    public AddCommentPayload(Comment newComment) {
+    public AddCommentSuccessPayload(Comment newComment) {
       this.newComment = newComment;
     }
 
@@ -84,15 +89,33 @@ public class PublyGraphQLController {
     }
   }
 
+  static class AddCommentFailedPayload implements AddCommentPayload {
+    private final String errorMsg;
+
+
+    AddCommentFailedPayload(String errorMsg) {
+      this.errorMsg = errorMsg;
+    }
+
+    public String getErrorMsg() {
+      return errorMsg;
+    }
+  }
+
   @MutationMapping
   public AddCommentPayload addComment(@Argument AddCommentInput input) {
-    Comment newComment = publyDomainService.addComment(
-      input.getStoryId(),
-      input.getMemberId(),
-      input.getContent()
-    );
+    try {
+      Comment newComment = publyDomainService.addComment(
+        input.getStoryId(),
+        input.getMemberId(),
+        input.getContent()
+      );
 
-    return new AddCommentPayload(newComment);
+      return new AddCommentSuccessPayload(newComment);
+    } catch (Exception ex) {
+      log.error("Add Comment failed: {}", ex.getMessage(), ex);
+      return new AddCommentFailedPayload(ex.getMessage());
+    }
   }
 
   @SubscriptionMapping

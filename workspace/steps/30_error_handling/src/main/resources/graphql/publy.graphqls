@@ -4,10 +4,9 @@ This is a `Story`.
 type Story  {
     id: ID!
     title: String!
-    writtenBy: Member!
     body: String!
 
-    excerpt(maxLength: Int! = 10): String!
+    writtenBy: Member!
     comments: [Comment!]!
 }
 
@@ -21,7 +20,6 @@ type Comment {
 
 type User {
     id: ID!
-
     name: String!
     email: String!
 }
@@ -29,7 +27,7 @@ type User {
 type Member {
     id: ID!
 
-    profileImage: String
+    profileImage: String!
     user: User
 }
 
@@ -46,7 +44,25 @@ input AddCommentInput {
     content: String!
 }
 
+type AddCommentSuccessPayload {
+    newComment: Comment!
+}
+
+type AddCommentFailedPayload {
+    errorMsg: String!
+}
+
+union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
 type Mutation {
-    addComment(input: AddCommentInput!): Comment!
+    addComment(input: AddCommentInput!): AddCommentPayload!
+}
+
+type OnNewCommentEvent {
+    newComment: Comment!
+}
+
+type Subscription {
+    onNewComment(storyId: ID!): OnNewCommentEvent!
 }
 
