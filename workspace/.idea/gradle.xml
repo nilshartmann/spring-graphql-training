@@ -9,9 +9,11 @@
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$USER_HOME$/.sdkman/candidates/gradle/current" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/hello-graphql-java" />
             <option value="$PROJECT_DIR$/publy-backend" />
             <option value="$PROJECT_DIR$/publy-frontend" />
             <option value="$PROJECT_DIR$/publy-userservice" />

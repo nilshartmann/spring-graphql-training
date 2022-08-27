@@ -9,7 +9,7 @@ pluginManagement {
 
 rootProject.name = 'workspace'
 
-
+include 'hello-graphql-java'
 include 'publy-userservice'
 include 'publy-backend'
 include 'publy-frontend'

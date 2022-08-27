@@ -5,6 +5,7 @@ include 'app:publy-userservice'
 include 'app:publy-backend'
 include 'app:publy-frontend'
 
+include 'workspace:hello-graphql-java'
 include 'workspace:publy-userservice'
 include 'workspace:publy-backend'
 include 'workspace:publy-frontend'
