@@ -2,7 +2,7 @@ on:
   - push
 
 jobs:
-  build-backend:
+  build-app-backend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -17,7 +17,7 @@ jobs:
           java-version: "17"
       - run: ./gradlew build
 
-  build-frontend:
+  build-app-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -47,3 +47,18 @@ jobs:
         run: pnpm run prettier:check
       - name: Build application
         run: pnpm build
+        
+  build-workspace-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./workspace
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install JDK17
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin" # See 'Supported distributions' for available options
+          java-version: "17"
+      - run: ./gradlew build
