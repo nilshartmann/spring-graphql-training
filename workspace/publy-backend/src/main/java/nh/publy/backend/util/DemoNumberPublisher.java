@@ -4,17 +4,15 @@ import io.reactivex.rxjava3.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.Flow;
+public class DemoNumberPublisher {
 
-public class DemoPublisher {
+  private static final Logger log = LoggerFactory.getLogger( DemoNumberPublisher.class );
 
-  private static final Logger log = LoggerFactory.getLogger( DemoPublisher.class );
+  private static DemoNumberPublisher _instance;
 
-  private static DemoPublisher _instance;
-
-  public synchronized static DemoPublisher getInstance() {
+  public synchronized static DemoNumberPublisher getInstance() {
     if (_instance == null) {
-      _instance = new DemoPublisher();
+      _instance = new DemoNumberPublisher();
     }
 
     return _instance;
@@ -22,7 +20,7 @@ public class DemoPublisher {
 
   private Flowable<Integer> publisher;
 
-  public DemoPublisher() {
+  public DemoNumberPublisher() {
     this.publisher = Flowable.create(new FlowableOnSubscribe<Integer>() {
       @Override
       public void subscribe(FlowableEmitter<Integer> emitter) throws Exception {
