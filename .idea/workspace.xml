@@ -6,43 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="a33a630c-bf81-4842-b310-9e6a4253fc9c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.github/workflows/build-app.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build-app.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/runConfigurations/GraphQLApi.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/src/main/java/nh/publy/GraphQLApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/main/java/nh/publy/GraphQLApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/src/main/java/nh/publy/domain/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/main/java/nh/publy/domain/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/src/main/java/nh/publy/domain/Story.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/main/java/nh/publy/domain/Story.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/src/main/java/nh/publy/domain/StoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/main/java/nh/publy/domain/StoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/app/src/test/java/nh/publy/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/test/java/nh/publy/AppTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/OnNewCommentEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/OnNewCommentEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/PublyDomainService.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/domain/PublyDomainService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoCommentGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoCommentGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoNumberPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/util/DemoNumberPublisher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/test/java/nh/publy/backend/AbstractPublyGraphQLTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/test/java/nh/publy/backend/AbstractPublyGraphQLTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workspace/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +130,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.UserserviceApplication (1)">
+  <component name="RunManager" selected="Application.GraphQLApi">
     <configuration name="GraphQLApi" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="nh.publy.GraphQLApi" />
       <module name="spring-graphql-training.workspace.hello-graphql-java.main" />
@@ -292,7 +259,7 @@
       <workItem from="1661426561725" duration="1727000" />
       <workItem from="1661434907477" duration="8819000" />
       <workItem from="1661497801076" duration="34979000" />
-      <workItem from="1661588904036" duration="50000" />
+      <workItem from="1661588904036" duration="1026000" />
     </task>
     <servers />
   </component>

@@ -47,7 +47,7 @@ jobs:
         run: pnpm run prettier:check
       - name: Build application
         run: pnpm build
-        
+
   build-workspace-backend:
     runs-on: ubuntu-latest
     defaults:

@@ -14,6 +14,7 @@ import nh.publy.domain.StoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,29 +23,6 @@ public class GraphQLApi {
   private static final Logger log = LoggerFactory.getLogger(GraphQLApi.class);
 
   StoryRepository storyRepository = new StoryRepository();
-
-  String schema = """
-    type Member {
-      id: ID!
-      name: String!
-     }
-     
-    type Story {
-      id: ID!
-      title: String!
-      body: String!
-      
-      excerpt: String!
-      
-      writtenBy: Member!
-    }
-        
-    type Query {
-      stories: [Story!]!
-      
-      story(storyId: ID!): Story
-    }
-    """;
 
   class QueryStoriesDataFetcher implements DataFetcher<List<Story>> {
 
@@ -75,7 +53,8 @@ public class GraphQLApi {
 
   public void graphqlApi() {
     SchemaParser schemaParser = new SchemaParser();
-    TypeDefinitionRegistry typeDefinitionRegistry = schemaParser.parse(schema);
+    InputStream schemaStream = getClass().getResourceAsStream("/graphql/hello-graphql-java.graphqls");
+    TypeDefinitionRegistry typeDefinitionRegistry = schemaParser.parse(schemaStream);
     RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
       .type("Query", builder -> {
         return builder
