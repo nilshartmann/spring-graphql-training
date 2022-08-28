@@ -909,12 +909,18 @@ TODO: OHNE SPRING!
 ---
 ### Übung: Spring
 
-* Hello GraphQL Java auf Spring portieren!
-* DataFetcher als `Components`
-  * Repository darein injizieren
-* RuntimeWiringConfig o.ä. als Service bauen (in der nicht-Spring-Version schon vorbereiten)
-  * Darein die DataFetcher injizieren
-
+* `Hello GraphQL Java` auf Spring portieren!
+* Markiere das `StoryRepository` als `Repository`
+* Markiere deine DataFetcher als `Component` oder `Service`
+  * Die Story-DataFetcher sollen das `StoryRepository` per Dependency Injection bekommen
+* Markiere den `GraphQLProvider` als `Service`
+  * Der `GraphQLProvider` soll die drei DataFetcher und das `StoryRepository` per Dependency Injection erhalten
+* Erzeuge die Klasse `nh.publy.HelloGraphQLApplication`
+  * Den Inhalt dafür findest Du im `hello-graphql-java/material`-Verzeichnis (einfach kopieren und in `.java` umbenennen)
+* Stelle den `QueryTest` auf einen `SpringBootTest` um:
+  * Annotiere ihn mit `@SpringBootTest`
+  * Den GraphQL-Provider nicht mit `new` erzeugen, sondern einfach mit `@Autowired` markieren
+* Nun sollten die `QueryTests` einen Spring-Server starten und natürlich grün sein.
 ---
 
 ## Spring for GraphQL
