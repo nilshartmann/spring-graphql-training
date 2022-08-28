@@ -1,14 +1,13 @@
-package nh.publy.graphql;
+package nh.publy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GraphQLApplication {
+public class HelloGraphQLApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(GraphQLApplication.class);
-
+    SpringApplication.run(HelloGraphQLApplication.class);
   }
 
 }

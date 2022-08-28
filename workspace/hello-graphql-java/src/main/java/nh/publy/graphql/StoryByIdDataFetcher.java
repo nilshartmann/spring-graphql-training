@@ -4,9 +4,11 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import nh.publy.domain.Story;
 import nh.publy.domain.StoryRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Component
 public class StoryByIdDataFetcher implements DataFetcher<Optional<Story>> {
 
   private final StoryRepository storyRepository;

@@ -10,16 +10,28 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import nh.publy.domain.StoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
+@Component
 public class GraphQLProvider {
 
   private static final Logger log = LoggerFactory.getLogger(GraphQLProvider.class);
-  private final StoryRepository storyRepository;
 
-  public GraphQLProvider() {
-    this.storyRepository = new StoryRepository();
+  private final StoryRepository storyRepository;
+  private final QueryStoriesDataFetcher queryStoriesDataFetcher;
+  private final StoryByIdDataFetcher storyByIdDataFetcher;
+  private final ExcerptDataFetcher excerptDataFetcher;
+
+  public GraphQLProvider(StoryRepository storyRepository,
+                         QueryStoriesDataFetcher queryStoriesDataFetcher,
+                         StoryByIdDataFetcher storyByIdDataFetcher,
+                         ExcerptDataFetcher excerptDataFetcher) {
+    this.storyRepository = storyRepository;
+    this.queryStoriesDataFetcher = queryStoriesDataFetcher;
+    this.storyByIdDataFetcher = storyByIdDataFetcher;
+    this.excerptDataFetcher = excerptDataFetcher;
   }
 
   public GraphQL getGraphQL() {
@@ -30,11 +42,11 @@ public class GraphQLProvider {
     RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
       .type("Query", builder -> {
         return builder
-          .dataFetcher("stories", new QueryStoriesDataFetcher(storyRepository))
-          .dataFetcher("story", new StoryByIdDataFetcher(storyRepository));
+          .dataFetcher("stories", queryStoriesDataFetcher)
+          .dataFetcher("story", storyByIdDataFetcher);
       })
       .type("Story", builder -> {
-        return builder.dataFetcher("excerpt", new ExcerptDataFetcher());
+        return builder.dataFetcher("excerpt", excerptDataFetcher);
       })
       .build();
 

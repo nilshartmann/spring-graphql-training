@@ -1,8 +1,11 @@
 package nh.publy.domain;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class StoryRepository {
 
   private static final Member member1 = new Member(1L, "Member 1", "Password One");
