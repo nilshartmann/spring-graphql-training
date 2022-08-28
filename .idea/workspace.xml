@@ -5,8 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a33a630c-bf81-4842-b310-9e6a4253fc9c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build-app.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build-app.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/test/java/nh/publy/SchemaTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/material/GraphQLAPI.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/src/main/java/nh/publy/GraphQLApi.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/src/main/java/nh/publy/domain/Member.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/src/main/java/nh/publy/domain/Story.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/src/main/java/nh/publy/domain/StoryRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/src/main/resources/graphql/hello-graphql-java.graphqls" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/workspace/hello-graphql-steps/src/test/java/nh/publy/AppTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/slides/2022-09-06-graphql-fullstack.html" beforeDir="false" afterPath="$PROJECT_DIR$/slides/2022-09-06-graphql-fullstack.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/workspace/hello-graphql-java/src/main/resources/graphql/hello-graphql-java.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/hello-graphql-java/src/main/resources/graphql/hello-graphql-java.graphqls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/java/nh/publy/backend/graphql/PublyGraphQLController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/main/resources/graphql/publy.graphqls" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/workspace/publy-backend/src/test/java/nh/publy/backend/AbstractPublyGraphQLTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/workspace/publy-backend/src/test/java/nh/publy/backend/AbstractPublyGraphQLTest.java" afterDir="false" />
@@ -42,27 +57,6 @@
                 <item name="spring-graphql-training" type="f1a62948:ProjectNode" />
                 <item name="workspace" type="2d1252cf:ModuleNode" />
               </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="spring-graphql-training" type="f1a62948:ProjectNode" />
-                <item name="workspace" type="2d1252cf:ModuleNode" />
-                <item name="hello-graphql-java" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="spring-graphql-training" type="f1a62948:ProjectNode" />
-                <item name="workspace" type="2d1252cf:ModuleNode" />
-                <item name="hello-graphql-java" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="spring-graphql-training" type="f1a62948:ProjectNode" />
-                <item name="workspace" type="2d1252cf:ModuleNode" />
-                <item name="hello-graphql-java" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="application" type="c8890929:TasksNode$1" />
-              </path>
             </expand>
             <select />
           </tree_state>
@@ -89,29 +83,29 @@
     <option name="showLibraryContents" value="true" />
     <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/nils/develop/spring-graphql-training&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/nils/develop/spring-graphql-training/app/publy-frontend/node_modules/prettier&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;4f06c3d0a3f54fbda1f60d0a6a24d32d&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Users/nils/develop/spring-graphql-training/app/publy-frontend/node_modules/typescript/lib&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/nils/develop/spring-graphql-training",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/nils/develop/spring-graphql-training/app/publy-frontend/node_modules/prettier",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "spring.configuration.checksum": "4f06c3d0a3f54fbda1f60d0a6a24d32d",
+    "ts.external.directory.path": "/Users/nils/develop/spring-graphql-training/app/publy-frontend/node_modules/typescript/lib"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -130,21 +124,8 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Application.GraphQLApi">
-    <configuration name="GraphQLApi" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="nh.publy.GraphQLApi" />
-      <module name="spring-graphql-training.workspace.hello-graphql-java.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="nh.publy.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PublyGraphQLTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="JUnit.SchemaTest">
+    <configuration name="SchemaTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -155,9 +136,9 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value=":workspace:publy-backend:test" />
+            <option value=":workspace:hello-graphql-java:test" />
             <option value="--tests" />
-            <option value="&quot;nh.publy.backend.PublyGraphQLTest&quot;" />
+            <option value="&quot;nh.publy.SchemaTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -167,37 +148,93 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="spring-graphql-training:workspace:hello-graphql-java [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="SchemaTest.memberTypeIsCorrect" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/workspace/hello-graphql-java" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="run" />
+            <option value=":workspace:hello-graphql-java:test" />
+            <option value="--tests" />
+            <option value="&quot;nh.publy.SchemaTest.memberTypeIsCorrect&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="PublyApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <option name="ACTIVE_PROFILES" />
-      <module name="spring-graphql-training.workspace.publy-backend.main" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="nh.publy.backend.PublyApplication" />
+    <configuration name="SchemaTest.queryTypeIsCorrect" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":workspace:hello-graphql-java:test" />
+            <option value="--tests" />
+            <option value="&quot;nh.publy.SchemaTest.queryTypeIsCorrect&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SchemaTest.storyTypeIsCorrect" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":workspace:hello-graphql-java:test" />
+            <option value="--tests" />
+            <option value="&quot;nh.publy.SchemaTest.storyTypeIsCorrect&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="SchemaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="spring-graphql-training.workspace.hello-graphql-java.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="nh.publy.backend.*" />
+          <option name="PATTERN" value="nh.publy.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="nh.publy" />
+      <option name="MAIN_CLASS_NAME" value="nh.publy.SchemaTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PublyApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="spring-graphql-training.workspace.publy-backend.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="nh.publy.backend.PublyApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -209,15 +246,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserserviceApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+    <configuration name="UserserviceApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="spring-graphql-training.workspace.publy-userservice.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="nh.graphql.publy.userservice.UserserviceApplication" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="nh.graphql.publy.userservice.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -230,9 +261,11 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.GraphQLApi" />
-      <item itemvalue="Gradle.spring-graphql-training:workspace:hello-graphql-java [run]" />
-      <item itemvalue="Gradle.PublyGraphQLTest" />
+      <item itemvalue="Gradle.SchemaTest" />
+      <item itemvalue="Gradle.SchemaTest.memberTypeIsCorrect" />
+      <item itemvalue="Gradle.SchemaTest.queryTypeIsCorrect" />
+      <item itemvalue="Gradle.SchemaTest.storyTypeIsCorrect" />
+      <item itemvalue="JUnit.SchemaTest" />
       <item itemvalue="Spring Boot.PublyApplication" />
       <item itemvalue="Spring Boot.UserserviceApplication" />
       <item itemvalue="Spring Boot.PublyApplication (1)" />
@@ -240,11 +273,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.spring-graphql-training:workspace:hello-graphql-java [run]" />
-        <item itemvalue="Spring Boot.PublyApplication (1)" />
-        <item itemvalue="Application.GraphQLApi" />
-        <item itemvalue="Gradle.PublyGraphQLTest" />
-        <item itemvalue="Spring Boot.UserserviceApplication (1)" />
+        <item itemvalue="JUnit.SchemaTest" />
+        <item itemvalue="Gradle.SchemaTest.queryTypeIsCorrect" />
+        <item itemvalue="Gradle.SchemaTest" />
+        <item itemvalue="Gradle.SchemaTest.memberTypeIsCorrect" />
+        <item itemvalue="Gradle.SchemaTest.storyTypeIsCorrect" />
       </list>
     </recent_temporary>
   </component>
@@ -260,6 +293,9 @@
       <workItem from="1661434907477" duration="8819000" />
       <workItem from="1661497801076" duration="34979000" />
       <workItem from="1661588904036" duration="1026000" />
+      <workItem from="1661615776819" duration="1300000" />
+      <workItem from="1661693042261" duration="1197000" />
+      <workItem from="1661695733133" duration="5759000" />
     </task>
     <servers />
   </component>
@@ -276,6 +312,11 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/workspace/hello-graphql-java" />
+    </ignored-roots>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

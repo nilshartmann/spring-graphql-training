@@ -1,0 +1,20 @@
+type Member {
+    id: ID!
+    name: String!
+}
+
+type Story {
+    id: ID!
+    title: String!
+    body: String!
+
+    excerpt: String!
+
+    writtenBy: Member!
+}
+
+type Query {
+    stories: [Story!]!
+
+    story(storyId: ID!): Story
+}

@@ -1,20 +1,24 @@
-type Member {
-    id: ID!
-    name: String!
-}
-
-type Story {
+"""
+This is a `Story`.
+"""
+type Story  {
     id: ID!
     title: String!
     body: String!
 
-    excerpt: String!
-
     writtenBy: Member!
 }
 
-type Query {
-    stories: [Story!]!
+type Member {
+    id: ID!
 
-    story(storyId: ID!): Story
+    profileImage: String!
 }
+
+type Query {
+    "Returns the newest `Story` in our backend or null if no Story available"
+    story(storyId: ID!): Story
+
+    stories: [Story!]!
+}
+

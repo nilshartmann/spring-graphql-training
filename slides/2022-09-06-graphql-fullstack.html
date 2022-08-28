@@ -726,6 +726,8 @@ type Story {
 
 ### Übung: Schema beschreiben
 
+TODO: OHNE SPRING!
+
 ---
 
 ### Vorbereitung: Das Repository
@@ -794,7 +796,8 @@ type Story {
 * graphql-java ist die Grundlage aller(?) Java-Frameworks für GraphQL
   * Parsen und Validieren der Queries
   * Optimierte Ausführung der `DataFetcher` zum Ermitteln der Daten (später mehr)
-  * Kein Abhängigkeit zu anderen Bibliotheken, auch kein HTTP Endpunkt
+  * Keine Abhängigkeit zu anderen Bibliotheken
+  * **Kein HTTP Endpunkt**
   * Alle anderen Frameworks abstrahieren davon und bieten "High-Level" API
 
 ---
@@ -815,6 +818,14 @@ type Story {
 
 ### DataFetcher (graphql-java)
 
+* <!-- .element: class="demo" --> Demo: DataFetcher- mit ping-Feld
+* <!-- .element: class="demo" --> Schema-Mapping!
+* <!-- .element: class="demo" --> Argumente!
+
+---
+
+### DataFetcher (graphql-java)
+
 * Zentrales Interface in GraphQL-Java: Ermitteln die Daten für _ein_ Feld eines Queries
   * Zum Beispiel für das Feld `Query.story` oder `Story.title`
   * Hier nur zur Kenntnis, in Spring GraphQL abstrahiert
@@ -828,30 +839,86 @@ type Story {
 
 * Beispiel:
 * ```java  
-  public class PublyDataFetchers {
-
-    public DataFetcher<String> pingFetcher = new DataFetcher() {
+  class PingDataFetcher implements DataFetcher<String> {
 
       @Override
       public String get(DataFetchingEnvironment env)  {
-
-        String msg = env.getArgumentOrDefault("msg", "Pong!");
-        return msg;
-
+        return "Pong";
       }
-    };
   }
   ```
 
+---
+### DataFetchingEnvironment (graphql-java)
 
-* Jeder DataFetcher wird im **RuntimeWiring** einem Feld der API zugewiesen
+* Jeder DataFetcher bekommt zur Laufzeit ein `DataFetchingEnvironment` übergeben
+* Dieses enthält unter anderem die an ein Feld übergebenen Argumente
+* ```java
+  class StoryByIdFetcher<Story> {
+      @Override
+      public Story get(DataFetchingEnvironment env)  {
+        Long id = env.getArgumentOrDefault("storyId", 1L);
+        return ...; // Story mit der id aus DB laden o.ä.
+      }
+  }
+  ```
 
 ---
+
+### RuntimeWiring
+
+* Im `RuntimeWiring` werden u.a. alle `DataFetcher` den Felder in unserem Schema zugewiesen
+* Um eine Instanz davon zu erzeugen, wird ein `RuntimeWiringBuilder` verwendet
+* An diesem werden für jeden Typ aus unserem Schema (auch `Query`, `Mutation`, `Subscription`)
+            DataFetcher-Instanzen zu Feldern zugeordnet
+* ```java
+    RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
+      .type("Query", builder -> {
+        return builder
+          .dataFetcher("stories", new QueryStoriesDataFetcher())
+          .dataFetcher("story", new StoryByIdDataFetcher());
+      })
+      .type("Story", builder -> {
+        return builder.dataFetcher("excerpt", new ExcerptDataFetcher());
+      })
+      .build();
+  ```
+
+---
+
 
 ## GraphQL Java Architektur
 
 
 <img src="images/graphql-java-architektur.png" />
+
+---
+### Übung: Hello, GraphQL-Java!
+
+* DataFetcher implementieren
+* Hinzufügen zum RuntimeWiring
+
+---
+
+## Exkurs: Spring und Spring Boot
+
+* Was ist Spring?
+  * DI
+  * Beans und Autowiring
+  * Annotationen
+* Was ist JPA
+  * Was ist spring-data?
+* Was ist Spring Boot?
+
+---
+### Übung: Spring
+
+* Hello GraphQL Java auf Spring portieren!
+* DataFetcher als `Components`
+  * Repository darein injizieren
+* RuntimeWiringConfig o.ä. als Service bauen (in der nicht-Spring-Version schon vorbereiten)
+  * Darein die DataFetcher injizieren
+
 ---
 
 ## Spring for GraphQL
