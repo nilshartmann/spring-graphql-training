@@ -73,8 +73,8 @@ public class GraphQLApi {
   }
 
   public static void main(String []args) throws Exception {
-    GraphQLApi graphQLApi = new GraphQLApi();
-    graphQLApi.buildGraphQLApi();
+    GraphQLApi graphQLProvider = new GraphQLApi();
+    graphQLProvider.buildGraphQLApi();
   }
 
 }

@@ -830,12 +830,12 @@ TODO: OHNE SPRING!
   * Zum Beispiel für das Feld `Query.story` oder `Story.title`
   * Hier nur zur Kenntnis, in Spring GraphQL abstrahiert
   * In anderen GraphQL Frameworks auch `Resolver` genannt
-
-* ```java  
+* ```java
   interface DataFetcher<T> {
     T get(DataFetchingEnvironment environment); 
   }  
-  ```  
+  ```
+* `T` ist der Typ, der von diesem DataFetcher zurückgeliefert wird
 
 * Beispiel:
 * ```java  
