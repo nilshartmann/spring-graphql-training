@@ -1,0 +1,12 @@
+# TODO: Definiere das Schema!
+
+# Vervollständige die Datei `resources/graphql/hello-graphql-java.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
+#   **Member** mit `id` und `profileImage`
+#   **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
+# Alle Felder in den beiden Typen sind Pflicht (non-nullable), das `id`-Feld ist vom Typ `ID` alle anderen Strings
+# Lege den Query-Typen mit folgenden Feldern an:
+#   `stories`: Liefert eine Liste der `Story`-Objekte zurück. Nicht nullable.
+#   `story`: Liefert eine einzelne Story zurück. Das Feld soll ein Argument haben: `storyId`. Das Feld kann `null` zurückgeben
+# Füge für das `story`-Feld Dokumentation hinzu
+# Wenn Du das Schema korrekt beschrieben hast, sollten die Tests in derTest-Klasse `nh.publy.SchemaTest` "grün" werden
+# Eine mögliche Lösung findest Du in `hello-graphql-steps/01-schema`
