@@ -10,28 +10,16 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import nh.publy.domain.StoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
-@Component
 public class GraphQLProvider {
 
   private static final Logger log = LoggerFactory.getLogger(GraphQLProvider.class);
-
   private final StoryRepository storyRepository;
-  private final QueryStoriesDataFetcher queryStoriesDataFetcher;
-  private final StoryByIdDataFetcher storyByIdDataFetcher;
-  private final ExcerptDataFetcher excerptDataFetcher;
 
-  public GraphQLProvider(StoryRepository storyRepository,
-                         QueryStoriesDataFetcher queryStoriesDataFetcher,
-                         StoryByIdDataFetcher storyByIdDataFetcher,
-                         ExcerptDataFetcher excerptDataFetcher) {
-    this.storyRepository = storyRepository;
-    this.queryStoriesDataFetcher = queryStoriesDataFetcher;
-    this.storyByIdDataFetcher = storyByIdDataFetcher;
-    this.excerptDataFetcher = excerptDataFetcher;
+  public GraphQLProvider() {
+    this.storyRepository = new StoryRepository();
   }
 
   public GraphQL getGraphQL() {
@@ -39,15 +27,18 @@ public class GraphQLProvider {
     InputStream schemaStream = getClass().getResourceAsStream("/graphql/hello-graphql-java.graphqls");
     TypeDefinitionRegistry typeDefinitionRegistry = schemaParser.parse(schemaStream);
 
+    // TODO:
+    //  1. Implementiere die DataFetcher:
+    //      - QueryStoriesDataFetcher (für Query.stories)
+    //      - StoryByIdDataFetcher (für Query.story)
+    //      - ExcerptDataFetcher( für Story.excerpt)
+    //  2. Instantiiere die DataFetcher:
+    //   - Die Story-Datafetcher benötigen die Instanz StoryRepository von oben
+    //      übergib diese per Konstruktor an die DataFetcher
+
     RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
-      .type("Query", builder -> {
-        return builder
-          .dataFetcher("stories", queryStoriesDataFetcher)
-          .dataFetcher("story", storyByIdDataFetcher);
-      })
-      .type("Story", builder -> {
-        return builder.dataFetcher("excerpt", excerptDataFetcher);
-      })
+    // TODO:
+    //  2. Registriere die DataFetcher hier am RuntimeWiring
       .build();
 
     SchemaGenerator schemaGenerator = new SchemaGenerator();

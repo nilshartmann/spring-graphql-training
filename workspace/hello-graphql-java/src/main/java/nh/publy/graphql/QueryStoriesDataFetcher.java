@@ -4,21 +4,10 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import nh.publy.domain.Story;
 import nh.publy.domain.StoryRepository;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
-public class QueryStoriesDataFetcher implements DataFetcher<List<Story>> {
-
-  private final StoryRepository storyRepository;
-
-  public QueryStoriesDataFetcher(StoryRepository storyRepository) {
-    this.storyRepository = storyRepository;
-  }
-
-  @Override
-  public List<Story> get(DataFetchingEnvironment environment) throws Exception {
-    return storyRepository.findAllStories();
-  }
+public class QueryStoriesDataFetcher {
+  // TODO: Implementiere diesen DataFetcher:
+  //  er soll ALLE Stories aus einem StoriesRepository zurückliefern
 }
