@@ -760,22 +760,16 @@ TODO: OHNE SPRING!
 ### Übung: Schema beschreiben
 
 * <!-- .element: class="very-small" --> 
-* Vervollständige die Datei `resources/graphql/publy.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
+* Vervollständige die Datei `resources/graphql/hello-graphql-java.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
   * **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
   * Alle Felder in den beiden Typen sind Pflicht (non-nullable), das `id`-Feld ist vom Typ `ID` alle anderen Strings
 * Lege den Query-Typen mit folgenden Feldern an:
   * `stories`: Liefert eine Liste der `Story`-Objekte zurück. Nicht nullable.
   * `story`: Liefert eine einzelne Story zurück. Das Feld soll ein Argument haben: `storyId`. Das Feld kann `null` zurückgeben
-* Füge für ein oder zwei Felder Dokumentation hinzu
-* Die Implementierung für die API machen wir später! Du musst also nichts programmieren.
-* Sieh dir das API-Schema in GraphiQL an (http://localhost:8090).
-  * Prüfe, ob Code Completion funktioniert und ob die Dokumentation im "Docs"-Tab findest
-  * Wenn Du Änderungen an der `graphqls`-Datei gemacht hast, musst Du die Anwendung neu bauen, und in GraphiQL
-    die Seite im Browser neu laden.
-  * Du kannst mal probieren, was passiert, wenn Du einen `stories` bzw `story`-Query ausführst.    
-    * Eine gültige ID für eine Story ist z.B. `1`
-* Eine mögliche Lösung findest Du in `steps/01-schema`    
+* Füge für das `story`-Feld Dokumentation hinzu
+* Wenn Du das Schema korrekt beschrieben hast, sollten die Tests in derTest-Klasse `nh.publy.SchemaTest` "grün" werden
+* Eine mögliche Lösung findest Du in `XXXX`
 
 ---
 
@@ -897,6 +891,8 @@ TODO: OHNE SPRING!
 
 * DataFetcher implementieren
 * Hinzufügen zum RuntimeWiring
+* TODOs in GraphQLProvider und DataFetcher-Klassen
+* Nun sollten auch die Tests in `nh.publy.QueryTest` grün werden
 
 ---
 
