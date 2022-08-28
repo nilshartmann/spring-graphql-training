@@ -30,11 +30,14 @@ klonen und die Projekte installieren.
 
 Die Anwendung benötigt folgende folgende Ports:
 
-- 8442 (Docker/Postgres)
+
 - 8090 (Backend für die GraphQL API)
 - 8091 (UserService)
 
 Bitte achte darauf, dass diese Ports nicht belegt sind.
+
+
+# Den Workspace für die Übungen einrichten
 
 ## Schritt 1: Repository klonen
 
@@ -44,46 +47,59 @@ Bitte achte darauf, dass diese Ports nicht belegt sind.
 git clone https://github.com/nilshartmann/spring-graphql-training
 ```
 
-## Schritt 2: Docker starten
-
-Im `workspace`-Verzeichnis des Repositories die Datenbank mit `docker-compose` starten:
-
-```
-cd workspace
-
-docker-compose up -d
-```
-
-Das Starten der Datenbank beim ersten Mal kann etwas dauern, weil zunächst die
-Test-Daten importiert werden.
-
-Mit `docker logs publy_db_graphql_training` kannst Du im Logfile des Containers nach
-den beiden Zeilen suchen, die den Text `database system was shut down`
-bzw. `database system is ready to accept connections` enthalten. Dann ist Postgres
-komplett gestartet.
-
-Zum Beispiel:
-
-```shell
-$ docker logs publy_db_graphql_training
-
-2022-04-19 09:28:35.924 UTC [56] LOG:  database system was shut down at 2022-04-19 09:28:35 UTC
-2022-04-19 09:28:35.950 UTC [1] LOG:  database system is ready to accept connections
-```
-
-## Schritt 3: Testweise den Workspace bauen
+## Schritt 2: Testweise den Workspace bauen
 
 1. Im Verzeichnis **workspace** des Repositories einmal den Gradle-Build ausführen, damit werden dann auch gleich alle benötigten Module geladen:
 
 ```
 cd workspace
 
-./gradlew build
+./gradlew clean build -x :hello-graphql-java:test
 ```
 
-## Schritt 4: Öffnen in der IDE
+## Schritt 3: Frontend Packages installieren
 
-Wenn Du möchstest, kannst Du das `workspace`-Verzeichnis in deiner IDE öffnen. Dort sollten zwei (Gradle-)Projekte erkannt und compiliert werden: `publy-backend` und `publy-userservice`.
+Achtung! Port 3000 darf nicht belegt sein.
+
+Voraussetzung: Der Package-Manager [pnpm](https://pnpm.io/) (Version 7.9.5) ist installiert.
+- Installation von pnpm siehe: https://pnpm.io/installation
+- Bei mir habe ich pnpm wie folgt installiert:
+  ```bash
+  corepack enable
+  corepack prepare pnpm@7.9.5 --activate
+  ```
+- (Möglicherweise funktioniert das Starten auch mit yarn oder npm, aber ich teste mit pnpm).
+- Meine Node-Version ist `16.17.0`
+
+
+Installieren der Packages und testweise Bauen des Frontends:
+```bash
+
+cd workspace/publy-frontend
+
+pnpm install
+
+pnpm build
+```
+
+Wenn Du möchtest, kannst Du das Frontend auch testweise starten:
+
+```bash
+cd workspace/publy-frontend
+
+pnpm start
+```
+
+Du kannst nun das Frontend über `http://localhost:3000` in deinem Browser öffnen.
+
+
+## Schritt 4: Öffnen des Workspaces in der IDE
+
+Wenn Du möchstest, kannst Du das `workspace`-Verzeichnis schon in deiner IDE öffnen. Dort sollten vier (Gradle-)Projekte erkannt und compiliert werden:
+* `hello-graphql-java`
+* `publy-backend`
+* `publy-userservice`
+* `publy-frontend`
 
 Die anderen Verzeichnisse in diesem Repository brauchst Du _nicht_ in der IDE zu öffnen. Wir arbeiten ausschliesslich in dem `workspace`-Verzeichnis.
 
