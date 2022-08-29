@@ -1,5 +1,6 @@
 overwrite: true
-schema: "../publy-backend/src/main/resources/graphql/publy.graphqls"
+schema:
+  - "../publy-backend/src/main/resources/graphql/publy.graphqls"
 documents: "./src/**/{*.graphql,*.tsx}"
 generates:
   src/generated/graphql.tsx:

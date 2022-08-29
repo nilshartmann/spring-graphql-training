@@ -21,104 +21,18 @@ export type Scalars = {
   Float: number;
 };
 
-export type AddCommentFailedPayload = {
-  __typename?: "AddCommentFailedPayload";
-  errorMsg: Scalars["String"];
-};
-
-export type AddCommentInput = {
-  content: Scalars["String"];
-  storyId: Scalars["ID"];
-};
-
-export type AddCommentPayload =
-  | AddCommentFailedPayload
-  | AddCommentSuccessPayload;
-
-export type AddCommentSuccessPayload = {
-  __typename?: "AddCommentSuccessPayload";
-  newComment: Comment;
-};
-
-export type Comment = {
-  __typename?: "Comment";
-  content: Scalars["String"];
-  id: Scalars["ID"];
-  story: Story;
-  writtenBy: Member;
-};
-
-export type Member = {
-  __typename?: "Member";
-  id: Scalars["ID"];
-  profileImage: Scalars["String"];
-  stories: Array<Story>;
-  user?: Maybe<User>;
-};
-
-export type Mutation = {
-  __typename?: "Mutation";
-  addComment: AddCommentPayload;
-};
-
-export type MutationAddCommentArgs = {
-  input: AddCommentInput;
-};
-
-export type OnNewCommentEvent = {
-  __typename?: "OnNewCommentEvent";
-  newComment: Comment;
-};
-
 export type Query = {
   __typename?: "Query";
-  stories: Array<Story>;
-  /** Returns the newest `Story` in our backend or null if no Story available */
-  story?: Maybe<Story>;
-};
-
-export type QueryStoryArgs = {
-  storyId?: InputMaybe<Scalars["ID"]>;
-};
-
-/** This is a `Story`. */
-export type Story = {
-  __typename?: "Story";
-  body: Scalars["String"];
-  comments: Array<Comment>;
-  id: Scalars["ID"];
-  title: Scalars["String"];
-  writtenBy: Member;
-};
-
-export type Subscription = {
-  __typename?: "Subscription";
-  onNewComment: OnNewCommentEvent;
-};
-
-export type SubscriptionOnNewCommentArgs = {
-  storyId: Scalars["ID"];
-};
-
-export type User = {
-  __typename?: "User";
-  email: Scalars["String"];
-  id: Scalars["ID"];
-  name: Scalars["String"];
+  ping?: Maybe<Scalars["String"]>;
 };
 
 export type FeedPageQueryVariables = Exact<{ [key: string]: never }>;
 
-export type FeedPageQuery = {
-  __typename?: "Query";
-  stories: Array<{ __typename?: "Story"; id: string }>;
-};
+export type FeedPageQuery = { __typename?: "Query"; ping?: string | null };
 
 export const FeedPageDocument = gql`
   query FeedPage {
-    stories {
-      id
-    }
+    ping
   }
 `;
 
