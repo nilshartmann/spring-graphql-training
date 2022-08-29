@@ -26,6 +26,14 @@ Auf deinem Laptop/PC sollte installiert sein:
 Um Zeit während des Workshops zu sparen, kannst Du im Vorweg schon den Workspace
 klonen und die Projekte installieren.
 
+## Verzeichnisse
+
+Das Repository besteht aus zwei Verzeichnissen: `app` und `workspace`
+- Wir arbeiten nur in `workspace`. Es reicht, wenn Du dieses Verzeichnis in deiner IDE öffnest (am Besten als Gradle-Projekt importieren)
+- Das `app`-Verzeichnis entält eine "fertige" Anwendung, die braucht ihr nicht zu verwenden. Falls ihr die ausprobieren wollt, findet ihr weiter unten eine Beschreibung.
+
+Die folgenden Schritte beziehen sich also immer auf das `workspace`-Verzeichnis, soweit nicht anders angegeben.
+
 ## Ports
 
 Die Anwendung benötigt folgende folgende Ports:
