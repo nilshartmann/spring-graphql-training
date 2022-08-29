@@ -1,9 +1,0 @@
-query Me {
-  me {
-    id
-    user {
-      name
-    }
-    profileImageUrl
-  }
-}

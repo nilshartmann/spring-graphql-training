@@ -3,7 +3,6 @@ import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { LogoutIcon } from "@heroicons/react/outline";
-import { useMe } from "../shared/useMe";
 import { useAuthContext } from "../shared/AuthContext";
 import { graphiqlUrl } from "../urls";
 
@@ -29,43 +28,44 @@ function UserProfile() {
 }
 
 function UserBadge() {
-  const { me, error } = useMe();
   const { setToken } = useAuthContext();
 
-  if (error) {
-    return (
-      <div className={"flex place-items-center"}>
-        <LogoutIcon
-          className={"h-7 pl-2 hover:cursor-pointer hover:text-orange-500"}
-          onClick={() => setToken("")}
-        />
-      </div>
-    );
-  }
+  return null;
 
-  if (!me) {
-    return null;
-  }
-
-  return (
-    <div className={"flex place-items-center"}>
-      <Link
-        to={`/u/${me.id}`}
-        className={"flex hover:cursor-pointer hover:underline"}
-      >
-        <img
-          className={"h-7 pr-2"}
-          src={me.profileImageUrl}
-          alt={me.user?.name}
-        />
-        {me.user?.name}
-      </Link>
-      <LogoutIcon
-        className={"h-7 pl-2 hover:cursor-pointer hover:text-orange-500"}
-        onClick={() => setToken("")}
-      />
-    </div>
-  );
+  // if (error) {
+  //   return (
+  //     <div className={"flex place-items-center"}>
+  //       <LogoutIcon
+  //         className={"h-7 pl-2 hover:cursor-pointer hover:text-orange-500"}
+  //         onClick={() => setToken("")}
+  //       />
+  //     </div>
+  //   );
+  // }
+  //
+  // if (!me) {
+  //   return null;
+  // }
+  //
+  // return (
+  //   <div className={"flex place-items-center"}>
+  //     <Link
+  //       to={`/u/${me.id}`}
+  //       className={"flex hover:cursor-pointer hover:underline"}
+  //     >
+  //       <img
+  //         className={"h-7 pr-2"}
+  //         src={me.profileImageUrl}
+  //         alt={me.user?.name}
+  //       />
+  //       {me.user?.name}
+  //     </Link>
+  //     <LogoutIcon
+  //       className={"h-7 pl-2 hover:cursor-pointer hover:text-orange-500"}
+  //       onClick={() => setToken("")}
+  //     />
+  //   </div>
+  // );
 }
 
 export function NavBar() {

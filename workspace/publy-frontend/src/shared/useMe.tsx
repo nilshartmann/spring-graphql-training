@@ -1,7 +1,5 @@
-import { useMeQuery } from "../generated/graphql";
-
 export function useMe() {
-  const { error, data } = useMeQuery();
+  const { error, data } = { error: null, data: null };
 
   if (error) {
     return { error };

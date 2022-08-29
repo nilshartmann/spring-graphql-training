@@ -1,8 +1,0 @@
-fragment BasicMember on Member {
-  id
-  profileImageUrl
-  user {
-    id
-    name
-  }
-}
