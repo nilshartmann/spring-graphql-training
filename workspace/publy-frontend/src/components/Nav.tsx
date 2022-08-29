@@ -2,7 +2,6 @@
 import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button";
-import { LogoutIcon } from "@heroicons/react/outline";
 import { useAuthContext } from "../shared/AuthContext";
 import { graphiqlUrl } from "../urls";
 
@@ -28,7 +27,7 @@ function UserProfile() {
 }
 
 function UserBadge() {
-  const { setToken } = useAuthContext();
+  // const { setToken } = useAuthContext();
 
   return null;
 
