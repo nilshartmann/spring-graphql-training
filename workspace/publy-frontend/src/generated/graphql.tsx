@@ -111,28 +111,13 @@ export type FeedPageQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FeedPageQuery = {
   __typename?: "Query";
-  stories: Array<{
-    __typename?: "Story";
-    id: string;
-    title: string;
-    writtenBy: {
-      __typename?: "Member";
-      user?: { __typename?: "User"; id: string; name: string } | null;
-    };
-  }>;
+  stories: Array<{ __typename?: "Story"; id: string }>;
 };
 
 export const FeedPageDocument = gql`
   query FeedPage {
     stories {
       id
-      title
-      writtenBy {
-        user {
-          id
-          name
-        }
-      }
     }
   }
 `;

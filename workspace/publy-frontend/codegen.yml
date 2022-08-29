@@ -1,6 +1,6 @@
 overwrite: true
 schema: "../publy-backend/src/main/resources/graphql/publy.graphqls"
-documents: "./src/**/*.graphql"
+documents: "./src/**/{*.graphql,*.tsx}"
 generates:
   src/generated/graphql.tsx:
     plugins:
