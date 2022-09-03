@@ -232,6 +232,10 @@ li.demo li.demo:before {
   content: none;
 } 
 
+ul.note {
+  display: block;
+  text-align: center;
+}
 
 li.note {
   margin-top: 5px;

@@ -68,14 +68,6 @@ Reveal.initialize({
     //   n.parentNode.insertBefore(div, n);
     //   div.appendChild(n);
     // });
-
-    // li having a code inside, should not have a bullet point (see also styles.css)
-    document.querySelectorAll("li > pre.code-wrapper").forEach((n) => {
-      n.parentNode.classList.add("no-icon");
-    });
-    document.querySelectorAll("li > img").forEach((n) => {
-      n.parentNode.classList.add("no-icon");
-    });
   } else {
     // public version
 
@@ -85,7 +77,21 @@ Reveal.initialize({
     document.querySelectorAll(".todo").forEach((n) => n.remove());
   }
 
+  // -----------------------------------------------------------------------------------
   // Changes for both public and presenter version
+  // -----------------------------------------------------------------------------------
+
+  // li having a code inside, should not have a bullet point (see also styles.css)
+  document.querySelectorAll("li > pre.code-wrapper").forEach((n) => {
+    n.parentNode.classList.add("no-icon");
+  });
+  document.querySelectorAll("li > img").forEach((n) => {
+    n.parentNode.classList.add("no-icon");
+  });
+
+  document.querySelectorAll("ul > li.note").forEach((n) => {
+    n.parentNode.classList.add("note");
+  });
 
   // open all externals link in new tab
   document.querySelectorAll('a:not([href^="#"])').forEach((i) => {

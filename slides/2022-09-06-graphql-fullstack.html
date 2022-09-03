@@ -111,14 +111,13 @@
 
 * Teil 1: GraphQL
   * Was ist GraphQL?
-  * Die Abfragesprache
-  * APIs beschreiben
+  * [Die Abfragesprache](#/graphql-sprache)
 
-
-* Teil 2: Spring GraphQL
-  * GraphQL APIs mit Java implementieren
-  * Optimierungen
-  * Testen
+* Teil 2: [GraphQL APIs bereitstellen](#/graphql-apis-bereitstellen)
+  * [Das Schema Definieren](#/schema)
+  * [Die Basis: graphql-java](#/graphql-java)
+  * [Exkurs: Einführung in Spring und Spring Boot](#/exkurs-spring)
+  * GraphQL APIs mit Spring for GraphQL
 
 * Teil 3: [GraphQL Clients mit React und Apollo](#/t-graphql)
 
@@ -211,11 +210,10 @@ _"GraphQL is a query language for APIs and a runtime for fulfilling those querie
 * <!-- .element: class="demo" --> TypeScript (optional)
   * <!-- .element: class="demo" --> publy-frontend, npm run codegen:watch
   * <!-- .element: class="demo" --> StoryPage.query.graphql zeigen und story-Feld entfernen
-
 ---
 
+<!-- .slide: id="graphql-sprache" -->
 # Die GraphQL Abfrage-Sprache
-
 ---
 
 ### Sprache, um **Felder** aus einem **Objekt-Graphen** abzufragen
@@ -372,12 +370,13 @@ query {
 _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
 * Öffne GraphiQL auf meinem Computer (URL gebe ich euch)
-* Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert, und folgende Felder abfragt:
+* Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert und folgende Felder abfragt:
   * Id, Titel, Excerpt, Veröffentlichungsdatum, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
   * Kannst Du den Query so erweitern, dass er die ersten zehn _neusten_ Stories zurückliefert?
 * Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
 * Mögliche Lösung: [https://graphql.schule/queries](https://graphql.schule/queries)
 
+<!-- .element: class="todo" -->Union-Type oder Interface oder Fragment einbauen
 ---
 
 ### GraphQL Requests
@@ -400,8 +399,14 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
 
 ---
- 
-# Das GraphQL Schema
+
+### Teil II
+<!-- .slide: id="graphql-apis-bereitstellen" -->
+# GraphQL APIs bereitstellen
+
+---
+<!-- .slide: id="schema" -->
+## Das GraphQL Schema
 
 ---
 
@@ -702,64 +707,24 @@ type Story {
 
 ---
 
-### Das Schema in Spring GraphQL
-
-* Das Schema wird in Dateien mit der Endung `.graphqls` abgelegt
-  * Verzeichnis: `main/resources/graphql`
-* Spring Boot sammelt alle Schema-Dateien ein und erzeugt ein Schema daraus
-* Typen können erweitert werden
-
-
-<pre class="fragment"><code class="graphql">
-  # story.graphqls
-  extend type Query {
-    story(id: ID!): Story
-  }
-
-  # comment.graphqls
-  extend type Query {
-    comment(id: ID): Comment
-  }
-</code></pre>
-
----
-
 ### Übung: Schema beschreiben
-
-TODO: OHNE SPRING!
 
 ---
 
 ### Vorbereitung: Das Repository
 
 * `workspace`: Hier arbeiten wir, bitte in der IDE öffnen
+  * `workspace/hello-graphql-java`: Java-Projekt mit graphql-java für die Basis ohne Spring
   * `workspace/publy-backend`: Spring Boot-Projekt, in dem wir die GraphQL API implementieren
   * `workspace/publy-userservice`: Spring Boot-Projekt mit dem UserService
   * `workspace/steps`: Lösungen für die einzelnen Übungen
+* Nach dem Öffnen in der IDE sollte es keine Compilier-Fehler geben.
+  * Zur Sicherheit einmal JUnit-Test in `hello-graphql-java` ausführen: `nh.publy.GraphQLProviderTest`
+  * Die anderen beiden Test-Klassen funktionieren *nicht*, bzw. werden "rot" beim Ausführen
 
 ---
-
-### Vorbereitung: Starten der Anwendung
-
-* Verzeichnis `workspace` in der IDE öffnen
-* Dort sind zwei Spring Boot-Anwendungen vorhanden: `publy-userservice` und `publy-backend`
-
-* Schritt 1: Datenbank starten
-  * Im `workspace`-Verzeichnis: `docker-compose up -d`
-  * (Dauert einen Moment, bis die Daten importiert werden)
-* Schritt 2: User Service starten
-  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
-  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
-* Schritt 3: Backend starten
-  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
-  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
-  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
-
----
-
 ### Übung: Schema beschreiben
-
-* <!-- .element: class="very-small" --> 
+* <!-- .element: class="very-small" -->
 * Vervollständige die Datei `resources/graphql/hello-graphql-java.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
   * **Story** mit `id`, `title` und `body` und einer Referenz (`writtenBy`) auf den Member
@@ -769,42 +734,54 @@ TODO: OHNE SPRING!
   * `story`: Liefert eine einzelne Story zurück. Das Feld soll ein Argument haben: `storyId`. Das Feld kann `null` zurückgeben
 * Füge für das `story`-Feld Dokumentation hinzu
 * Wenn Du das Schema korrekt beschrieben hast, sollten die Tests in derTest-Klasse `nh.publy.SchemaTest` "grün" werden
-* Eine mögliche Lösung findest Du in `XXXX`
+* Eine mögliche Lösung findest Du in `hello-graphql-steps/01-schema`
 
 ---
 
-# Implementieren der GraphQL API
+
+<!-- .slide: id="api-implementieren" -->
+## Implementieren der GraphQL API
 
 ---
 
 ### Die Beispiel-Anwendung
 
 <img src="images/publy-architektur.png" />
+            <!-- .element: class="todo" -->eventuell später
 
 ---
 
-### graphql-java (und andere GraphQL Frameworks für Java)
+### Die Basis: graphql-java
+<!-- .slide: id="graphql-java" -->
 
-<img style="height:350px" src="images/java-graphql-frameworks.png" />
-
-* graphql-java ist die Grundlage aller(?) Java-Frameworks für GraphQL
-  * Parsen und Validieren der Queries
-  * Optimierte Ausführung der `DataFetcher` zum Ermitteln der Daten (später mehr)
-  * Keine Abhängigkeit zu anderen Bibliotheken
-  * **Kein HTTP Endpunkt**
-  * Alle anderen Frameworks abstrahieren davon und bieten "High-Level" API
+* <img style="height:350px" src="images/java-graphql-frameworks.png" />
+* [graphql-java](https://www.graphql-java.com/) ist die Basis für alle (?) Java-basierten GraphQL-Frameworks
+* Zuständig für die eigentliche Ausführung einer GraphQL Operation:
+  * Schema-Definition mit der SDL (oder per Java API)
+  * Parsen und validieren einer GraphQL Operation
+  * Optimierte Ausführung der `DataFetcher` zum Ermitteln der Daten (z.B. Parallelisierung)
+  * Aber: kein HTTP Endpunkt, keine Security etc.
+* API ist low-level (`DataFetcher`)
+* Andere GraphQL Frameworks abstrahieren davon und stellen weitere Features zur Verfügung
 
 ---
+
+
 
 ### Verarbeitung eines GraphQL Queries (allgemein)
 
 1. Query kommt an (HTTP Endpunkt)
 2. Query wird geparst und validiert 
 3. Ungültige Queries werden abgewiesen (`errors`-Feld in der Antwort) 
-4. Für jedes Feld wird eine *Resolver-Funktion* (auch DataFetcher genannt) aufgerufen, die verantwortlich dafür ist, die Daten für das jeweilige Feld zu liefern
+4. Für jedes Feld wird eine *Resolver-Funktion* (auch *DataFetcher* oder *Mapping-Funktion* genannt) aufgerufen, die verantwortlich dafür ist, die Daten für das jeweilige Feld zu liefern
 5. Die Ergebnisse der Resolver werden validiert (insb. hinsichtlich der Typen)
 6. Das Ergebnis wird als `data`-Feld bereitsgestellt
 7. Das Ergebnis wird an den Client zurückgeschickt 
+
+<!-- .slide: class="left" -->
+* Graphql-java ist für Punkte 2-6 verantwortlich
+
+<!-- end of the list -->
 
 * <!-- .element: class="note" --> Unsere Aufgabe ist es, die Resolver zu implementieren
 
@@ -815,6 +792,7 @@ TODO: OHNE SPRING!
 * <!-- .element: class="demo" --> Demo: DataFetcher- mit ping-Feld
 * <!-- .element: class="demo" --> Schema-Mapping!
 * <!-- .element: class="demo" --> Argumente!
+* <!-- .element: class="demo" --> Workspace `hello-graphql-java` oder eigenen anlegen
 
 ---
 
@@ -822,7 +800,7 @@ TODO: OHNE SPRING!
 
 * Zentrales Interface in GraphQL-Java: Ermitteln die Daten für _ein_ Feld eines Queries
   * Zum Beispiel für das Feld `Query.story` oder `Story.title`
-  * Hier nur zur Kenntnis, in Spring GraphQL abstrahiert
+  * In Spring for GraphQL wird davon abstrahiert
   * In anderen GraphQL Frameworks auch `Resolver` genannt
 * ```java
   interface DataFetcher<T> {
@@ -841,18 +819,23 @@ TODO: OHNE SPRING!
       }
   }
   ```
-
+* oder als Lambda:
+* ```java
+  class DataFetchers {
+    public DataFetcher<String> ping = env -> "Pong";
+  }
+  ```
 ---
 ### DataFetchingEnvironment (graphql-java)
 
 * Jeder DataFetcher bekommt zur Laufzeit ein `DataFetchingEnvironment` übergeben
 * Dieses enthält unter anderem die an ein Feld übergebenen Argumente
 * ```java
-  class StoryByIdFetcher<Story> {
+  class PingFetcher<String> {
       @Override
       public Story get(DataFetchingEnvironment env)  {
-        Long id = env.getArgumentOrDefault("storyId", 1L);
-        return ...; // Story mit der id aus DB laden o.ä.
+        String msg = env.getArgumentOrDefault("msg", "Pong");
+        return msg;
       }
   }
   ```
@@ -889,18 +872,21 @@ TODO: OHNE SPRING!
 ---
 ### Übung: Hello, GraphQL-Java!
 
-* DataFetcher implementieren
-* Hinzufügen zum RuntimeWiring
-* TODOs in GraphQLProvider und DataFetcher-Klassen
-* Nun sollten auch die Tests in `nh.publy.QueryTest` grün werden
+* Im `hello-graphql-java`-Projekt fehlen die DataFetcher 😱
+  * Bitte implementiere die drei DataFetcher dort (s. TODOs in den einzelnen Dateien)
+* Füge deine DateFetcher in `GraphQLProvider` zum `RuntimeWiring` hinzu
+* Zur Kontrolle führe die Tests in `nh.publy.QueryTest`, die nun "grün" werden sollten
 
 ---
 
 ## Exkurs: Spring und Spring Boot
+<!-- .slide: id="exkurs-spring" -->
 
 * Was ist Spring?
   * DI
   * Beans und Autowiring
+            * Constructor
+            * Autowired
   * Annotationen
 * Was ist JPA
   * Was ist spring-data?
@@ -920,7 +906,7 @@ TODO: OHNE SPRING!
 * Stelle den `QueryTest` auf einen `SpringBootTest` um:
   * Annotiere ihn mit `@SpringBootTest`
   * Den GraphQL-Provider nicht mit `new` erzeugen, sondern einfach mit `@Autowired` markieren
-* Nun sollten die `QueryTests` einen Spring-Server starten und natürlich grün sein.
+* Nun sollten die `QueryTest` einen Spring-Server starten und natürlich weiterhin grün sein.
 ---
 
 ## Spring for GraphQL
@@ -941,6 +927,26 @@ TODO: OHNE SPRING!
 
 ---
 
+### Das Schema in Spring for GraphQL
+
+* Das Schema wird in Dateien mit der Endung `.graphqls` abgelegt
+  * Verzeichnis: `main/resources/graphql`
+* Spring Boot sammelt alle Schema-Dateien ein und erzeugt ein Schema daraus
+* Typen können erweitert werden
+
+* <pre class="fragment"><code class="graphql">
+  # story.graphqls
+  extend type Query {
+    story(id: ID!): Story
+  }
+
+  # comment.graphqls
+  extend type Query {
+    comment(id: ID): Comment
+  }
+</code></pre>
+---
+
 ## Spring GraphQL
 
 * <!-- .element: class="demo" --> Demo: Handler-Funktionen mit `ping`-Feld
@@ -953,9 +959,8 @@ TODO: OHNE SPRING!
 
 
 * Anstatt `DataFetcher` werden *Handler-Funktionen* an `Controller`-Klassen implementiert
-  * Vorsichtig vergleichbar mit `@RequestMapping` 
 
-  ```java fragment  
+  * ```java fragment
     @Controller
     public GraphQLController {
 
@@ -963,7 +968,7 @@ TODO: OHNE SPRING!
       public String ping() { return "Pong!" }
 
     }
-  ```
+    ```
   
   * Handler-Funktionen für Felder am Query-Typen werden mit `@QueryMapping` annotiert
     * Mutations: `@MutationMapping`, Subscription: `@SubscriptionMapping`
@@ -1051,39 +1056,54 @@ TODO: OHNE SPRING!
 
 ---
 
-
 ## Übung: Handler-Funktionen
+---
 
-_Implementiere zwei Handler-Funktionen_
 
-* Eine Handler-Funktion `Query.stories` und für `Query.story(id: ID!)`
+### Vorbereitung: Starten der Anwendung
+
+* Ab jetzt arbeiten wir in der "Publy"-Beispiel-Anwendung
+* Diese besteht aus zwei Spring Boot Anwendungen: `publy-userservice` und `publy-backend`
+
+* Schritt 1: User Service starten
+  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
+  * Diese Anwendung kann die ganze Zeit durchlaufen, wir machen hier keine Änderungen
+* Schritt 2: Backend starten
+  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
+  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
+
+---
+
+### Übung: Handler-Funktionen
+
+* Kopiere dein Schema aus der `hello-graphql-java`-Übung (oder aus dem `01-schema`-Verzeichnis)
+  nach `publy-backend/src/main/resources/graphql` (bestehendes Schema überschreiben)
+* Implementiere zwei Handler-Funktionen für die Root-Felder unserer API:
+  * Eine Handler-Funktion für `Query.stories` und für `Query.story(id: ID!)`
 * Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
 * Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
   * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
 * Folgende Queries sollten danach funktionieren:
-* ```graphql
-  query {
-    stories {
-      id title body
-     
-      writtenBy {
-        id profileImage
-      }
-    }
-  }
-  ```
-* ```graphql
-  query {
-    story(storyId: 1) {
-      id title body
-     
-      writtenBy {
-        id profileImage
-      }
-    }
-  }
-  ```
+  * ```graphql
+      query {
+        stories {
+          id title body
 
+          writtenBy { id profileImage }
+        }
+      }
+      ```
+  * ```graphql
+      query {
+        story(storyId: 1) {
+          id title body
+
+          writtenBy { id profileImage }
+        }
+      }
+      ```
 * Eine mögliche Lösung findest Du in `steps/10_handler_function`
 
 ---
