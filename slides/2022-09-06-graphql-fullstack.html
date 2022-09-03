@@ -104,6 +104,15 @@
           </div>
         </section>
 
+        <section>
+          <h2>Und ihr?</h2>
+          <ul>
+            <li>Stellt euch doch bitte kurz vor...</li>
+            <li>Eure Vorkenntnisse in <b>GraphQL</b>, <b>Java</b>, <b>Spring?</b>, <b>React/TypeScript</b></li>
+            <li>Wünsche für diese Schulung? Besondere Themen oder Interessen?</li>
+          </ul>
+        </section>
+
         <section data-markdown>
           <textarea data-template>
 
@@ -117,19 +126,17 @@
   * [Das Schema Definieren](#/schema)
   * [Die Basis: graphql-java](#/graphql-java)
   * [Exkurs: Einführung in Spring und Spring Boot](#/exkurs-spring)
-  * GraphQL APIs mit Spring for GraphQL
+  * [GraphQL APIs mit Spring for GraphQL](#/spring-for-graphql)
 
-* Teil 3: [GraphQL Clients mit React und Apollo](#/t-graphql)
+* Teil 3: [GraphQL Clients mit React und Apollo](#/t-apollo-react)
 
 ---
 
 ## Zeitplan
 
-* 13:30 bis 15:00  Teil 1
+* 08:30-12:30
 
-* 15:00-15:30 Kaffeepause ☕️ 🍰
-
-* 15:30 bis 17:00 Teil 2
+* Zwischendurch Pausen ☕️ 🍰
 
 ---
 
@@ -274,7 +281,7 @@ Der Operation-Type bestimmt auch den Einstiegspunkt in den Objekt-Graphen
 * Operationen können **Namen** haben.
 * Das ist vor allem für Debugging und Code-Generatoren relevant
 
-<pre class="fragment"><code class="graphql">
+* <pre class="fragment"><code class="graphql">
 query NewestStory {
     story {
       id
@@ -287,23 +294,23 @@ query NewestStory {
 
 ### Fragmente
 
-Mit einem **Fragment** beschreibst Du eine wiederverwendbare Menge von Feldern
-<pre><code class="graphql">
-fragment BaseMember on Member {
-    id joined
-    user { is username }
-}
+* Mit einem **Fragment** beschreibst Du eine wiederverwendbare Menge von Feldern
+* ```graphql
+  fragment BaseMember on Member {
+      id joined
+      user { is username }
+  }
 
-query {
-    story {
-      writtenBy { ...BaseMember }
+  query {
+      story {
+        writtenBy { ...BaseMember }
 
-      reactions {
-        givenBy { ...BaseMember }
+        reactions {
+          givenBy { ...BaseMember }
+        }
       }
-    }
-}
-</code></pre>
+  }
+  ```
 
 ---
 
@@ -311,40 +318,40 @@ query {
 
 Ein **Union-Type** kann mehr als einen Typ zurückliefern:
 
-<pre><code class="graphql">
-mutation  addComment
-    (input: { storyId: "1", content: "..." }) {
+```graphql
+  mutation  addComment
+      (input: { storyId: "1", content: "..." }) {
 
-    ...on AddCommentSuccessPayload {
-      newComment { id }
-    }
+      ...on AddCommentSuccessPayload {
+        newComment { id }
+      }
 
-    ...on AddCommentFailurePayload {
-      errorMessage
-    }
-}
-</code></pre>
+      ...on AddCommentFailurePayload {
+        errorMessage
+      }
+  }
+```
 
 ---
 ### Interfaces
 
-Ein Interface erzwingt gemeinsame Felder an den Objekten, die das Interface implementieren (ähnlich
+* Ein Interface erzwingt gemeinsame Felder an den Objekten, die das Interface implementieren (ähnlich
     wie in Java mit Methoden)
 
 * Beispiel: `id` und `createdAt` sind am `Node`-Interface definiert
 
-<pre><code class="graphql">
-query {
-    node(id: "...") {
+* ```graphql
+  query {
+      node(id: "...") {
 
-      id
-      createdAt
+        id
+        createdAt
 
-      ...on Story { title body }
-      ...on Comment { content }
-    }
-}
-</code></pre>
+        ...on Story { title body }
+        ...on Comment { content }
+      }
+  }
+  ```
 
 
 ---
@@ -355,13 +362,14 @@ query {
 * Variablen müssen im Query deklariert werden
 * Werte für Variablen werden in einem eigenen JSON-Objekt an den Server geschickt
 
-<pre class="fragment"><code class="graphql">query ($storyId: ID!) {
+* ```graphql
+  query ($storyId: ID!) {
     story(id: $storyId) {
       id
       title body
     }
-}
-</code></pre>
+  }
+  ```
 
 ---
 
@@ -373,10 +381,12 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 * Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert und folgende Felder abfragt:
   * Id, Titel, Excerpt, Veröffentlichungsdatum, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
   * Kannst Du den Query so erweitern, dass er die ersten zehn _neusten_ Stories zurückliefert?
+* Bau eine Fragment (`Author`), das aus dem `Member` dessen Id, sowie `name` und `id` des Users enthält
+  * Verwende das Fragment, um in den Stories und den Kommentaren jeweils die Member-Informationen abzufragen
+  * In den Stories zusätzlich noch `skills` des Members abfragen
 * Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
 * Mögliche Lösung: [https://graphql.schule/queries](https://graphql.schule/queries)
 
-<!-- .element: class="todo" -->Union-Type oder Interface oder Fragment einbauen
 ---
 
 ### GraphQL Requests
@@ -406,10 +416,6 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
 ---
 <!-- .slide: id="schema" -->
-## Das GraphQL Schema
-
----
-
 ### Das GraphQL Schema
 
 * GraphQL APIs müssen in einem Schema beschrieben werden.
@@ -467,7 +473,7 @@ Beschreibung eines *Objekt Types*
 * Kommentare mit Hash-Zeichen
   * Dokumentation ist Bestandteil der API, Kommentare nicht
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   """
   A `Story` is the main object in our service.
   """
@@ -477,8 +483,7 @@ Beschreibung eines *Objekt Types*
 
     # todo: implement new tags-field (PROJ-666)
   }
-  
-</code></pre>
+  ```
 
 ---
 
@@ -490,7 +495,7 @@ Beschreibung eines *Objekt Types*
   * ID wird als String gelesen und geschrieben, soll aber nicht interpretiert werden
 
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type Member {
     id: ID!
 
@@ -502,8 +507,8 @@ Beschreibung eines *Objekt Types*
     amount: Float!
 
     activeMember: Boolean
-}
-</code></pre>
+  }
+  ```
   
 
 * Man kann eigene skalare Typen bauen
@@ -513,13 +518,14 @@ Beschreibung eines *Objekt Types*
 
 * Wie in Java
 
-<pre class="fragment"><code class="graphql">
+* <!-- .element: style="min-width: 500px" -->
+  ```graphql
   enum ReactionType {
     like,
     laugh,
     thumbUp
   }
-</code></pre>
+  ```
 
 ---
 
@@ -527,7 +533,8 @@ Beschreibung eines *Objekt Types*
 
 * Referenzen auf andere Objekt-Typen
 
-<pre class="fragment"><code class="graphql">
+* <!-- .element: style="min-width: 900px" -->
+  ```graphql
   type Member {
     # ...
   }
@@ -543,7 +550,7 @@ Beschreibung eines *Objekt Types*
     comments: [Comment!]!
 
   }
-</code></pre>
+  ```
 
 ---
 
@@ -557,15 +564,15 @@ Beschreibung eines *Objekt Types*
 * Achtung! Argumente dürfen keine Objekt-Typen sein!  
 
 
-<pre class="fragment"><code class="graphql">
-type Story {
+* ```graphql
+  type Story {
 
-  # Mandatory argument maxLength, defaults to 20
-  #  if not specified by the client
-  excerpt(maxLength: Int! = 20): String!
+    # Mandatory argument maxLength, defaults to 20
+    #  if not specified by the client
+    excerpt(maxLength: Int! = 20): String!
 
-}  
-</code></pre>
+  }
+  ```
 
 ---
 
@@ -578,7 +585,7 @@ type Story {
 * Felder an den Root-Typen werden auch **Root-Felder** genannt
 
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type Query {
     """Returns a List of all stories"""
     stories: [Story!]!
@@ -590,8 +597,7 @@ type Story {
   type Mutation {
     addComment(storyId: ID!, memberId: ID!, content: String!): Comment!
   }
-</code></pre>
-
+  ```
 ---
 
 ### Input-Typen
@@ -601,8 +607,7 @@ type Story {
 * Ein Input-Type wird mit `input` definiert, sieht ansonsten aus wie ein Objekt-Type
   * Ein Input-Type darf keine Objekt-Typen referenzieren
 
-
-<pre class="fragment"><code class="graphql">
+* ```graphql
   input AddCommentInput {
     storyId: ID!
     memberId: ID!
@@ -612,7 +617,7 @@ type Story {
   type Mutation {
     addComment(input: AddCommentInput!): Comment!
   }
-</code></pre>
+  ```
 
 ---
 
@@ -622,7 +627,7 @@ type Story {
 * Ein Feld kann ein Typen aus dieser Menge zurückliefern ("A _oder_ B")
 
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type AddCommentSuccess { newComment: Comment! }
   type AddCommentFailed { errorMessage: String! }
 
@@ -631,8 +636,8 @@ type Story {
   type Mutation {
     addComment(input: AddCommentInput!): AddCommentResult!
   }
+  ```
 
-</code></pre>
 
 ---
 
@@ -642,7 +647,7 @@ type Story {
   * Vergleichbar mit Interfaces in Java
 
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   interface Node {
     id: ID!
   }
@@ -669,7 +674,7 @@ type Story {
 
     node(id: ID!): Node 
   }
-</code></pre>
+  ```
 
 ---
 
@@ -680,31 +685,37 @@ type Story {
   * Clients fragen explizit Felder ab, d.h. durch neue Felder werden sie nicht beeinträchtigt
 * Man kann Felder mit `deprecated` markieren, um anzuzeigen, dass sie nicht genutzt werden sollen  
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type Query {
     # Ausgangspunkt 
     getStoryById(id: ID!): Story
   }
-</code></pre>
+  ```
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type Query {
     getStoryById(id: ID!): Story
 
     # Neues Feld, beeinträchtigt bestehenden Client nicht
     stories: [Story!]!
   }
-</code></pre>
+  ```
 
-<pre class="fragment"><code class="graphql">
+* ```graphql
   type Query {
     getStoryById(id: ID!): Story @deprecated("Use story instead")
     story(id: ID!): Story
 
     stories: [Story!]!
   }
-</code></pre>
+  ```
+---
+### _Eine_ API für ganze Anwendung
 
+* Üblicherweise hat eine Anwendung *eine* GraphQL API
+  * In REST gibt es mehrere Endpunkte, die auf unterschiedliche Server verteilt sein können
+  * GraphQL soll zentrale API sein
+  * Untereinander kommunizieren die Services per REST o.ä.
 ---
 
 ### Übung: Schema beschreiben
@@ -719,6 +730,7 @@ type Story {
   * `workspace/publy-userservice`: Spring Boot-Projekt mit dem UserService
   * `workspace/steps`: Lösungen für die einzelnen Übungen
 * Nach dem Öffnen in der IDE sollte es keine Compilier-Fehler geben.
+  * Bitte verwende mindestens *JDK 13*
   * Zur Sicherheit einmal JUnit-Test in `hello-graphql-java` ausführen: `nh.publy.GraphQLProviderTest`
   * Die anderen beiden Test-Klassen funktionieren *nicht*, bzw. werden "rot" beim Ausführen
 
@@ -746,8 +758,8 @@ type Story {
 
 ### Die Beispiel-Anwendung
 
+* <!-- .element: class="todo" -->eventuell später
 <img src="images/publy-architektur.png" />
-            <!-- .element: class="todo" -->eventuell später
 
 ---
 
@@ -874,7 +886,7 @@ type Story {
 
 * Im `hello-graphql-java`-Projekt fehlen die DataFetcher 😱
   * Bitte implementiere die drei DataFetcher dort (s. TODOs in den einzelnen Dateien)
-* Füge deine DateFetcher in `GraphQLProvider` zum `RuntimeWiring` hinzu
+* Füge deine DataFetcher in `GraphQLProvider` zum `RuntimeWiring` hinzu
 * Zur Kontrolle führe die Tests in `nh.publy.QueryTest`, die nun "grün" werden sollten
 
 ---
@@ -909,11 +921,12 @@ type Story {
 * Nun sollten die `QueryTest` einen Spring-Server starten und natürlich weiterhin grün sein.
 ---
 
+<!-- .slide: id="spring-for-graphql" -->
 ## Spring for GraphQL
 
 
 * [Spring for GraphQL](https://spring.io/projects/spring-graphql) bietet eine Abstraktion von GraphQL-Java an
-* Erstes Release von Spring GraphQL enthalten in Spring Boot 2.7 (Mai 2022)
+* Erstes Release von Spring for GraphQL enthalten in Spring Boot 2.7 (Mai 2022)
   * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden
 
 * Features:
@@ -947,7 +960,7 @@ type Story {
 </code></pre>
 ---
 
-## Spring GraphQL
+## Spring for GraphQL
 
 * <!-- .element: class="demo" --> Demo: Handler-Funktionen mit `ping`-Feld
 * <!-- .element: class="demo" --> Query-Mapping!
@@ -960,7 +973,7 @@ type Story {
 
 * Anstatt `DataFetcher` werden *Handler-Funktionen* an `Controller`-Klassen implementiert
 
-  * ```java fragment
+  * ```java
     @Controller
     public GraphQLController {
 
@@ -1036,7 +1049,7 @@ type Story {
 * ```java
   class GreetingInput { private String name; private String msg; /* getter+setter... */ }
 
-  // oder JDK 17 Records:
+  // oder Java 17 Records:
   record GreetingInput(String name, String msg) {}
 
   @QueryMapping
@@ -1085,7 +1098,7 @@ type Story {
 * Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
 * Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
   * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
-* Folgende Queries sollten danach funktionieren:
+* Folgende Queries sollten danach funktionieren (in GraphiQL http://localhost:8080 ausführen!):
   * ```graphql
       query {
         stories {
@@ -1419,21 +1432,9 @@ type Story {
 
 ### Interaktiv: Eine Subscription
 * <!-- .element: class="demo" --> onNewNumber liefert Zahlen zurück
+  * <!-- .element: class="demo" --> (DemoNumberPublisher)
   * <!-- .element: class="demo" --> Wie sieht das Schema aus?
   * <!-- .element: class="demo" --> Wie können wir die Zahlen filtern, so dass z.B. nur gerade oder ungerade Zahlen kommen?
----
-### Eine Subscription für neue Kommentare
-<!-- .slide: class="left" -->
-* ```graphql
-  type OnNewCommentEvent {
-    newComment: Comment!
-  }
-
-  type Subscription {
-    onNewComment(storyId: ID!): OnNewCommentEvent!
-  }
-  ```
-
 ---
 
 ### Übung: Eine Subscription für neue Kommentare
@@ -1692,8 +1693,8 @@ type Story {
 
 * <!-- .element: class="demo" --> Beispiel: Bean Validation mit `addPerson`-Mutation
   * <!-- .element: class="demo" --> @Size und @Valid hinzufügen
-            errors-Objekt!!!!!!!!!!
-  * <!-- .element: class="demo" --> Optionen für Fehlerbehandlung durchspielen: addComent-Mutation aufgreifen, error-Feld vs. Union-Type diskutieren
+  * <!-- .element: class="demo" --> Errors-Objekt beschreiben
+  * <!-- .element: class="demo" --> Was können wir besser machen: Optionen für Fehlerbehandlung durchspielen
 
 ---
 
@@ -1751,7 +1752,7 @@ type Story {
   * `message`: Fehlermeldung
   * `locations`: Auf welche Code-Stelle im Query bezieht sich der Fehler (wenn vorhanden)
   * `path`: Pfad zum Feld, das den Fehler verursacht hat (wenn vorhanden)
-  * `extensions`: Proprietäre Erweiterungen (`classification` kommt von Spring GraphQL)
+  * `extensions`: Proprietäre Erweiterungen (`classification` kommt von Spring for GraphQL)
   * Keines dieser Felder ist im Schema beschrieben!
 * `errors`-Objekt nur für "Request Errors" verwenden, wenn der Query gar nicht
   oder nicht vernünftig ausgeführt werden kann
@@ -2025,8 +2026,8 @@ _Schreibe einen Test für unsere GraphQL-API_
         </section>
 
         <!-- ============================= GRAPHQL ANFANG =================================================================== -->
-        <section id="t-graphql">
-          <h3>Teil V</h3>
+        <section id="t-apollo-react">
+          <h3>Teil 3</h3>
           <h1>GraphQL</h1>
           <h2>Clients mit Apollo React</h2>
         </section>
