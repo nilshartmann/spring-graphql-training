@@ -21,7 +21,7 @@
     <div class="reveal">
       <div class="slides">
         <section data-state="title">
-          <h4 style="margin-bottom: 3rem;font-size:3rem">
+          <h4 style="margin-bottom: 3rem; font-size: 3rem">
             <span class="transparent-bg">
               <a href="https://nilshartmann.net" target="_blank"
                 >Nils Hartmann</a
@@ -35,23 +35,22 @@
           <h2 class="title" style="font-size: 7rem">
             <b>GraphQL "Fullstack"</b>
           </h2>
-          <h3 class="title" style="font-size: 5rem;margin-bottom:3rem">
+          <h3 class="title" style="font-size: 5rem; margin-bottom: 3rem">
             <b>mit Java, Spring und React</b>
           </h3>
 
-<!--          <div style="margin-top: 6rem">-->
-<!--            <h3><span class="transparent-bg">Slides (online)</span></h3>-->
-<!--            <p>-->
-<!--              <a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</a>-->
-<!--            </p>-->
-<!--          </div>-->
-<!--          <div style="margin-top: 6rem">-->
-<!--            <h3><span class="transparent-bg">Workspace Installation</span></h3>-->
-<!--            <p>-->
-<!--              <a class="Link" href="https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md">https://graphql.schule/install</a>-->
-<!--            </p>-->
-<!--          </div>-->
-
+          <!--          <div style="margin-top: 6rem">-->
+          <!--            <h3><span class="transparent-bg">Slides (online)</span></h3>-->
+          <!--            <p>-->
+          <!--              <a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</a>-->
+          <!--            </p>-->
+          <!--          </div>-->
+          <!--          <div style="margin-top: 6rem">-->
+          <!--            <h3><span class="transparent-bg">Workspace Installation</span></h3>-->
+          <!--            <p>-->
+          <!--              <a class="Link" href="https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md">https://graphql.schule/install</a>-->
+          <!--            </p>-->
+          <!--          </div>-->
         </section>
         <section>
           <h2>Nils Hartmann</h2>
@@ -101,8 +100,13 @@
           <h2>Und ihr?</h2>
           <ul>
             <li>Stellt euch doch bitte kurz vor...</li>
-            <li>Eure Vorkenntnisse in <b>GraphQL</b>, <b>Java</b>, <b>Spring?</b>, <b>React/TypeScript</b></li>
-            <li>Wünsche für diese Schulung? Besondere Themen oder Interessen?</li>
+            <li>
+              Eure Vorkenntnisse in <b>GraphQL</b>, <b>Java</b>, <b>Spring?</b>,
+              <b>React/TypeScript</b>
+            </li>
+            <li>
+              Wünsche für diese Schulung? Besondere Themen oder Interessen?
+            </li>
           </ul>
         </section>
 
@@ -2205,22 +2209,16 @@ _Schreibe einen Test für unsere GraphQL-API_
         </section>
 
         <section>
-          <h3>Die Blog Anwendung mit GraphQL</h3>
-
-          <p>👉 Beispiel: steps/8-graphql</p>
-        </section>
-
-        <section>
           <h3>Apollo Client</h3>
           <p>
             <a href="https://www.apollographql.com/docs/react/"
-            >https://www.apollographql.com/docs/react/</a
+              >https://www.apollographql.com/docs/react/</a
             >
           </p>
           <p>React Hooks um mit GraphQL Services zu kommunizieren</p>
           <p>
-            Stellt einen <b>globalen Cache</b> zur Verfügung, um konsistente Daten in der ganzen
-            Anwendung sicherzustellen
+            Stellt einen <b>globalen Cache</b> zur Verfügung, um konsistente
+            Daten in der ganzen Anwendung sicherzustellen
           </p>
         </section>
 
@@ -2233,13 +2231,14 @@ _Schreibe einen Test für unsere GraphQL-API_
           <ul>
             <li>
               <a
-                  href="https://chrome.google.com/webstore/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm"
-              >Chrome</a
+                href="https://chrome.google.com/webstore/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm"
+                >Chrome</a
               >
             </li>
             <li>
-              <a href="https://addons.mozilla.org/de/firefox/addon/apollo-developer-tools/"
-              >Firefox</a
+              <a
+                href="https://addons.mozilla.org/de/firefox/addon/apollo-developer-tools/"
+                >Firefox</a
               >
             </li>
           </ul>
@@ -2347,19 +2346,20 @@ _Schreibe einen Test für unsere GraphQL-API_
 
 
           </textarea>
-         </section>
+        </section>
 
         <!-- ============================================================================= -->
         <section>
           <h3>Apollo React Client</h3>
           <p>
-            Die Komponenten bzw. die React-spezifische API des Apollo Clients, benötigt Zugriff auf
-            den ApolloClient
+            Die Komponenten bzw. die React-spezifische API des Apollo Clients,
+            benötigt Zugriff auf den ApolloClient
           </p>
           <p>Das Client-Objekt muss der Anwendung bereitgestellt werden</p>
           <p>
-            Dazu wird die <code>ApolloProvider</code>-Komponente verwendet, die allen
-            darunterliegenden Komponenten Zugriff auf den ApolloClient ermöglicht:
+            Dazu wird die <code>ApolloProvider</code>-Komponente verwendet, die
+            allen darunterliegenden Komponenten Zugriff auf den ApolloClient
+            ermöglicht:
           </p>
 
           <pre class="fragment"><code class="javascript">
@@ -2377,15 +2377,16 @@ root.render(
 </code></pre>
           <p class="fragment">
             (Der Apollo Client verwendet intern die
-            <a ref="https://reactjs.org/docs/context.html">React Context API</a>)
+            <a ref="https://reactjs.org/docs/context.html">React Context API</a
+            >)
           </p>
         </section>
         <section>
           <h3>Apollo GraphQL Client in React</h3>
           <p>Live: workspace-graphql</p>
         </section>
-<section data-markdown="">
-  <textarea data-template>
+        <section data-markdown="">
+          <textarea data-template>
 ### GraphQL Operationen beschreiben
 
 * GraphQL Operationen können inline oder in einer eigenen Datei beschrieben werden
@@ -2408,10 +2409,9 @@ root.render(
   ```
 * Um die GraphQL-Operationen in einer eigenen Datei abzulegen und zu importieren, müsst ihr [Euer Setup anpassen](https://create-react-app.dev/docs/loading-graphql-files/)
   * Wenn ihr mit dem [GraphQL Codegenerator](https://www.graphql-code-generator.com/) arbeitet, braucht ihr das _nicht_
-  </textarea>
- </section>
-
-
+  </textarea
+          >
+        </section>
 
         <!-- ============================================================================= -->
         <section>
@@ -2419,27 +2419,30 @@ root.render(
 
           <ul>
             <li class="fragment">
-              Apollo stellt für die drei GraphQL Operationstypen jeweils eigene Hooks zur Verfügung:
+              Apollo stellt für die drei GraphQL Operationstypen jeweils eigene
+              Hooks zur Verfügung:
               <ul>
                 <li>
-                  <a href="https://www.apollographql.com/docs/react/data/queries/#usequery-api"
-                  >useQuery</a
+                  <a
+                    href="https://www.apollographql.com/docs/react/data/queries/#usequery-api"
+                    >useQuery</a
                   >
                   (und
                   <a
-                      href="https://www.apollographql.com/docs/react/data/queries/#manual-execution-with-uselazyquery"
-                  >useLazyQuery</a
+                    href="https://www.apollographql.com/docs/react/data/queries/#manual-execution-with-uselazyquery"
+                    >useLazyQuery</a
                   >)
                 </li>
                 <li>
-                  <a href="https://www.apollographql.com/docs/react/data/mutations/#usemutation-api"
-                  >useMutation</a
+                  <a
+                    href="https://www.apollographql.com/docs/react/data/mutations/#usemutation-api"
+                    >useMutation</a
                   >
                 </li>
                 <li>
                   <a
-                      href="https://www.apollographql.com/docs/react/data/subscriptions/#usesubscription-api-reference"
-                  >useSubscription</a
+                    href="https://www.apollographql.com/docs/react/data/subscriptions/#usesubscription-api-reference"
+                    >useSubscription</a
                   >
                 </li>
               </ul>
@@ -2448,544 +2451,25 @@ root.render(
               Die Hooks funktionieren alle ähnlich:
               <ul>
                 <li class="fragment">
-                  Sie erwarten ein Dokument mit einer GraphQL Operation (Ergebnis von
+                  Sie erwarten ein Dokument mit einer GraphQL Operation
+                  (Ergebnis von
                   <code>gql</code>)
                 </li>
                 <li class="fragment">
-                  Verhalten kann mit weiteren Argumenten konfiguriert werden, z.B. Setzen von
-                  Variablen
+                  Verhalten kann mit weiteren Argumenten konfiguriert werden,
+                  z.B. Setzen von Variablen
                 </li>
                 <li class="fragment">
-                  Der Rückgabetyp ist ein Objekt mit Informationen über den Request (loading, data,
-                  error). Bei <code>useMutation</code> kommt kommt außerdem eine Funktion zum
-                  Ausführen der Mutation zurück
+                  Der Rückgabetyp ist ein Objekt mit Informationen über den
+                  Request (loading, data, error). Bei
+                  <code>useMutation</code> kommt kommt außerdem eine Funktion
+                  zum Ausführen der Mutation zurück
                 </li>
               </ul>
             </li>
           </ul>
         </section>
-
-        <!-- ============================================================================= -->
-
-        <section data-markdown="">
-          <textarea data-template>
-### useQuery: GraphQL Query ausführen
-
- * ```javascript
-  const PostListQuery = gql`...`;
-
-  function BlogListPage() {
-    const { loading, error, data } = useQuery(PostListQuery);
-
-    if (loading) {
-      return <h1>Loading, please wait...</h1>;
-    }
-
-    if (error) {
-      return <h1>GraphQL Failed: {error.toString()}</h1>;
-    }
-
-    return &lt;PostList posts={data.posts} />;
-  }
-  ```
-
----
-
-### useQuery: Lebenszyklus
-
-* `useQuery` führt automatisch den übergebenen Query aus, sobald die
-              Komponente gemounted wird
-* Sobald der Request läuft, gibt die Funktion ein Objekt zurück, in dem
-             `loading` auf `true` gesetzt ist. Die Komponente rendert sich neu
-              und Du kannst z.B. einen Loading Indikator anzeigen
-* Sobald die Antwort des Requests ankommt, wird deine Komponente erneut gerendert:
-  * Der `useQuery`-Hook gibt nun ein Objekt zurück, in dem entweder `error` oder
-              `data` gesetzt ist und `loading` jetzt `false` ist.
-  * Du kannst die Informationen nutzen, um die Darstellung zu aktualisieren (Daten oder Fehler anzeigen)
-  * Wenn der Request erfolgreich war, aktualisiert Apollo den globalen Cache mit den
-              geladenen Daten
-  * <em>Alle</em> sichtbaren Komponenten, die (Teile der) geladenen Daten darstellen,
-              werden automatisch aktualisiert
-  * <!-- .element: class="todo" --> beispiel!!!!!!!
-
----
-
-### useQuery: Variablen
-
-* GraphQL Queries können Variablen enthalten
-* Das (optionale) zweite Argument von `useQuery` ist ein Objekt mit
-            Konfigurationsoptionen
-* Mit diesem Argument kannst Du auch Variabeln an deinen Query übergeben
-* ```javascript
-  const POST_PAGE_QUERY = gql`
-    query PostPageQuery($postId: ID!) {
-      post(postId: $postId) {
-        id  title date
-        body user { name }
-      }
-    }
-  `;
-  ```
-* ```javascript
-  function PostPage() {
-    // Receive postId from URL params
-    const { postId } = useParams();
-
-    const { loading, error, data } = useQuery(POST_PAGE_QUERY,
-      {
-        variables: { postId }
-      }
-    );
-    // ...
-  ```
----
-
-## TypeScript
-
-<!-- .element: class="todo" -->Query
-
----
-
-## Übung
-
-<!-- .element: class="todo" -->Query
-
-
-
-
-          </textarea>
-         </section>
-<section data-markdown="">
-  <textarea data-template>
-    ## GraphQL CodeGenerator
-
-<!-- .element: class="todo" -->Erst zum Schluss oder schon ab hier?
-  </textarea>
- </section>
-
-
-
-
-        <!-- ============================================================================= -->
-
-        <section>
-          <h2>Übung: Ein GraphQL Query ausführen</h2>
-          <p>
-            <em>Vorbereitung: GraphQL-Backend starten </em>
-          </p>
-          <div class="fragment">
-            <p>
-              Bitte das GraphQL-Backend starten:
-            </p>
-            <pre><code>
-                  cd react-training/blog-example/backend-graphql
-
-                  npm install (falls noch nicht erfolgt)
-
-                  npm start
-                </code></pre>
-            <p>Der Server läuft auf Port 4000</p>
-            <p>
-              Du kannst den
-              <a
-                  href="https://www.apollographql.com/docs/apollo-server/v2/testing/graphql-playground/"
-              >Apollo Playground</a
-              >
-              für das Blog-Backend unter
-              <a href="http://localhost:4000">http://localhost:4000</a> öffnen und ausprobieren
-            </p>
-            <p>
-              Wenn sich der Playground öffnen lässt, funktioniert das Backend. Dann bitte Hand heben
-              🙋, damit wir gemeinsam weitermachen können
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <h2>Übung: Ein GraphQL Query ausführen</h2>
-          <ol class="x-list">
-            <li class="fragment">
-              <em
-              >Achtung: Neuer Workspace! Wir arbeiten für diese Übung im Verzeichnis
-                <b>workspace-graphql</b></em
-              >
-            </li>
-
-            <li class="fragment">Bitte beende den "alten" Workspace</li>
-            <li class="fragment">
-              Starte dann in <b>workspace-graphql</b> den Development Server für React:
-              <pre><code>
-            cd react-training/blog-example/workspace-graphql
-
-            npm install (falls noch nicht erfolgt)
-
-            npm start
-          </code></pre>
-            </li>
-            <li class="fragment">
-              <em
-              >Implementiere die <code><b>PostListPage</b></code> Komponente</em
-              >
-              (TODOs stehen in der Datei)
-            </li>
-            <li class="fragment">
-              Wenn die Komponente funktioniert, sollten die Blog-Posts angezeigt werden (in dieser
-              Version der Anwendung nur der Titel)
-            </li>
-            <li class="fragment">Fertige Lösung in steps/9-graphql</li>
-
-            <li class="fragment">Wenn Du fertig bist, bitte Hand heben 🙋</li>
-            <!-- <li class="fragment">
-              Zusatz: Öffne dann den Netzwerk-Tab im Browser und prüfe, wann Netzwerk-Requests
-              durchgeführt werden, wenn Du dir nacheinander mehrere Blog-Artikel anzeigen lässt
-            </li> -->
-          </ol>
-        </section>
-
-        <!-- ============================================================================= -->
-        <section>
-          <h3>useQuery: Cache #1</h3>
-
-          <p>
-            Wenn deine Komponete erneut gerendert wird, wird dein Query
-            <b>nicht erneut ausgeführt</b>, sofern Apollo das Ergebnis noch im Cache findet
-          </p>
-          <p>👉 Netzwerk</p>
-        </section>
-
-        <!-- ============================================================================= -->
-        <section>
-          <h3>Der Apollo Cache</h3>
-          <p><em>Apollo normalisiert die Daten bevor sie in den Cache gelegt werden:</em></p>
-          <p class="fragment">
-            Für jedes Objekt, das als Teil deines Queries geladen wurde (egal auf welchem Level),
-            Apollo ermittelt den
-            <b>typename</b>
-          </p>
-          <p class="fragment">
-            Das <code>__typename</code>-Feld wird dafür automatisch allen Queries von Euch
-            hinzugefügt!
-          </p>
-          <p class="fragment">Für jedes Objekt extrahiert Apollo dessen <b>id</b></p>
-          <p class="fragment">
-            Wenn das <b>id</b>-Feld eines Objektes nicht <b>id</b> heißt, muss das in der
-            Konfiguration von Apollo gesetzt werden
-          </p>
-          <p class="fragment">
-            <b>Empfehlung:</b> <em>Immer</em> das <b>id</b>-Feld in jedem Objekt in jedem Query
-            abfragen!
-          </p>
-        </section>
-
-        <section>
-          <h3>Apollo GraphQL: Mutations</h3>
-          <p class="fragment">
-            Ausführen von Mutations ist ähnlich wie das Ausführen eines Queries
-          </p>
-          <p class="fragment">
-            Hook:
-            <a href="https://www.apollographql.com/docs/react/data/mutations/#executing-a-mutation"
-            ><b>useMutation</b></a
-            >
-          </p>
-          <p class="fragment">
-            Der useMutation Hook gibt ein Array (Tuple) mit zwei Einträgen zurück:
-          </p>
-          <p class="fragment">
-            1. Eine Funktion zum Ausführen der Mutation (z.B. nach einer Benutzerinteraktion)
-          </p>
-          <p class="fragment">
-            2. Das Ergebnis-Objekt, das wird schon bei <code>useQuery</code> gesehen haben
-            (zusätzlich: ein <code>called</code>-Property)
-          </p>
-
-          <pre class="fragment"><code class="javascript">
-const NewBlogPostMutation = gql`...`;
-
-function PostEditorPage() {
-  const [mutate, { error, data, called }] = useMutation(NewBlogPostMutation);
-
-  async function savePost(post) {
-    mutate({
-        variables: {
-        postData: post
-      }
-    });
-  }
-
-  const errorMessage = error ? ... : null;
-
-  if (called && !errorMessage) {
-  // Mutation has been executed and was successful
-  return &lt;SuccessConfirmation />;
-}
-
-  // Mutation hasn't been run or failed with an error
-  return &lt;PostEditor onSavePost={savePost} error={errorMessage} />;
-}
-  </code></pre>
-        </section>
-        <section>
-          <h3>Übung: Eine Mutation</h3>
-          <p>
-            <em>Vervollständige die <code>PostEditorPage</code> Komponente</em>
-          </p>
-
-          <ol class="x-list">
-            <li>In <code>PostEditorPage.js</code> stehen TODOs</li>
-            <li>Wenn Du fertig bist, bitte Hand heben 🙋</li>
-          </ol>
-        </section>
-
-        <section>
-          <h3>Aktualisieren des Caches</h3>
-          <p>Es gibt mehrere Möglichkeiten:</p>
-          <ul>
-            <li class="fragment">
-              <a
-                  href="https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy"
-              >Fetch Policy</a
-              >
-            </li>
-            <li class="fragment">
-              <a href="https://www.apollographql.com/docs/react/data/queries/#refetching"
-              >Refetch function</a
-              >
-            </li>
-            <li class="fragment">
-              <a href="https://www.apollographql.com/docs/react/data/queries/#polling"
-              >Polling (alle x ms)</a
-              >
-            </li>
-            <li class="fragment">
-              Mit einer "<b>subscribe to more</b>"-<a
-                href="https://www.apollographql.com/docs/react/data/subscriptions/#subscribing-to-updates-for-a-query"
-            >Subscription</a
-            >
-            </li>
-            <li class="fragment">
-              Mit der
-              <a
-                  href="https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly"
-              >Cache API</a
-              >
-              kannst Du den Cache direkt manipulieren
-            </li>
-          </ul>
-        </section>
-
-        <!-- ============================================================================= -->
-        <section>
-          <h3>Fetch Policy #1</h3>
-          <p>
-            Mit einer Fetch Policy kannst Du bei <code>useQuery</code> einstellen, wann dein Query
-            erneut ausgeführt werden soll
-          </p>
-          <pre class="fragment"><code class="javascript">
-function PostPage() {
-  // Receive postId from URL params
-  const { postId } = useParams();
-
-  const { loading, error, data } = useQuery(POST_PAGE_QUERY,
-    {
-      variables: { postId },
-      fetchPolicy: "network-only"
-    }
-  );
-  // ...
-}
-</code></pre>
-        </section>
-        <section>
-          <h3>Fetch Policy #2</h3>
-          <p>Erlaubte Werte</p>
-          <ul>
-            <li class="fragment">
-              <b>cache-first</b>: Wenn die angeforderten Daten bereits im Cache sind, werden sie aus
-              dem Cache zurückgegeben, sonst vom Backend geladen (Default)
-            </li>
-            <li class="fragment">
-              <b>cache-and-network</b>: Falls vorhanden, Daten aus dem Cache zurückgeben, aber in
-              jedem Fall auch einen Backend-Request auszuführen, um ggf. aktualisierte Daten zu
-              laden (Schnelle Darstellung, die ggf. kurze Zeit später aktualisiert wird)
-            </li>
-            <li class="fragment">
-              <b>network-only</b>: Immer Daten vom Backend laden (keine Daten vom Cache verwenden),
-              aber mit dem Ergebnis den Cache aktualisieren
-            </li>
-            <li class="fragment">
-              <b>no-cache</b>: Immer Daten vom Backend laden und auch nicht den Cache aktualisieren
-            </li>
-            <li class="fragment">
-              <b>cache-only</b>: Nur Daten vom Cache verwenden. Wenn die Daten darin nicht gefunden
-              werden, wird kein Ergebnis zurückgeliefert
-            </li>
-          </ul>
-        </section>
-
-        <!-- ============================================================================= -->
-        <section>
-          <h3>Refetch Funktion</h3>
-          <p>
-            <code>useQuery</code> liefert eine <b>refetch</b>-Funktion, die Du verwenden kannst, um
-            den Query erneut auszuführen (z.B. nach Klick auf einen "Aktualisieren"-Button)
-          </p>
-
-          <pre class="fragment"><code class="javascript">
-function BlogListPage() {
-  const { loading, error, data, refetch } = useQuery(PostListQuery);
-
-  if (loading) {
-    return <h1>Loading, please wait...</h1>;
-  }
-
-  if (error) {
-    return <h1>GraphQL Failed: {error.toString()}</h1>;
-  }
-
-  return &lt;PostList posts={data.posts} onRefetch={refetch}/>;
-}
-    </code></pre>
-
-          <pre class="fragment"><code class="javascript">
-function PostList({posts, onRefetch}) {
-  return &lt;>
-    &lt;button onClick={onRefetch}>Refresh Posts&lt;/button>
-    ...
-  &lt;/>
-}
-</code></pre>
-        </section>
-
-        <section>
-          <h3>Polling</h3>
-          <p>
-            Du kannst ein <code>pollInterval</code> (Zeit in ms) als Query Option angeben. Apollo
-            führt dann den Query dann in dem angegebenen Interval automatisch neu aus
-          </p>
-          <pre class="fragment"><code class="javascript">
-function BlogListPage() {
-  const { loading, error, data } = useQuery(POST_LIST_QUERY,
-    { pollInterval: 1500 }
-  );
-
-// ...wie gesehen...
-}
-    </code></pre>
-        </section>
-
-        <!-- ============================================================================= -->
-        <section>
-          <h3>Den Cache nach einer Mutation aktualisieren</h3>
-
-          <ul>
-            <li>
-              <a href="https://www.apollographql.com/docs/react/data/mutations/#refetching-queries"
-              >refetch Queries</a
-              >: Damit kannst Du eine Liste von Queries angeben, die erneut ausgeführt werden, wenn
-              eine Mutation erfolgreich war
-            </li>
-            <li>
-              Mit der
-              <a
-                  href="https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly"
-              >update-function</a
-              >: kannst Du den Cache direkt per API manipulieren, sobald deine Mutation erfolgreich
-              war
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h3>Nach einer Mutation... wird der Cache automatisch aktualisiert (eventuell)</h3>
-          <p class="fragment">
-            Wenn deine Mutation ein Objekt zurückliefert, das sich bereits im Cache befindet, wird
-            es dort aktualisiert
-          </p>
-          <p class="fragment">
-            Beispiel: Du <b>aktualisierts</b> einen existierenden Blog Post und das Ergebnis der
-            Mutation enthält den aktualisierten Post
-          </p>
-
-          <pre class="fragment"><code class="javascript">
-const UpdatePost = gql`
-  mutation {
-    updateBlogPost(postId: "P1", newTitle: "...", newBody: "...") {
-        id
-        title
-        body
-    }
-  }
-`
-      </code></pre>
-          <p class="fragment">
-            In diesem Beispiel kann Apollo das Objekt <b>P1</b> im Cache automatisch aktualisieren
-          </p>
-        </section>
-
-        <section>
-          <h3>Grenzen der automatischen Cache-Aktualisierung</h3>
-          <p>Es gibt Fälle, da kann Apollo den Cache nicht selbstständig aktualisieren</p>
-          <p>Beispiel: Einfügen eines neuen Objektes in eine Liste</p>
-          <p>
-            Apollo weiß nicht, dass das Objekt, dass eine Mutation zurückliefert, (auch) in eine
-            bestehende Liste gehört
-          </p>
-          <p>
-            Beispiel: Du liest Blog Posts. Du führst eine Mutation aus, die einen neuen Blog Post
-            anlegt (und diesen auch zurückliefert) <br />
-            Apollo legt das neue Objekt in den Cache, weiß aber nicht, dass es auch in die Liste der
-            gelesenen Posts gehört
-          </p>
-        </section>
-
-        <section>
-          <h3>Die Apollo Cache API</h3>
-          <p>Du kannst den Query auslesen (mit einem GraphQL Query!)</p>
-          <p>Du kannst den Cache direkt modifizieren</p>
-        </section>
-
-        <section>
-          <h3>Beispiel: Den Cache aktualisieren</h3>
-          <p>Du kannst die <b>update-Function</b> bei <code>useMutation</code> angeben:</p>
-          <p>
-            Diese Funktion wird nach dem Ausführen der Mutation von Apollo aufgerufen
-          </p>
-          <p>
-            Die Funktion bekommt das Mutation-Ergebnis sowie den aktuellen Cache von Apollo
-            übergeben
-          </p>
-          <p>You can use the cache api to add the new object</p>
-
-          <pre class="fragment"><code class="javascript">
-const ReadPostsFromCache = gql`
-  query ReadPosts {
-    posts {
-      id
-    }
-  }
-`;
-
-function PostEditorPage() {
-  function savePost(post: NewBlogPost) {
-    mutate({
-      variables: {...},
-      update: (cache, {data}) => {
-      const { posts } = cache.readQuery({
-        query: ReadPostsFromCache
-      });
-      cache.writeQuery({
-        query: ReadPostsFromCache,
-        data: { posts: posts.concat(data.newPost) }
-      });
-    }
-  })
-}
-
-return ...;
-}
-</code></pre>
-        </section>
+        <!-- apollo.txt -->
 
         <section>
           <h2>Geschafft! 😊</h2>
