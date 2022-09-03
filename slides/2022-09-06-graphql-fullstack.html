@@ -33,31 +33,24 @@
             </span>
           </h4>
           <h2 class="title" style="font-size: 7rem">
-            <b>GraphQL APIs</b>
+            <b>GraphQL "Fullstack"</b>
           </h2>
           <h3 class="title" style="font-size: 5rem;margin-bottom:3rem">
-            <b>Eine praktische Einführung mit Spring for GraphQL</b>
+            <b>mit Java, Spring und React</b>
           </h3>
 
-          <h4>
-            <span class="transparent-bg"
-              >21. Juni 2022, API Summit, München</span
-            >
-          </h4>
-
-
-          <div style="margin-top: 6rem">
-            <h3><span class="transparent-bg">Slides (online)</span></h3>
-            <p>
-              <a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</a>
-            </p>
-          </div>
-          <div style="margin-top: 6rem">
-            <h3><span class="transparent-bg">Workspace Installation</span></h3>
-            <p>
-              <a class="Link" href="https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md">https://graphql.schule/install</a>
-            </p>
-          </div>
+<!--          <div style="margin-top: 6rem">-->
+<!--            <h3><span class="transparent-bg">Slides (online)</span></h3>-->
+<!--            <p>-->
+<!--              <a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</a>-->
+<!--            </p>-->
+<!--          </div>-->
+<!--          <div style="margin-top: 6rem">-->
+<!--            <h3><span class="transparent-bg">Workspace Installation</span></h3>-->
+<!--            <p>-->
+<!--              <a class="Link" href="https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md">https://graphql.schule/install</a>-->
+<!--            </p>-->
+<!--          </div>-->
 
         </section>
         <section>
@@ -894,20 +887,199 @@ Beschreibung eines *Objekt Types*
 ## Exkurs: Spring und Spring Boot
 <!-- .slide: id="exkurs-spring" -->
 
-* Was ist Spring?
-  * DI
-  * Beans und Autowiring
-            * Constructor
-            * Autowired
-  * Annotationen
-* Was ist JPA
-  * Was ist spring-data?
-* Was ist Spring Boot?
+* Wir gucken uns hier nur an, was für diesen Workshop relevant ist und nur sehr oberflächlich
 
 ---
-### Übung: Spring
+### Spring
 
-* `Hello GraphQL Java` auf Spring portieren!
+<!-- .element: class="demo" --> DI
+<!-- .element: class="demo" --> Neues Spring-Projekt mit MVC und Spring Data
+---
+
+### Spring
+
+#### Der Kern: Ein Container für Beans
+
+* Dependecy Injection Container
+  * IoC: Abhängige Objekte werden übergeben (und nicht abgefragt)
+  * In Spring "Beans" genannt
+  * Spring erzeugt die Beans und übergibt benötigte abhängige Beans
+* AOP Container
+  * z.B. für Transaktionen oder Sicherheit
+
+---
+### Spring: Dependency Injection
+
+* Beans werden mit `@Component` annotiert
+  * Darauf aufbauend gibt es "semantische" Annotation wie `@Controller` oder `@Service`
+* Alle Klassen, die so annotiert sind, werden automatisch im Klassenpfad gefunden ("classpath scanning")
+* Die Klassen werden von Spring instantiiert und im Application Context registriert
+* Spring sorgt dafür, dass Abhängigkeiten übergeben werden
+---
+### Spring: Dependency Injection
+
+* Beans können Abhängigkeiten auf andere Beans definieren
+* Im einfachsten Fall im Construktor, wenn es genau einen gibt:
+* ```java
+  @Service
+  public DomainService {
+    private final DbService dbService;
+
+    // DbService wird von Spring übergeben
+    public DomainService(DbService dbService) {
+      this.dbService = dbService;
+    }
+  }
+  ```
+---
+### Spring: Dependency Injection
+* Mit `@Autowired` oder `@Inject`-Annotationen an Feldern, Konstruktoren oder (Setter-)Methoden:
+* ```java
+  @Service
+  public DomainService {
+    private DbService dbService;
+
+    @Autowired
+    private MailService mailService;
+
+    private UserService userService;
+
+    // Mehrere Konstruktoren => Autowired erforderlich, falls
+    //  einer davon von Spring genutzt werden soll
+    public DomainService() {
+    }
+
+    @Autowired
+    public DomainService(DbService dbService) {
+      this.dbService = dbService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+      this.userService = userService;
+    }
+  }
+  ```
+* In der Regel sollte man sich für eine Technik entscheiden
+  * Als aktuelle Best-Practice gilt Konstruktor-Injektion ohne Autowired
+  * Dann können die Beans, z.B. im Test, auch selbst erzeugt werden
+
+---
+### Stereotypen
+
+* Klassen werden mit `@Component` annotiert, um sie zu Beans zu machen
+* Es gibt davon abgeleitet einige Annotation, die er erlauben, eine Bean semantisch einzuordnen:
+  * `@Service`, `@Repository`, `@Controller`, `@RestController`
+  * Teilweise fügen diese Annotationen einer Bean neue Features hinzu
+* Sie erlauben, die Beans nach Fachlichkeit zu organisieren und Architektur-Regeln einzuhalten
+  * `@Repository` sollte normalerweise z.B. nicht auf `@Service` zugreifen
+* Man kann eigene solcher *Stereotypen*-Annotationen erzeugen
+
+---
+### Konfiguration: Application Properties
+
+* Spring-Anwendungen können über Properties konfiguriert werden
+* Per Default wird eine Datei `application.properties` dafür verwendet
+* Die Datei wird von Spring automatisch eingelesen
+* Die Properties stehen der Anwendung dann zur Verfügung
+* Zum Zugriff gibt es diverse Möglichkeiten
+  * ```java
+  // Beispiel: @Value injiziert einen Wert
+  @Value("${my.app.db-url}")
+  private String dbUrl;
+  ```
+  * ```java
+    // Beispiel: Environment enthält alle Properties
+    @Autowired
+    private Environment environment;
+
+    public String getDatabaseUrl() { return environment.get("my.app.db-url"); }
+    ```
+---
+### Spring: Unterstützte Technologien
+
+* Spring bietet eine Abstraktion für diverse populäre Technologien
+  * JPA (Persistenz) und deklarative Transaktionen
+  * Messaging (JMS, Kafka, RabbitMQ, ...)
+  * Webservices mit und ohne REST (Spring MVC)
+  * JSP, Servlet (Spring MVC)
+  * REST Client
+  * Asynchrone Aufrufe mit Scheduler
+* Der Zugriff darauf ist unabhängig davon, wie Spring zur Laufzeit eingesetzt wird (im Servlet-Container
+   oder Standalone)
+
+---
+### Web-Anwendungen und REST-Services: Spring MVC
+* Spring MVC ist ursprüngliche eine Abstraktion u.a. über Servlets (und Template-Sprachen)
+  * In einer `@Controller`-Klasse werden Endpunkte beschrieben und auf Pfade gemappt
+  * Die Methoden geben ein Model zurück
+  * Spring sucht zu der Methode eine View heraus (z.B. JSP- oder Thymeleaf-Template)
+* Spring MVC wird mittlerweile auch für REST-APIs verwendet
+  * Dann wird kein Template zurückgeben, sondern ein Objekt, das automatisch nach JSON konvertiert wird
+* Das Programmiermodell ist immer identisch, unabhängig, in welchem Container die Anwendung ausgeführt wird
+
+---
+### Java Persistence API: JPA
+
+* JPA ist eine Standard API für ORM-Tools
+* Prominenteste Implementierung ist Hibernate, das in den meisten Fällen verwendet wird
+* In JPA kann das DB-Mapping von *Entities* beschrieben werden
+* Der JPA-Provider sorgt dafür, dass Daten aus der DB in die Entity-Klassen gemappt und zurückgeschrieben werden
+* 👉 Für unseren Workshop spielen Details keine Rolle, deswegen lassen wir das hier aus
+
+---
+### Spring: Datenzugriff
+
+* Spring unterstützt diverse Persistenz-Technologien, z.B. JPA, natives SQL oder MongoDB
+* Unabhängig von der Technologie werden Daten in der Regel über _Repositories_ verwaltet
+  * Der Begriff kommt aus dem Domain Driven Design und beschreibt Akteure, die dafür Zuständig sind,
+    Daten aus einer Quelle zu ermitteln
+* Ein Repository wird in Spring mit der Annotation `@Repository` gekennzeichnet
+* Je nach Technologie ist die Implementierung dann aber unterschiedlich
+
+---
+### Spring Data
+
+* [Spring Data](https://spring.io/projects/spring-data) stellt eine einheitliche Abstraktion für mehrere Persistenz-Technologien
+  zur Verfügung (z.B. Spring Data für JDBC, für JPA oder für MonogoDB)
+* Beschrieben werden in der Anwenung dafür Interfaces, die Repositories genannt werden und auch ein
+  Interface `Repository` implementieren müssen
+* Spring Data stellt dann dafür Implementierungen zur LAufzeit zur Verfügung
+* Über Namenskonventionen können z.B. Query-Funktionen definiert werden
+* ```java
+  public interface StoryRepository extends CrudRepository<Story, Long> {
+  }
+  ```
+* ```java
+  public StoryService {
+    private final StoryRepository storyRepository;
+    public StoryService(StoryRepository sr) { this.storyRepository = sr; }
+
+    @Transactional
+    public void updateStory(Long storyId, String newTitle) {
+      storyRepository.findById(storyId).ifPresent(
+            story -> { story.setTitle(newTitle); storyRepository.save(story); }
+      );
+  }
+  ```
+
+---
+### Spring Boot
+* Das (initiale) Erstellen von Spring-Anwendungen kann sehr komplex sein
+  * Je nach Technologie-Stack viele Abhängigkeiten (Jars) zu verwalten
+  * Viele "Technik" Beans zu erzeugen und zu konfigurieren
+* Spring Boot nimmt einem davon viel ab
+  * Es gibt einen Projekt-Generator, https://start.spring.io
+* Es gibt "Starter", das sind Spring Module für diverse Technologien, die oft gebrauchte
+  Dinge zur Verfügung stellen (z.B. Datenbank-Support, Transaktionen, REST Endpunkte etc.)
+* Zur Laufzeit ermittlt Spring Boot an Hand der im Klassenpfad befindlichen Starter, welche
+  Technik im Projekt eingesetzt wird (z.B. JPA und welche Datenbank)
+* Die Beans dafür werden dann automatisch erzeugt und konfiguriert
+
+---
+### Übung: Spring Boot
+
+* `Hello GraphQL Java` auf Spring Boot portieren!
 * Markiere das `StoryRepository` als `Repository`
 * Markiere deine DataFetcher als `Component` oder `Service`
   * Die Story-DataFetcher sollen das `StoryRepository` per Dependency Injection bekommen
