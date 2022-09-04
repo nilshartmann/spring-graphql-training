@@ -1,12 +1,11 @@
 package nh.publy.backend.graphql;
 
-import nh.publy.backend.domain.Story;
-
 import java.util.Base64;
 
 import static nh.publy.backend.graphql.DemoConfig.useComplexNodeIds;
 
 public class NodeId {
+  private final static boolean useBase64 = true;
   private NodeType nodeType;
   private Long id;
 
@@ -110,14 +109,22 @@ public class NodeId {
   }
 
   private static String decode(String base64String) {
-    return new String(Base64.getDecoder().decode(base64String));
+    if (useBase64) {
+      return new String(Base64.getDecoder().decode(base64String));
+    }
+    return base64String;
   }
 
   public String toString() {
     if (!useComplexNodeIds) {
       return getId().toString();
     }
+
     String idString = this.nodeType.name() + ":" + getId();
-    return new String(Base64.getEncoder().encodeToString(idString.getBytes()));
+    if (useBase64) {
+      return new String(Base64.getEncoder().encodeToString(idString.getBytes()));
+    }
+
+    return idString;
   }
 }
