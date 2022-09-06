@@ -16,8 +16,24 @@ import {
 } from "@apollo/client/utilities";
 
 export function createApolloClient() {
+  const deprecationLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map((data) => {
+      const deprecations = data.extensions?.deprecations;
+      if (deprecations) {
+        console.warn(
+          `In operation ${
+            operation.operationName || "untitled"
+          } you fetched deprecated fields: `,
+          deprecations
+        );
+      }
+      return data;
+    });
+  });
+
   const httpLink = createHttpLink({
     uri: graphqlApiUrl,
+    includeExtensions: true,
   });
   const wsLink = new GraphQLWsLink(
     createClient({
@@ -69,7 +85,7 @@ export function createApolloClient() {
   });
 
   const apolloClient = new ApolloClient({
-    link: ApolloLink.from([errorLink, authLink, remoteLink]),
+    link: ApolloLink.from([errorLink, authLink, deprecationLink, remoteLink]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
