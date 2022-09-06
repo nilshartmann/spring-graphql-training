@@ -93,6 +93,11 @@ Reveal.initialize({
     n.parentNode.classList.add("note");
   });
 
+  document.querySelectorAll("li.xx-list").forEach((n) => {
+    n.classList.remove("xx-list");
+    n.parentNode.classList.add("xx-list");
+  });
+
   // open all externals link in new tab
   document.querySelectorAll('a:not([href^="#"])').forEach((i) => {
     i.setAttribute("target", "_blank");

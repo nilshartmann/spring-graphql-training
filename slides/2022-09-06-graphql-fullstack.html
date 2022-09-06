@@ -755,7 +755,6 @@ Beschreibung eines *Objekt Types*
 
 ### Die Beispiel-Anwendung
 
-* <!-- .element: class="todo" -->eventuell später
 <img src="images/publy-architektur.png" />
 
 ---
@@ -779,7 +778,8 @@ Beschreibung eines *Objekt Types*
 
 ### Verarbeitung eines GraphQL Queries (allgemein)
 
-1. Query kommt an (HTTP Endpunkt)
+
+1. <!-- .element: class="xx-list" --> Query kommt an (HTTP Endpunkt)
 2. Query wird geparst und validiert 
 3. Ungültige Queries werden abgewiesen (`errors`-Feld in der Antwort) 
 4. Für jedes Feld wird eine *Resolver-Funktion* (auch *DataFetcher* oder *Mapping-Funktion* genannt) aufgerufen, die verantwortlich dafür ist, die Daten für das jeweilige Feld zu liefern
@@ -792,15 +792,16 @@ Beschreibung eines *Objekt Types*
 
 <!-- end of the list -->
 
-* <!-- .element: class="note" --> Unsere Aufgabe ist es, die Resolver zu implementieren
+* <!-- .element: class="note" --> Unsere Aufgabe ist es, die _Resolver_ bzw. _DataFetcher_ zu implementieren
 
 ---
 
 ### DataFetcher (graphql-java)
 
-* <!-- .element: class="demo" --> Demo: DataFetcher- mit ping-Feld
-* <!-- .element: class="demo" --> Schema-Mapping!
+* <!-- .element: class="demo" --> Demo: DataFetcher- mit Person-Feld
+* <!-- .element: class="demo" --> Schema-Mapping! (fullname)
 * <!-- .element: class="demo" --> Argumente!
+
 * <!-- .element: class="demo" --> Workspace `hello-graphql-java` oder eigenen anlegen
 
 ---
@@ -842,13 +843,22 @@ Beschreibung eines *Objekt Types*
 * ```java
   class PingFetcher<String> {
       @Override
-      public Story get(DataFetchingEnvironment env)  {
+      public String get(DataFetchingEnvironment env)  {
         String msg = env.getArgumentOrDefault("msg", "Pong");
         return msg;
       }
   }
   ```
-
+* Oder das `source`-Objekt, das das Ergebnis des übergeordneten DataFetchers zurückliefert:
+* ```java
+  class ExcerptFetcher<Sring> {
+      @Override
+      public String get(DataFetchingEnvironment env)  {
+        Story story = env.getSource();
+        return story.getBody().substring(0, 7);
+      }
+  }
+  ```
 ---
 
 ### RuntimeWiring
@@ -885,6 +895,7 @@ Beschreibung eines *Objekt Types*
   * Bitte implementiere die drei DataFetcher dort (s. TODOs in den einzelnen Dateien)
 * Füge deine DataFetcher in `GraphQLProvider` zum `RuntimeWiring` hinzu
 * Zur Kontrolle führe die Tests in `nh.publy.QueryTest`, die nun "grün" werden sollten
+* Mögliche Lösung `hello-graphql-steps/02-datafetcher`
 
 ---
 
