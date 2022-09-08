@@ -18,48 +18,48 @@ VALUES (5, 1, '2020-08-28T14:58:47.401Z', 'U5', 'avatars/avatar_U5.png',
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (1, 1, '2021-10-09T04:40:50.027Z', 1,
         'Story 1', '{"java","string"}',
-        'Body of Story 1');
+        'At vero eos et accusam et justo duo dolores et ea rebum. ');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (2, 1, '2021-10-10T04:40:50.027Z', 1,
         'Story 2', '{"java","string"}',
-        'Body of Story 2');
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (3, 1, '2021-10-11T04:40:50.027Z', 2,
         'Story 3', '{"java","string"}',
-        'Body of Story 3');
+        'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui ');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (4, 1, '2021-10-12T04:40:50.027Z', 3,
         'Story 4', '{"java","string"}',
-        'Body of Story 4');
+        'Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. ');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (5, 1, '2021-10-13T04:40:50.027Z', 2,
         'Story 5', '{"java","string"}',
-        'Body of Story 5');
+        'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. ');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (6, 1, '2021-10-14T04:40:50.027Z', 1,
         'Story 6', '{"java","string"}',
-        'Body of Story 6');
+        'Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. L');
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (7, 1, '2021-10-15T04:40:50.027Z', 4,
         'Story 7', '{"java","string"}',
-        'Body of Story 7');
+        'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.');
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (8, 1, '2021-10-16T04:40:50.027Z', 3,
         'Story 8', '{"java","string"}',
-        'Body of Story 8');
+        'At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ');
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (9, 1, '2021-10-17T04:40:50.027Z', 3,
         'Story 9', '{"java","string"}',
-        'Body of Story 9');
+        'Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. ');
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (10, 1, '2021-10-18T04:40:50.027Z', 2,
         'Story 10', '{"java","string"}',
-        'Body of Story 10');
+        'Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at ');
 
 
 INSERT INTO reactions (id, version, created_at, story_id, given_by_id, type)

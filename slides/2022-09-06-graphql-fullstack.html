@@ -1099,7 +1099,8 @@ Beschreibung eines *Objekt Types*
 * Markiere deine DataFetcher als `Component` oder `Service`
   * Die Story-DataFetcher sollen das `StoryRepository` per Dependency Injection bekommen
 * Markiere den `GraphQLProvider` als `Service`
-  * Der `GraphQLProvider` soll die drei DataFetcher und das `StoryRepository` per Dependency Injection erhalten
+  * Der `GraphQLProvider` soll die drei DataFetcher per Dependency Injection erhalten
+  * Das `StoryRepository` wird im `GraphQLProvider` nicht mehr benötigt und kann entfernt werden.
 * Erzeuge die Klasse `nh.publy.HelloGraphQLApplication`
   * Den Inhalt dafür findest Du im `hello-graphql-java/material`-Verzeichnis (einfach kopieren und in `.java` umbenennen)
 * Stelle den `QueryTest` auf einen `SpringBootTest` um:
@@ -1282,10 +1283,11 @@ Beschreibung eines *Objekt Types*
   nach `publy-backend/src/main/resources/graphql` (bestehendes Schema überschreiben)
 * Implementiere zwei Handler-Funktionen für die Root-Felder unserer API:
   * Eine Handler-Funktion für `Query.stories` und für `Query.story(id: ID!)`
+  * Eine Handler-Funktion für das `excerpt`-Feld am `Story`-Typen
 * Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
 * Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
   * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
-* Folgende Queries sollten danach funktionieren (in GraphiQL http://localhost:8080 ausführen!):
+* Folgende Queries sollten danach funktionieren (in GraphiQL http://localhost:8090 ausführen!):
   * ```graphql
       query {
         stories {
