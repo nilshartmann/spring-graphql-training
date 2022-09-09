@@ -1,31 +1,24 @@
-package nh.publy.backend.graphql.runtime;
+package nh.publy.backend.util;
 
 import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;
-import graphql.com.google.common.collect.ImmutableList;
 import graphql.execution.ExecutionStepInfo;
 import graphql.execution.instrumentation.InstrumentationContext;
 import graphql.execution.instrumentation.InstrumentationState;
 import graphql.execution.instrumentation.SimpleInstrumentation;
 import graphql.execution.instrumentation.parameters.InstrumentationExecutionParameters;
 import graphql.execution.instrumentation.parameters.InstrumentationFieldFetchParameters;
-import graphql.execution.instrumentation.parameters.InstrumentationFieldParameters;
-import graphql.execution.instrumentation.tracing.TracingInstrumentation;
-import graphql.execution.instrumentation.tracing.TracingSupport;
-import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLFieldDefinition;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static graphql.execution.instrumentation.SimpleInstrumentationContext.noOp;
-import static graphql.execution.instrumentation.SimpleInstrumentationContext.whenCompleted;
 import static graphql.schema.GraphQLTypeUtil.simplePrint;
 
 @Component
-public class PublyDeprecatedInstrumentation extends SimpleInstrumentation {
+public class DeprecationInstrumentation extends SimpleInstrumentation {
   static class DeprecationState implements InstrumentationState {
 
     private final List<DeprecatedField> deprecatedFields = new LinkedList<>();
@@ -80,22 +73,28 @@ public class PublyDeprecatedInstrumentation extends SimpleInstrumentation {
     }).orElse(currentExt);
 
 
-    return CompletableFuture.completedFuture(new ExecutionResultImpl(executionResult.getData(), executionResult.getErrors(), newExt));
+    return CompletableFuture.completedFuture(
+      new ExecutionResultImpl(
+        executionResult.getData(),
+        executionResult.getErrors(),
+        newExt)
+    );
   }
 
   @Override
   public InstrumentationContext<Object> beginFieldFetch(InstrumentationFieldFetchParameters parameters) {
+
     GraphQLFieldDefinition field = parameters.getField();
-    if (!field.isDeprecated()) {
-      return noOp();
+
+    if (field.isDeprecated()) {
+      DeprecationState deprecationState = parameters.getInstrumentationState();
+      ExecutionStepInfo executionStepInfo = parameters.getEnvironment().getExecutionStepInfo();
+      var reason = field.getDeprecationReason();
+      var fieldName = simplePrint(executionStepInfo.getParent().getUnwrappedNonNullType()) + "." + executionStepInfo.getFieldDefinition().getName();
+      var path = executionStepInfo.getPath().toString();
+      deprecationState.addDeprecatedField(fieldName, path, reason);
     }
 
-    DeprecationState tracingSupport = parameters.getInstrumentationState();
-    ExecutionStepInfo executionStepInfo = parameters.getEnvironment().getExecutionStepInfo();
-    var reason = field.getDeprecationReason();
-    var fieldName = simplePrint(executionStepInfo.getParent().getUnwrappedNonNullType()) + "." + executionStepInfo.getFieldDefinition().getName();
-    var path = executionStepInfo.getPath().toString();
-    tracingSupport.addDeprecatedField(fieldName, path, reason);
-
     return noOp();
-  }}
+  }
+}

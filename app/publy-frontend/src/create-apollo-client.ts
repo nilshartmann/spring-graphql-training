@@ -15,21 +15,49 @@ import {
   relayStylePagination,
 } from "@apollo/client/utilities";
 
+type DeprecatedField = {
+  name: string;
+  path: string;
+  reason: string;
+};
+
 export function createApolloClient() {
   const deprecationLink = new ApolloLink((operation, forward) => {
     return forward(operation).map((data) => {
-      const deprecations = data.extensions?.deprecations;
+      const deprecations = data.extensions?.deprecations as DeprecatedField[];
       if (deprecations) {
         console.warn(
-          `In operation ${
+          `In operation %c${
             operation.operationName || "untitled"
-          } you fetched deprecated fields: `,
-          deprecations
+          }%c you fetched deprecated fields: \n${deprecations
+            .map(
+              (d) =>
+                `  Field: %c${d.name}%c\n  Location: %c${d.path}%c\n  Deprecation reason: %c${d.reason}%c\n`
+            )
+            .join("\n")}`,
+          "font-weight: bold",
+          "font-weight: regular",
+          ...deprecations.flatMap((_) => [
+            "font-weight: bold",
+            "font-weight: regular",
+          ]),
+          ...deprecations.flatMap((_) => [
+            "font-weight: bold",
+            "font-weight: regular",
+          ]),
+          ...deprecations.flatMap((_) => [
+            "font-style: italic",
+            "font-style: normal",
+          ])
         );
       }
       return data;
     });
   });
+
+  function bold(s: string): string[] {
+    return ["%c" + s, "font-weight: bold"];
+  }
 
   const httpLink = createHttpLink({
     uri: graphqlApiUrl,
