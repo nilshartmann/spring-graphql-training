@@ -1,0 +1,90 @@
+"""
+This is a `Story`.
+"""
+type Story  {
+    id: ID!
+    title: String!
+    body: String!
+    createdAt: String!
+
+    writtenBy: Member!
+    comments: [Comment!]!
+}
+
+type Comment {
+    id: ID!
+
+    story: Story!
+    writtenBy: Member!
+    content: String!
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+type Member {
+    id: ID!
+
+    profileImage: String!
+    user: User
+    stories: [Story!]!
+}
+
+type PageResult {
+    pageNumber: Int!
+    totalCount: Int!
+    totalPageCount: Int!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+}
+
+"""
+A **StoryConnection** represents a connection in our graph from one
+node to a list of `Story` nodes: `Query --> StoryConnection --> Store`
+"""
+type StoryConnection {
+    page: PageResult!
+
+    stories: [Story!]!
+
+}
+
+type Query {
+    "Returns the newest `Story` in our backend or null if no Story available"
+    story(storyId: ID): Story
+
+    """Returns the requested amount of stories, ordered by date, so
+    that newest/latest stories come first"""
+    stories(page: Int! = 0, pageSize: Int! = 3): StoryConnection!
+}
+
+input AddCommentInput {
+    storyId: ID!
+    content: String!
+}
+
+type AddCommentSuccessPayload {
+    newComment: Comment!
+}
+
+type AddCommentFailedPayload {
+    errorMsg: String!
+}
+
+union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
+type Mutation {
+    addComment(input: AddCommentInput!): AddCommentPayload!
+}
+
+type OnNewCommentEvent {
+    newComment: Comment!
+}
+
+type Subscription {
+    onNewComment(storyId: ID!): OnNewCommentEvent!
+}
+
