@@ -2446,13 +2446,6 @@ root.render(
 
 ---
 
-###
-*
-*
-
-
----
-
 ### Verwenden des Apollo React Clients
 * Apollo stellt für die drei GraphQL Operationstypen jeweils eigene
               Hooks zur Verfügung:
@@ -2670,9 +2663,12 @@ root.render(
   ```
 
 ---
-### Übung: Query ausführen - Vorbereitung
+### Übung: Query ausführen
 
-
+* Die `FeedPage` soll eine Liste von Stories ("Feed") anzeigen
+* Ergänze in `src/FeedPage/Feedpage.tsx` den dazu notwendigen Code
+* In der Datei findest Du TODOs mit weiteren Informationen
+* Eine mögliche Lösung findest Du in `steps-frontend/10-useQuery`
 
 ---
 
@@ -2693,26 +2689,39 @@ root.render(
             Konfiguration von Apollo gesetzt werden
   * **Empfehlung:** *Immer* das `id`-Feld in jedem Objekt in jedem Query
             abfragen!
-* Achtung! Listen werden *nicht* aktualisiert
-* <!-- .element: class="demo" -->Der Cache in den Developer-Tools
+* Achtung! Listen werden *nicht* aktualisiert, bzw. nicht erweitert/gekürzt
 ---
 
 ### Aktualisieren von Listen
+* Wenn neue Daten für eine Liste geladen werden (oder welche entfernt werden),
+  weiß Apollo nicht, wie damit umzugehen ist
+* Beispiel:
+  * Zusätzliche Stories werden auf der FeedPage gelesen (nächste "page")
+  * Müssen die gelesenen Stories am Anfang oder Ende der bestehenden Liste eingefügt werden?
+  * Sollen sie dort überhaupt eingefügt werden?
+* Beispiel 2:
+  * Ein Kommentar wird mit einer Mutation angelegt
+  * In welche bestehenden Listen im Cache muss der Kommentar?
+
+---
+### Aktualisieren von Listen
 * Grundsätzlich können Listen mit verschiedenen Strategien aktualisiert werden:
   * **fetch more**: Jemand klickt z.B. auf "Weitere Einträge laden"-Link
-  * <!-- .element: class="todo" -->BEISPIEL: Liste von Stories in Feed-Page
+    * Beispiel: Liste von Stories in Feed-Page
   * **subscription**: Eine Subscription liefert neue Elemente, die (auch) in eine bestehende Liste eingefügt werden
-  * <!-- .element: class="todo" -->BEISPIEL: Neuer Kommentar in SingleStory-Page
+    * Beispiel: Neuer Kommentar in `StoryComments`
   * **update**: Nach einer Mutation, die ein neues Objekte erzeugt (oder löscht), soll das Objekt
             in eine Liste hinzugefügt (oder gelöscht) werden
     * Diesen Fall sehen wir uns im Zusammenhang mit Mutations an
+* In jedem Fall müssen wir dazu implementieren, *wie* die neuen Daten in die gecachten Listen kommen
 ---
 ### Aktualisieren von Listen: Pagination mit fetchMore
 * Anwendungsfall:
   * es gibt eine Liste, durch die durchgeblättert werden kann
   * die jeweils neu geladenen Objekte sollen der Liste auch im Cache hinzugefügt werden
   * Vorteil: wenn Benutzer dann nochmal zurückblättert, sind die Objekte schon da
-* Dazu liefert `useQuery` eine `fetchMore`-Funktion zurück
+* Dazu liefert `useQuery` eine weitere Funktion zurück: `fetchMore`
+
 * Diese Funktion akzeptiert im einfachsten Fall neue Query _Variablen_ und führt den Query neu aus
 * ```javascript
   function FeedPage() {
@@ -2734,19 +2743,13 @@ root.render(
     </>
   }
   ```
----
-
-### Aktualisieren von Listen: Pagination mit fetchMore
-* Die `fetchMore`-Funktion führt den Query mit neuen Variablen aus
-* Apollo weiß aber nicht, wie die neu gelesenen Objekte in die gecachte Liste eingefügt werden sollen
-  * An den Anfang? Ans Ende? Mitte? ...
-  * <!-- .element: class="demo" --> Fetch-More-Button
-*
+* Die geladenen Daten landen aber nicht im Cache 😭
+* <!-- .element: class="demo" --> Cache im DevTools mit fetchMore
 ---
 
 ### Type Policy
-* Mit einer **Type Policy** kann die Aktualisierung des Caches für ein Feld angepasst werden
-  * Achtung 1: Das ist - je nach Schema - nicht trivial!
+* Mit einer **Type Policy** muss die Aktualisierung des Caches für ein Feld angepasst werden
+  * Achtung 1: Das ist - je nach Schema, Query und Fachlichkeit - nicht trivial!
   * Achtung 2: TypeScript-Support an der Stelle nur eingeschränkt!
 * In der Cache-Konfiguration beim Erzeugen des Apollo Clients:
 * ```javascript
@@ -2757,6 +2760,7 @@ root.render(
         Query: {
           fields: {
             stories: {
+              keyArgs: false,
               merge(
                 existing: StoryConnection | undefined | null,
                 incoming: StoryConnection
@@ -2770,7 +2774,9 @@ root.render(
               }  }  }  } }
             }),
         });
-```
+  ```
+  * <!-- .element: class="demo" -->Der Cache in den Developer-Tools mit fetchMore-Funktion in FeedPage
+
 ---
 
 ### Aktualisieren von Listen mit Subscriptions

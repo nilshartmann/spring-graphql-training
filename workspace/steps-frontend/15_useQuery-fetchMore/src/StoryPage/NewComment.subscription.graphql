@@ -1,0 +1,17 @@
+subscription OnNewComment($storyId: ID!) {
+  onNewComment(storyId: $storyId) {
+    newComment {
+      id
+      writtenBy {
+        id
+        user {
+          id
+          name
+        }
+        profileImage
+      }
+      createdAt
+      content
+    }
+  }
+}
