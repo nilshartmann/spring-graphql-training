@@ -42,6 +42,7 @@ public class PublyAuthenticationService implements AuthenticationService {
 
       String subject = claims.getSubject();
       User user = objectMapper.readValue(subject, User.class);
+      log.info("Token for User verified: {}", user);
       return user;
     } catch (Exception ex) {
       log.error("Verify Token failed: " + ex, ex);

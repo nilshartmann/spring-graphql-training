@@ -1,0 +1,14 @@
+fragment StoryComment on Comment {
+  id
+  writtenBy {
+    ...BasicMember
+  }
+  createdAt
+  content
+}
+
+query StoryComments($storyId: ID!) {
+  comments(storyId: $storyId) {
+    ...StoryComment
+  }
+}

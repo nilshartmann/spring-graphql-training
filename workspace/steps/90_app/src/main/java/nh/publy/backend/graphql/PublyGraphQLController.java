@@ -7,6 +7,7 @@ import org.dataloader.DataLoader;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,13 +26,20 @@ import java.util.concurrent.CompletableFuture;
 public class PublyGraphQLController {
   private static final Logger log = LoggerFactory.getLogger(PublyGraphQLController.class);
   private final StoryRepository storyRepository;
+  private final CommentRepository commentRepository;
+  private final MemberRepository memberRepository;
   private final UserService userService;
   private final PublyDomainService publyDomainService;
+  private final String serverPort;
 
-  public PublyGraphQLController(StoryRepository storyRepository, UserService userService, PublyDomainService publyDomainService, BatchLoaderRegistry batchLoaderRegistry) {
+  public PublyGraphQLController(StoryRepository storyRepository, UserService userService, PublyDomainService publyDomainService, BatchLoaderRegistry batchLoaderRegistry, CommentRepository commentRepository, MemberRepository memberRepository,
+                                @Value("${server.port}") String serverPort) {
     this.storyRepository = storyRepository;
     this.userService = userService;
     this.publyDomainService = publyDomainService;
+    this.commentRepository = commentRepository;
+    this.memberRepository = memberRepository;
+    this.serverPort = serverPort;
 
     batchLoaderRegistry.forTypePair(String.class, User.class).registerBatchLoader((keys, env) -> {
       log.info("Loading Users with keys {}", keys);
@@ -77,6 +85,32 @@ public class PublyGraphQLController {
     return storyRepository.findById(storyId);
   }
 
+  @QueryMapping
+  public List<Comment> comments(@Argument Long storyId) {
+    return commentRepository.findAllByStoryId(storyId);
+  }
+
+  @QueryMapping
+  public Optional<Member> me() {
+    Optional<Member> member = userService.getCurrentUser()
+      .flatMap(u -> memberRepository.findByUserId(u.getId()));
+    return member;
+  }
+
+  @SchemaMapping
+  public String excerpt(Story story, @Argument int maxLength) {
+    String body = story.getBody();
+    String excerpt = body.length() > maxLength ? body.substring(0, maxLength) + "..." : body;
+    return excerpt;
+  }
+
+  @SchemaMapping
+  public String profileImage(Member member) {
+    return String.format("http://localhost:%s/%s",
+      serverPort, member.getProfileImage());
+
+  }
+
   @SchemaMapping
   public CompletableFuture<User> user(Member member, DataLoader<String, User> userDataLoader) {
     String userId = member.getUserId();
@@ -105,7 +139,7 @@ public class PublyGraphQLController {
   interface AddCommentPayload {
   }
 
-  static class AddCommentSuccessPayload implements AddCommentPayload{
+  static class AddCommentSuccessPayload implements AddCommentPayload {
     private final Comment newComment;
 
     public AddCommentSuccessPayload(Comment newComment) {

@@ -2221,6 +2221,24 @@ _Schreibe einen Test für unsere GraphQL-API_
           <h2>Clients mit Apollo React</h2>
         </section>
 
+        <section data-markdown>
+          <textarea data-template>
+            Vorbereitung
+
+* Backend
+  * `publy-backend/src`-Verzeichnis *löschen* (ggf. vorher Eure Änderungen sichern)
+  * `steps/99_complete/src`-Verzeichnis nach `publy-backend` kopieren
+  * `publy-userservice` starten (Klasse: `nh.graphql.publy.userservice.UserserviceApplication`)
+  * `publy-backend` starten (Klasse: `nh.publy.backend.PublyApplication`)
+  * Diese beiden Prozesse können im folgenden einfach immer weiter laufen. Wir machen daran keine Änderungen mehr.
+* Frontend
+  * Im Verzeichnis `publy-frontend`:  `pnpm install` und `pnpm start`
+  * Frontend sollte dann auf http://localhost:3000 laufen
+
+
+          </textarea>
+        </section>
+
         <section>
           <h3>Apollo Client</h3>
           <p>
@@ -2422,67 +2440,568 @@ root.render(
   ```
 * Um die GraphQL-Operationen in einer eigenen Datei abzulegen und zu importieren, müsst ihr [Euer Setup anpassen](https://create-react-app.dev/docs/loading-graphql-files/)
   * Wenn ihr mit dem [GraphQL Codegenerator](https://www.graphql-code-generator.com/) arbeitet, braucht ihr das _nicht_
+
+
+---
+
+###
+*
+*
+
+
+---
+
+### Verwenden des Apollo React Clients
+* Apollo stellt für die drei GraphQL Operationstypen jeweils eigene
+              Hooks zur Verfügung:
+  * [useQuery](https://www.apollographql.com/docs/react/data/queries/#usequery-api) bzw. [useLazyQuery](https://www.apollographql.com/docs/react/data/queries/#manual-execution-with-uselazyquery)
+  * [useMutation](https://www.apollographql.com/docs/react/data/mutations/#usemutation-api)
+  * [useSubscription](https://www.apollographql.com/docs/react/data/subscriptions/#usesubscription-api-reference)
+* Die Hooks funktionieren alle ähnlich:
+  * Sie erwarten ein Dokument mit einer GraphQL Operation (Ergebnis von `gql`)
+  * Verhalten kann mit weiteren Argumenten konfiguriert werden, z.B. Setzen von Variablen
+  * Der Rückgabetyp ist ein Objekt mit Informationen über den Request (loading, data, error). Bei
+    `useMutation` kommt kommt außerdem eine Funktion zum Ausführen der Mutation zurück
+
+---
+
+### useQuery: GraphQL Query ausführen
+* Der `useQuery`-Hook führt einen GraphQL aus:
+* ```typescript
+  const FeedPageQuery = gql`...`;
+  function Feedpage() {
+    const { loading, error, data } = useQuery(FeedPageQuery);
+
+    if (loading) {
+      return <h1>Loading, please wait...</h1>;
+    }
+
+    if (error) {
+      return <h1>GraphQL Failed: {error.toString()}</h1>;
+    }
+
+    return &lt;TeaserList story={data.stories} />;
+  }
+  ```
+---
+
+### useQuery - Lebenszyklus
+* `useQuery`führt den übergebenen Query automatisch aus, sobald die Komponente _gemounted_ wurde
+* Sobald der Request läuft, gibt die Funktion ein Objekt zurück, in dem `loading` auf `true` gesetzt ist. Damit kannst Du z.B. einen Loading Indikator anzeigen
+* Sobald die Antwort des Queries ankommt, wird deine Komponente erneut gerendert
+  * Der useQuery-Hook gibt nun ein Objekt zurück, in dem entweder <code>error</code> oder
+              `data` gesetzt ist und `loading` nun `false` ist.
+  * Du kannst die Informationen nutzen, um die Darstellung zu aktualisieren
+  * Wenn der Request erfolgreich war, aktualisiert Apollo den globalen Cache mit den
+              geladenen Daten
+  * _Alle_ sichtbaren Komponenten, die (Teile der) geladenen Daten darstellen,
+              werden automatisch aktualisiert
+
+---
+
+### useQuery: Variablen
+* GraphQL Queries können Variablen enthalten
+* Das (optionale) zweite Argument von `useQuery` ist ein Objekt mit Konfigurationsoptionen
+* Mit diesem Argument kannst Du Variablen an deinen Query übergeben
+* ```graphql
+  const STORY_PAGE_QUERY = gql`
+    query StoryPageQuery($storyId: ID!) {
+      story(storyId: $storyId) {
+        id title createdAt
+        body member { user { name } }
+      }
+    }
+  `;
+  ```
+* ```graphql
+  function StoryPage() {
+    // Example: Receive storyId from URL params
+    const { storyId } = useParams();
+
+    const { loading, error, data } = useQuery(STORY_PAGE_QUERY,
+      {
+        variables: { storyId }
+      }
+    );
+    // ...
+  }
+  ```
+---
+### Apollo Hooks mit TypeScript
+* Die Apollo Hooks können mit Typ-Parametern typsicher gemacht werden.
+* In der Regel können zwei Parameter angegeben werden:
+  * `TData`: beschreibt, wie die gelesenen Daten aussehen (`data`-Knoten)
+  * `TVariables`: beschreibt, ob/wie benötigte Variablen aussehen
+* ```typescript
+  const STORY_PAGE_QUERY = gql`...`;
+
+  type StoryPageQuery = {
+    id: String, title: String, body: string, member: { id: string, bio?: string } }
+  }
+
+  type StoryPageVariables = { storyId: string }
+
+  function StoryPage({storyId}: {storyId: string}) {
+    const result = useQuery<StoryPageQuery, StoryPageVariables>({
+            variables: { storyId });
+
+    result.data?.id; // OK
+    result.data?.content; // ERROR content not in data
+    // ...
+  }
+  ```
+* Das `data`-Field in dem Ergebnis ist in TypeScript _immer_ optional, da es
+  im Fehlerfall nicht gesendet wird!
+* ```typescript
+  const {data} = useQuery<...>();
+
+  data.story.id; // ERROR: data might be undefined
+  if (!data) {
+    return <h1>No Data!</h1>;
+  }
+  data.story.id; // OK
+  ```
+---
+
+### TypeScript Code generieren
+* Das Project [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) bietet Code Generatoren für eine Reihe von GraphQL Frameworks, u.a. Apollo/React
+* Generiert werden können damit:
+  * Typen für das Query-Ergebnis (`TData`)
+  * Variablen (`TVariables`)
+  * Typen für verwendete Fragmente
+  * Fertige Hook-Funktionen
+
+---
+### Code Generator: Konfiguration
+* Je nach Konfiguration sucht der Generator nach `.graphql`-Dateien mit Queries und/oder `gql`-Funktionen
+* Die Typen werden in eine Datei (z.B. `generated.tsx`) geschrieben
+* Der Generator braucht Zugriff auf das Schema (lokal oder remote)
+* Der Generator kann im watch-Modus betrieben werden, dann wird automatisch neu generiert, wenn neue Queries geschrieben werden
+* ```yml
+  overwrite: true
+  schema:
+    # Lokales Schema, aber remote-Schema geht auch
+    - "../publy-backend/src/main/resources/graphql/publy.graphqls"
+  # In welchen Dateien soll nach GraphQL Queries gesucht werden?
+  documents: "./src/**/{*.graphql,*.tsx}"
+  # Was (und wohin) soll generiert werden:
+  generates:
+    src/generated/graphql.tsx:
+      plugins:
+        - "typescript"
+        - "typescript-operations"
+        - "typescript-react-apollo"
+```
+* Empfehlung: Code Generator auch im CI Build ausführen lassen!
+
+---
+### Code Generator
+* _Empfehlung_: Typen und Hooks generieren lassen
+* Die generierten Hooks sind "nur" Wrapper-Funktionen um `useQuery`, `useMutation`, ersparen
+  aber das hinschreiben der Typ-Informationen und des Dokuments mit dem Query
+* ```typescript
+  function StoryPage({storyId}: {storyId: string}) {
+
+    // useQuery:
+    const { data } = useQuery<StoryPageQuery, StoryPageQueryVariables>(
+            STORY_PAGE_QUERY, { variables: { storyId } });
+
+    // generierter Hook:
+    const { data } = useStoryPage({ variables: { storyId } });
+
+    // data-Objekte in beiden Fällen gleich
+  ```
+---
+### Code Generator: Fragmente
+* Für verwendete Fragmente wird ein eigener TypeScript-Typ generiert, das kann praktisch
+  sein, wenn man Typen für Teile eines Queries benötigt.
+* Beispiel:
+* ```graphql
+  query { stories { member { user { id name } } } }
+```
+* Generierter Typ (konzeptionell):
+* ```typescript
+  type StoriesQuery = { stories: Array<{ member: { user: { id: string, name: string } } }> }
+  ```
+* Um nur den Typen für den User zu ermitteln (z.B. um in einer Komponente als Property zu verwenden),
+ kann man schreiben:
+* ```javascript
+  type UserType = StoriesQuery["stories"][0]["member"]["user"]; // 🤯 😱
+  ```
+* Einfacher mit einem Fragment:
+* ```graphql
+  fragment UserFragment on User { id name }
+  query { stories { member { user { ...UserFragment } } } }
+  ```
+* Nun wird ein `UserFragment`-Typ generiert:
+* ```typescript
+  type UserFragment = { id: string, name: string }; // 😊
+  ```
+
+---
+### Übung: Query ausführen
+
+* <!-- .element: class="todo" -->Evtl. erst noch load more
+*
+*
+
+
+---
+
+### useQuery: Caching
+* Wenn deine Komponente erneut gerendert wird, wird dein Query
+            **nicht erneut ausgeführt**, sofern Apollo das Ergebnis noch im Cache findet
+* <!-- .element: class="demo" -->Netzwerk-Tab
+---
+
+### Der Apollo Cache
+* Apollo _normalisiert_ die Daten bevor sie in den Cache gelegt werden:
+* Für jedes Objekt, das als Teil deines Queries geladen wurde (egal auf welchem Level),
+            Apollo ermittelt den **typename** (`__typename`-Feld)
+  * Das `__typename`-Feld wird dafür automatisch allen Queries von Euch
+            hinzugefügt!
+* Für jedes Objekt extrahiert Apollo dessen `id`
+  * Wenn das `id`-Feld eines Objektes nicht `id` heißt, muss das in der
+            Konfiguration von Apollo gesetzt werden
+  * **Empfehlung:** *Immer* das `id`-Feld in jedem Objekt in jedem Query
+            abfragen!
+* Achtung! Listen werden *nicht* aktualisiert
+* <!-- .element: class="demo" -->Der Cache in den Developer-Tools
+---
+
+### Aktualisieren von Listen
+* Grundsätzlich können Listen mit verschiedenen Strategien aktualisiert werden:
+  * **fetch more**: Jemand klickt z.B. auf "Weitere Einträge laden"-Link
+  * <!-- .element: class="todo" -->BEISPIEL: Liste von Stories in Feed-Page
+  * **subscription**: Eine Subscription liefert neue Elemente, die (auch) in eine bestehende Liste eingefügt werden
+  * <!-- .element: class="todo" -->BEISPIEL: Neuer Kommentar in SingleStory-Page
+  * **update**: Nach einer Mutation, die ein neues Objekte erzeugt (oder löscht), soll das Objekt
+            in eine Liste hinzugefügt (oder gelöscht) werden
+    * Diesen Fall sehen wir uns im Zusammenhang mit Mutations an
+---
+### Aktualisieren von Listen: Pagination mit fetchMore
+* Anwendungsfall:
+  * es gibt eine Liste, durch die durchgeblättert werden kann
+  * die jeweils neu geladenen Objekte sollen der Liste auch im Cache hinzugefügt werden
+  * Vorteil: wenn Benutzer dann nochmal zurückblättert, sind die Objekte schon da
+* Dazu liefert `useQuery` eine `fetchMore`-Funktion zurück
+* Diese Funktion akzeptiert im einfachsten Fall neue Query _Variablen_ und führt den Query neu aus
+* ```javascript
+  function FeedPage() {
+    const { loading, data, error, fetchMore } = useFeedPageQuery();
+
+    // ...
+
+    const handleFetchMore = () => {
+      fetchMore({
+        variables: {
+          page: data.stories.page.pageNumber + 1, // fetch next page
+        },
+      });
+    };
+
+    return <div>
+       {data.page.hasNext && <button onClick={handleFetchMore}>Next</button>}
+       // ...
+    </>
+  }
+  ```
+---
+
+### Aktualisieren von Listen: Pagination mit fetchMore
+* Die `fetchMore`-Funktion führt den Query mit neuen Variablen aus
+* Apollo weiß aber nicht, wie die neu gelesenen Objekte in die gecachte Liste eingefügt werden sollen
+  * An den Anfang? Ans Ende? Mitte? ...
+  * <!-- .element: class="demo" --> Fetch-More-Button
+*
+---
+
+### Type Policy
+* Mit einer **Type Policy** kann die Aktualisierung des Caches für ein Feld angepasst werden
+  * Achtung 1: Das ist - je nach Schema - nicht trivial!
+  * Achtung 2: TypeScript-Support an der Stelle nur eingeschränkt!
+* In der Cache-Konfiguration beim Erzeugen des Apollo Clients:
+* ```javascript
+  const apolloClient = new ApolloClient({
+    // ...
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            stories: {
+              merge(
+                existing: StoryConnection | undefined | null,
+                incoming: StoryConnection
+              ) {
+                if (!existing) { return incoming; }
+                const merged = {
+                  page: incoming.page,
+                  stories: [...existing.stories, ...incoming.stories],
+                };
+                return merged;
+              }  }  }  } }
+            }),
+        });
+```
+---
+
+### Aktualisieren von Listen: Subscriptions
+<!-- .slide: class="left" -->
+
+* `useQuery` stellt die Funktion `subscribeToMore` zur Verfügung
+* Dieser Funktion wird eine Subscription übergeben - und der (generierte) TypeScript-Typ
+* Immer wenn die Subscription neue Daten liefert, wird die Callback-Funktion `updateQuery`
+  mit den alten und neuen Daten aufgerufen
+* In `updateQuery` können die neuen Daten dem Cache hinzugegügt werden
+* <!-- .element: class="demo" --> Cache Verhalten in Apollo Dev Tools
+* ```javascript
+  function StoryComments({ storyId }) {
+
+    // initial Kommentare für eine Story lesen
+    const { data, loading, error, subscribeToMore } = useStoryCommentsQuery({
+      variables: { storyId },
+    });
+
+    React.useEffect(() => {
+      // Aktualisieren der Liste im Cache mit Subscription
+      subscribeToMore<OnNewCommentSubscription>({
+        document: OnNewCommentDocument,
+        variables: { storyId },
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          const newComment = subscriptionData.data.onNewComment.newComment;
+          const newData = Object.assign({}, prev, {
+            comments: [newComment, ...prev.comments],
+          });
+          return newData;
+        },
+      });
+    }, [subscribeToMore, storyId]);
+
+    return ...;
+  }
+  ```
+---
+
+### Apollo GraphQL: Mutations
+<!-- .slide: class="left" -->
+
+* Ausführen von Mutations ist ähnlich wie das Ausführen eines Queries
+* Hook: [useMutation](https://www.apollographql.com/docs/react/data/mutations/#executing-a-mutation)
+* Der `useMutation` Hook gibt ein Array (Tuple) mit zwei Einträgen zurück:
+  1. Eine Funktion zum Ausführen der Mutation (z.B. nach einer Benutzerinteraktion)
+  2. Das Ergebnis-Objekt, das wir schon bei `useQuery` gesehen haben
+            (zusätzlich: ein `called`-Property, das angibt, ob die Mutation bereits mind. einmal ausgeführt wurde)
+* ```jsx
+  const ADD_COMMENT_MUTATION = gql`...`;
+  type AddCommentMutation = { newComment: ... };
+  type AddCommentVariables = { input: ... };
+
+  function CommentEditor() {
+    const [mutate, { error, data, called }] = useMutation<AddCommentMutation, AddCommentVariables>
+            (ADD_COMMENT_MUTATION);
+
+    // oder generiert:
+    const [mutate, { error, data, called }] = useAddCommentMutation();
+
+    async function addComment(commentInput) {
+      // Verwendung von mutate hier Typsicher, da TS
+      // das 'variables'-Objekt von useMutation kennt
+      mutate({
+          variables: { input: commentInput }
+      });
+    }
+
+    const errorMessage = error ? ... : null;
+
+    if (called && !errorMessage) {
+      // Mutation has been executed and was successful
+      return &lt;SuccessConfirmation />;
+    }
+
+    // Mutation hasn't been run or failed with an error
+    return <form>
+            <input name="comment" ... />
+            {errorMessage && <p>Error: {errorMessage}</p>}
+           </form>
+  }
+  ```
+---
+
+
+### Übung: eine Mutation
+* <!-- .element: class="todo" -->Später, erst Cache aktualisieren
+*
+*
+
+---
+
+### Der Apollo Cache: Aktualisierung
+* Es gibt mehrere Möglichkeiten, den Cache zu aktualisieren:
+  * [Fetch Policy](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy)
+  * [Refetch Function](https://www.apollographql.com/docs/react/data/queries/#refetching)
+  * [Polling](https://www.apollographql.com/docs/react/data/queries/#polling)
+  * [Per Subscription](https://www.apollographql.com/docs/react/data/subscriptions/#subscribing-to-updates-for-a-query)
+  * Sonderfall: [Fetch more]()<!-- .element: class="todo" -->
+  * Nach einer Mutation direkt mit der [Cache API](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly)
+  *
+---
+
+### Fetch Policy
+* Mit einer Fetch Policy kannst Du bei `useQuery` einstellen, wann dein Query
+            erneut ausgeführt werden soll
+  * **cache-first**: Wenn die angeforderten Daten bereits im Cache sind, werden sie aus
+              dem Cache zurückgegeben, sonst vom Backend geladen (Default)
+  * **cache-and-network**: Falls vorhanden, Daten aus dem Cache zurückgeben, aber in
+              jedem Fall auch einen Backend-Request auszuführen, um ggf. aktualisierte Daten zu
+              laden (Schnelle Darstellung, die ggf. kurze Zeit später aktualisiert wird)
+  * **network-only**: Immer Daten vom Backend laden (keine Daten vom Cache verwenden),
+              aber mit dem Ergebnis den Cache aktualisieren
+  * **no-cache**: Immer Daten vom Backend laden und auch nicht den Cache aktualisieren
+  * **cache-only**: Nur Daten vom Cache verwenden. Wenn die Daten darin nicht gefunden
+              werden, wird kein Ergebnis zurückgeliefert
+---
+
+### Fetch Policy: Beispiel
+* ```javascript
+  function StoryPage() {
+    const { storyId } = useParams();
+
+    const { loading, error, data } = useQuery(STORY_PAGE_QUERY,
+      {
+        variables: { storyId },
+        fetchPolicy: "network-only"
+      }
+    );
+    // ...
+  }
+  ```
+
+---
+
+### Refetch Funktion
+* `useQuery` liefert eine **refetch**-Funktion, die Du verwenden kannst, um
+            den Query erneut auszuführen (z.B. nach Klick auf einen "Aktualisieren"-Button)
+* ```javascript
+  function StoryFeedPage() {
+    const { loading, error, data, refetch } = useQuery(StoryFeedPageQuery);
+
+    if (loading) {
+      return <h1>Loading, please wait...</h1>;
+    }
+
+    if (error) {
+      return <h1>GraphQL Failed: {error.toString()}</h1>;
+    }
+
+    return <TeaserList stories={data.stories} onRefetch={refetch} />;
+  }
+
+  function TeaserList({stories, onRefetch}) {
+    return <div>
+      <button onClick={onRefetch}>Refresh</button>
+      ...
+    </div>
+  }
+  ```
+---
+
+### Polling
+* Du kannst ein `pollInterval` (Zeit in ms) als Query Option angeben. Apollo
+            führt dann den Query dann in dem angegebenen Interval automatisch neu aus und aktualisiert den Cache mit den gelesenen Daten
+* ```javascript
+  function StoryFeedPage() {
+  const { loading, error, data } = useQuery(STORY_FEED_QUERY,
+    { pollInterval: 1500 }
+  );
+
+  // ...wie gesehen...
+  }
+  ```
+---
+### Den Cache nach einer Mutation aktualisieren
+* Mit [refetch Queries](https://www.apollographql.com/docs/react/data/mutations/#refetching-queries) kannst Du eine Liste von Queries angeben, die erneut ausgeführt werden, wenn
+              eine Mutation erfolgreich war
+* Mit der [update Function](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly) kannst Du den Cache direkt per API manipulieren, sobald deine Mutation erfolgreich
+              war
+---
+
+### Nach einer Mutation... wird der Cache automatisch aktualisiert (eventuell)
+* Wenn deine Mutation ein Objekt zurückliefert, das sich bereits im Cache befindet, wird
+            es dort aktualisiert
+* Beispiel: Du *aktualisierts* eine existierende Story und das Ergebnis der
+            Mutation enthält irgendwo die aktualisierte Story (zumindest die aktualisierten Teile).
+  * Voraussetzung: im Ergebnis kommt auch die `id` der Story vor
+* ```javascript
+  const UpdateStory = gql`
+    mutation {
+      updateStory(storyId: "S1", newTitle: "...", newBody: "...") {
+          id
+          title
+          body
+      }
+    }
+  ```
+* In diesem Beispiel kann Apollo das Objekt <b>S1</b> im Cache automatisch aktualisieren
+---
+
+### Grenzen der automatischen Cache-Aktualisierung
+* Es gibt Fälle, da kann Apollo den Cache nach einer Mutation nicht selbstständig aktualisieren
+* Beispiel: Einfügen eines neuen Objektes in eine Liste
+* Apollo weiß nicht, dass das Objekt, dass eine Mutation zurückliefert, (auch) in eine
+            bestehende Liste gehört:
+  * Du liest Stories mit einem Query.
+  * Du führst eine Mutation aus, die eine neue Story anlegt (und diese auch zurückliefert)
+  * Apollo legt das neue Objekt in den Cache, weiß aber nicht, dass es auch in die Liste der
+            gelesenen Stories gehört
+  * Die Liste der Stories wird also nicht aktualisiert
+
+---
+
+### Die Apollo Cache API
+* Du kannst den Query auslesen (mit einem GraphQL Query!)
+* Du kannst den Cache direkt modifizieren
+---
+
+### Beispiel: Den Cache aktualisieren
+* Du kannst die `update`-Function bei `useMutation` angeben:
+* Diese Funktion wird nach dem Ausführen der Mutation von Apollo aufgerufen
+* Die Funktion bekommt das Mutation-Ergebnis sowie den aktuellen Cache von Apollo
+            übergeben
+* Mit der Cache API kannst Du das neue Objekt in den Cache an allen erforderlichen Stellen einfügen
+* ```javascript
+  const ReadStoriesFromCache = gql`
+    query ReadStories {
+      stories {
+        id
+      }
+    }
+  `;
+
+  function StoryEditor() {
+    function saveStory(newStory) {
+      mutate({
+        variables: {...},
+        update: (cache, {data}) => {
+          const { posts } = cache.readQuery({
+            query: ReadStoriesFromCache
+          });
+          cache.writeQuery({
+            query: ReadStoriesFromCache,
+            data: { posts: stories.concat(data.newStora) }
+          });
+      })
+    }
+
+    return ...;
+  }
+  ```
+
+
+
   </textarea
           >
         </section>
-
-        <!-- ============================================================================= -->
-        <section>
-          <h3>Verwenden des Apollo React Clients</h3>
-
-          <ul>
-            <li class="fragment">
-              Apollo stellt für die drei GraphQL Operationstypen jeweils eigene
-              Hooks zur Verfügung:
-              <ul>
-                <li>
-                  <a
-                    href="https://www.apollographql.com/docs/react/data/queries/#usequery-api"
-                    >useQuery</a
-                  >
-                  (und
-                  <a
-                    href="https://www.apollographql.com/docs/react/data/queries/#manual-execution-with-uselazyquery"
-                    >useLazyQuery</a
-                  >)
-                </li>
-                <li>
-                  <a
-                    href="https://www.apollographql.com/docs/react/data/mutations/#usemutation-api"
-                    >useMutation</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="https://www.apollographql.com/docs/react/data/subscriptions/#usesubscription-api-reference"
-                    >useSubscription</a
-                  >
-                </li>
-              </ul>
-            </li>
-            <li class="fragment">
-              Die Hooks funktionieren alle ähnlich:
-              <ul>
-                <li class="fragment">
-                  Sie erwarten ein Dokument mit einer GraphQL Operation
-                  (Ergebnis von
-                  <code>gql</code>)
-                </li>
-                <li class="fragment">
-                  Verhalten kann mit weiteren Argumenten konfiguriert werden,
-                  z.B. Setzen von Variablen
-                </li>
-                <li class="fragment">
-                  Der Rückgabetyp ist ein Objekt mit Informationen über den
-                  Request (loading, data, error). Bei
-                  <code>useMutation</code> kommt kommt außerdem eine Funktion
-                  zum Ausführen der Mutation zurück
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </section>
-        <!-- apollo.txt -->
 
         <section>
           <h2>Geschafft! 😊</h2>

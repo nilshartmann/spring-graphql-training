@@ -11,10 +11,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
   @Query(value = "SELECT nextval('comment_ids');", nativeQuery = true)
   Long getNextCommentId();
 
-  @Query(value = "SELECT count(*) FROM comments c WHERE c.story_id = :storyId", nativeQuery = true)
-  Long countCommentsForStory(@Param("storyId") Long storyId);
+  public List<Comment> findAllByStoryId(Long storyId);
 
-  @Query("SELECT c FROM Comment c WHERE c.story.id in :storyIds")
-  List<Comment> findCommentsForStories(@Param("storyIds") List<Long> storyIds);
 
 }

@@ -7,12 +7,15 @@ type Story  {
     body: String!
     createdAt: String!
 
+    excerpt(maxLength: Int! = 20): String!
+
     writtenBy: Member!
     comments: [Comment!]!
 }
 
 type Comment {
     id: ID!
+    createdAt: String!
 
     story: Story!
     writtenBy: Member!
@@ -29,6 +32,8 @@ type Member {
     id: ID!
 
     profileImage: String!
+    """Short biography of a member. Optional."""
+    bio: String
     user: User
     stories: [Story!]!
 }
@@ -59,6 +64,14 @@ type Query {
     """Returns the requested amount of stories, ordered by date, so
     that newest/latest stories come first"""
     stories(page: Int! = 0, pageSize: Int! = 3): StoryConnection!
+
+    comments(storyId: ID!): [Comment!]!
+
+    """
+    Return the current logged in Member (as read from the `Authorization` JWT) or null
+    if no member is logged in
+    """
+    me: Member
 }
 
 input AddCommentInput {

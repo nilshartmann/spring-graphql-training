@@ -63,11 +63,11 @@ VALUES (10, 1, '2021-10-15T13:32:50.027Z', 2,
 
 
 INSERT INTO reactions (id, version, created_at, story_id, given_by_id, type)
-VALUES (1, 1, '2021-10-09T13:52:10.259Z', 2,
+VALUES (1, 1, '2021-10-09T13:52:10.259Z', 10,
         2, 'heart');
 
 INSERT INTO comments (id, version, created_at, story_id, written_by_id, content)
-VALUES (2, 1, '2021-10-10T05:53:21.912Z', 2, 4,
+VALUES (2, 1, '2021-10-10T05:53:21.912Z', 10, 4,
         'Maiores autem adipisci.');
 
 ALTER SEQUENCE comment_ids RESTART WITH 171;
