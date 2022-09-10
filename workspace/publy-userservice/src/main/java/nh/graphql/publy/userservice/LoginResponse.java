@@ -13,6 +13,10 @@ public final class LoginResponse {
     return token;
   }
 
+  public String getToken() {
+    return token;
+  }
+
   @Override
   public boolean equals(Object obj) {
     if (obj == this) return true;

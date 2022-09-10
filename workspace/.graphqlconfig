@@ -1,8 +1,10 @@
 {
-  "name": "Untitled GraphQL Schema",
+  "name": "Publy WS Backend",
+  "schemaPath": "./publy-backend/src/main/resources/graphql/publy.graphqls",
+  "includes": ["./**/*.graphql"],
   "extensions": {
     "endpoints": {
-      "Default GraphQL Endpoint": {
+      "Publy WS Backend": {
         "url": "http://localhost:8090/graphql",
         "headers": {
           "user-agent": "JS GraphQL"

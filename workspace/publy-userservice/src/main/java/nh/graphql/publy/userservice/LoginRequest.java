@@ -7,8 +7,12 @@ import javax.validation.constraints.NotNull;
 @Validated
 public final class LoginRequest {
 
-  @NotNull public final String username;
-  @NotNull public final String password;
+  @NotNull public String username;
+  @NotNull public String password;
+
+  public LoginRequest() {
+
+  }
 
   public LoginRequest(String username, String password) {
     this.username = username;
@@ -21,6 +25,14 @@ public final class LoginRequest {
 
   public String password() {
     return this.password;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   @Override

@@ -55,10 +55,6 @@ export function createApolloClient() {
     });
   });
 
-  function bold(s: string): string[] {
-    return ["%c" + s, "font-weight: bold"];
-  }
-
   const httpLink = createHttpLink({
     uri: graphqlApiUrl,
     includeExtensions: true,
