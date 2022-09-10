@@ -1,0 +1,26 @@
+fragment StoryTeaser on Story {
+  id
+  title
+  createdAt
+  excerpt
+  writtenBy {
+    id
+    user {
+      name
+    }
+    profileImage
+  }
+}
+
+query FeedPage($page: Int!) {
+  stories(page: $page, pageSize: 3) {
+    page {
+      pageNumber
+      hasNextPage
+    }
+
+    stories {
+      ...StoryTeaser
+    }
+  }
+}
