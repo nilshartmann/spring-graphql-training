@@ -1,0 +1,21 @@
+fragment AddCommentError on AddCommentFailedPayload {
+  errorMsg
+}
+mutation AddComment($storyId: ID!, $content: String!) {
+  result: addComment(input: { content: $content, storyId: $storyId }) {
+    ... on AddCommentSuccessPayload {
+      newComment {
+        content
+        id
+        createdAt
+        writtenBy {
+          id
+          profileImage
+        }
+      }
+    }
+    ... on AddCommentFailedPayload {
+      ...AddCommentError
+    }
+  }
+}

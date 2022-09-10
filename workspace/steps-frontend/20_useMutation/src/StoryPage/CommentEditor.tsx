@@ -3,6 +3,7 @@ import * as React from "react";
 import {
   AddCommentErrorFragment,
   AddCommentMutation,
+  useAddCommentMutation,
 } from "../generated/graphql";
 import Stack from "../components/Stack";
 import ButtonBar from "../components/ButtonBar";
@@ -15,8 +16,9 @@ type CommentEditorProps = {
 export function CommentEditor({ storyId }: CommentEditorProps) {
   const { me } = useMe();
   const [addError, setAddError] = React.useState("");
+  const [addComment, { loading }] = useAddCommentMutation();
   const [content, setContent] = React.useState("");
-  const editorDisabled = !me;
+  const editorDisabled = !me || loading;
   const buttonDisabled = editorDisabled || !content;
 
   function handleContentChange(newContent: string) {
@@ -34,10 +36,22 @@ export function CommentEditor({ storyId }: CommentEditorProps) {
     //  - Die Mutation liefert einen Union-Typ zurück
     //  - Ob Du den Fehler UnionType zurückbekommen hast, kannst Du mit der
     //    Funktion 'isAddCommentFailed' überprüfen
+    const { errors, data } = await addComment({
+      variables: {
+        storyId,
+        content,
+      },
+    });
     //  - Im "fachlichen" Fehlerfall setze die übergebene Fehlermeldung als 'addError'
     //    in den State
     //    - Du kannst einen Fehler provozieren, in dem Du einen Kommentar
     //      eingibst und speicherst, der weniger als fünf Zeichen lang ist
+    if (data) {
+      if (isAddCommentFailed(data.result)) {
+        setAddError(data.result.errorMsg);
+        return;
+      }
+    }
     //  - Wenn Du auch technische Fehler verarbeiten willst (errors-Field),
     //     kannst Du ebenfalls einen Fehler in 'addError' setzen
     //     - Einen technischen Error kannst Du provozieren, in dem Du
@@ -46,9 +60,9 @@ export function CommentEditor({ storyId }: CommentEditorProps) {
     //        Button normalerweise disabled ist, wenn man nicht eingeloggt ist
     //  - Im Erfolgsfall kannst du das Eingabefeld wieder leeren
     //    (content-State leer machen)
-    //  - ACHTUNG!!!
-    //  - Der neue Kommentar wird (noch) nicht automatisch angezeigt, d.h.
-    //    Du musst nach dem erfolgreichen speichern die Seite neu laden!
+    if (!errors || errors.length === 0) {
+      setContent("");
+    }
   }
 
   return (

@@ -1,0 +1,8 @@
+fragment BasicMember on Member {
+  id
+  profileImage
+  user {
+    id
+    name
+  }
+}

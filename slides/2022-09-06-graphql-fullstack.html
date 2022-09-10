@@ -2692,9 +2692,64 @@ root.render(
 * Achtung! Listen werden *nicht* aktualisiert, bzw. nicht erweitert/gekürzt
 ---
 
+### Der Apollo Cache: Aktualisierung
+* Es gibt mehrere Möglichkeiten, den Cache zu aktualisieren:
+  * [Fetch Policy](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy)
+  * [Refetch Function](https://www.apollographql.com/docs/react/data/queries/#refetching)
+  * [Polling](https://www.apollographql.com/docs/react/data/queries/#polling)
+  * Für Paginierung von Listen mit der [Fetch more](https://www.apollographql.com/docs/react/pagination/core-api/#the-fetchmore-function)-Funktion
+  * [Per Subscription](https://www.apollographql.com/docs/react/data/subscriptions/#subscribing-to-updates-for-a-query)
+  * Nach einer Mutation direkt mit der [Cache API](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly)
+---
+
+### Fetch Policy
+* Mit einer Fetch Policy kannst Du bei `useQuery` einstellen, wann dein Query
+            erneut ausgeführt werden soll
+  * **cache-first**: Wenn die angeforderten Daten bereits im Cache sind, werden sie aus
+              dem Cache zurückgegeben, sonst vom Backend geladen (Default)
+  * **cache-and-network**: Falls vorhanden, Daten aus dem Cache zurückgeben, aber in
+              jedem Fall auch einen Backend-Request auszuführen, um ggf. aktualisierte Daten zu
+              laden (Schnelle Darstellung, die ggf. kurze Zeit später aktualisiert wird)
+  * **network-only**: Immer Daten vom Backend laden (keine Daten vom Cache verwenden),
+              aber mit dem Ergebnis den Cache aktualisieren
+  * **no-cache**: Immer Daten vom Backend laden und auch nicht den Cache aktualisieren
+  * **cache-only**: Nur Daten vom Cache verwenden. Wenn die Daten darin nicht gefunden
+              werden, wird kein Ergebnis zurückgeliefert
+* <!-- .element: class="demo" --> Cache-Policy zeigen
+---
+
+### Fetch Policy: Beispiel
+* ```javascript
+  function StoryPage() {
+    const { storyId } = useParams();
+
+    const { loading, error, data } = useQuery(STORY_PAGE_QUERY,
+      {
+        variables: { storyId },
+        fetchPolicy: "network-only"
+      }
+    );
+    // ...
+  }
+  ```
+
+### Polling
+* Du kannst ein `pollInterval` (Zeit in ms) als Query Option angeben. Apollo
+            führt dann den Query dann in dem angegebenen Interval automatisch neu aus und aktualisiert den Cache mit den gelesenen Daten
+* ```javascript
+  function StoryFeedPage() {
+  const { loading, error, data } = useQuery(STORY_FEED_QUERY,
+    { pollInterval: 1500 }
+  );
+
+  // ...wie gesehen...
+  }
+  ```
+---
 ### Aktualisieren von Listen
 * Wenn neue Daten für eine Liste geladen werden (oder welche entfernt werden),
   weiß Apollo nicht, wie damit umzugehen ist
+* Der Cache kann dann nicht automatisch aktualisiert werden
 * Beispiel:
   * Zusätzliche Stories werden auf der FeedPage gelesen (nächste "page")
   * Müssen die gelesenen Stories am Anfang oder Ende der bestehenden Liste eingefügt werden?
@@ -2710,10 +2765,12 @@ root.render(
     * Beispiel: Liste von Stories in Feed-Page
   * **subscription**: Eine Subscription liefert neue Elemente, die (auch) in eine bestehende Liste eingefügt werden
     * Beispiel: Neuer Kommentar in `StoryComments`
+    * Diesen Fall sehen wir uns im Zusammenhang mit Mutations an
   * **update**: Nach einer Mutation, die ein neues Objekte erzeugt (oder löscht), soll das Objekt
             in eine Liste hinzugefügt (oder gelöscht) werden
     * Diesen Fall sehen wir uns im Zusammenhang mit Mutations an
 * In jedem Fall müssen wir dazu implementieren, *wie* die neuen Daten in die gecachten Listen kommen
+
 ---
 ### Aktualisieren von Listen: Pagination mit fetchMore
 * Anwendungsfall:
@@ -2779,10 +2836,169 @@ root.render(
 
 ---
 
-### Aktualisieren von Listen mit Subscriptions
+
+### Apollo GraphQL: Mutations
 <!-- .slide: class="left" -->
 
-* `useQuery` stellt die Funktion `subscribeToMore` zur Verfügung
+* Ausführen von Mutations ist ähnlich wie das Ausführen eines Queries
+* Hook: [useMutation](https://www.apollographql.com/docs/react/data/mutations/#executing-a-mutation)
+* Der `useMutation` Hook gibt ein Array (Tuple) mit zwei Einträgen zurück:
+  1. Eine Funktion zum Ausführen der Mutation (z.B. nach einer Benutzerinteraktion)
+  2. Das Ergebnis-Objekt, das wir schon bei `useQuery` gesehen haben
+            (zusätzlich: ein `called`-Property, das angibt, ob die Mutation bereits mind. einmal ausgeführt wurde)
+* ```jsx
+  const ADD_COMMENT_MUTATION = gql`...`;
+  type AddCommentMutation = { newComment: ... };
+  type AddCommentVariables = { input: ... };
+
+  function CommentEditor() {
+    const [mutate, { error, data, called }] = useMutation<AddCommentMutation, AddCommentVariables>
+            (ADD_COMMENT_MUTATION);
+
+    // oder generiert:
+    const [mutate, { error, data, called }] = useAddCommentMutation();
+
+    function addComment(commentInput) {
+      // Verwendung von mutate hier Typsicher, da TS
+      // das 'variables'-Objekt von useMutation kennt
+      mutate({
+          variables: { input: commentInput }
+      });
+    }
+
+    const errorMessage = error ? ... : null;
+
+    if (called && !errorMessage) {
+      // Mutation has been executed and was successful
+      return &lt;SuccessConfirmation />;
+    }
+
+    // Mutation hasn't been run or failed with an error
+    return <form>
+            <input name="comment" ... />
+            {errorMessage && <p>Error: {errorMessage}</p>}
+           </form>
+  }
+  ```
+---
+
+### Die mutate-Funktion
+
+* Der `mutate`-Funktion können (fast) alle Argumente übergeben werden, die
+  auch an `useMutation` übergeben werden können (insb. Variablen)
+* Beim Aufruf der `mutate`-Funktion wird die Mutation ausgelöst und die Komponente
+  wird mit neuen Ergebnissen (oder Fehlern) neu gerendert (wie bei `useQuery`)
+* Die `mutate`-Funktion liefert ein Promise zurück, das mit dem Ergebnis
+  der Mutation (`data` oder `errors`) aufgelöst wird, sobald das Ergebnis da ist
+* Damit kannst Du weitere Logik unmittelbar nach dem Abschluss der Mutation ausführen
+* ```javascript
+  function CommentEditor({onCommentSaved}) {
+    const [mutate, { error, data, called }] = useAddCommentMutation();
+
+    async function addComment(commentInput) {
+      // Verwendung von mutate hier Typsicher, da TS
+      // das 'variables'-Objekt von useMutation kennt
+      const {data, error} = mutate({
+          variables: { input: commentInput }
+      });
+
+      if (data) {
+       // Alles OK, z.B. Redirect hier machen
+       history.push("/...");
+       // oder Callback von Oberkomponente aufrufen:
+       onCommentSaved();
+      }
+    }
+
+```
+---
+
+### Übung: eine Mutation
+* Die Logik zum Anlegen eines Kommentars implementieren
+* Die Mutation (`AddCommentMutation`) ist schon fertig und der Code dafür generiert
+* In `CommentEditor` musst Du den Code vervollständigen, siehe dort für weitere Informationen
+* Achtung: Der neue Kommentar wird (noch) nicht automatisch angezeigt, d.h. Du musst nach dem erfolgreichen speichern die Seite neu laden!
+* Mögliche Lösung in `steps-frontend/20_useMutation`
+
+---
+### Nach einer Mutation... wird der Cache automatisch aktualisiert (eventuell)
+* Wenn deine Mutation ein Objekt zurückliefert, das sich bereits im Cache befindet, wird
+            es dort aktualisiert
+* Beispiel: Du *aktualisierst* eine existierende Story und das Ergebnis der
+            Mutation enthält irgendwo die aktualisierte Story (zumindest die aktualisierten Teile).
+  * Voraussetzung: im Ergebnis kommt auch die `id` der Story vor
+* ```javascript
+  const UpdateStory = gql`
+    mutation {
+      updateStory(storyId: "S1", newTitle: "...", newBody: "...") {
+          id
+          title
+          body
+      }
+    }
+  ```
+* In diesem Beispiel kann Apollo das Objekt <b>S1</b> im Cache automatisch aktualisieren
+---
+### Den Cache nach einer Mutation aktualisieren
+* Mit [refetch Queries](https://www.apollographql.com/docs/react/data/mutations/#refetching-queries) kannst Du eine Liste von Queries angeben, die erneut ausgeführt werden, wenn
+              eine Mutation erfolgreich war
+* Mit der [update Function](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly) kannst Du den Cache direkt per API manipulieren, sobald deine Mutation erfolgreich
+              war
+---
+
+### Die Apollo Cache API
+* Du kannst den Query auslesen (mit einem GraphQL Query!)
+* Du kannst den Cache direkt modifizieren
+---
+
+### Beispiel: Den Cache aktualisieren
+* Du kannst die `update`-Function bei `useMutation` angeben:
+* Diese Funktion wird nach dem Ausführen der Mutation von Apollo aufgerufen
+* Die Funktion bekommt das Mutation-Ergebnis sowie den aktuellen Cache von Apollo
+            übergeben
+* Mit der Cache API kannst Du das neue Objekt in den Cache an allen erforderlichen Stellen einfügen
+* ```javascript
+  const ReadStoriesFromCache = gql`
+    query ReadStories {
+      stories {
+        id
+      }
+    }
+  `;
+
+  function StoryEditor() {
+    function saveStory(newStory) {
+      mutate({
+        variables: {...},
+        update: (cache, {data}) => {
+          const { posts } = cache.readQuery({
+            query: ReadStoriesFromCache
+          });
+          cache.writeQuery({
+            query: ReadStoriesFromCache,
+            data: { posts: stories.concat(data.newStora) }
+          });
+      })
+    }
+
+    return ...;
+  }
+  ```
+
+---
+### Aktualisieren des Caches mit Subscriptions
+<!-- .slide: class="left" -->
+* Bei den bisher gesehen Aktualisierungen, hat der Client die Aktualisierung
+  ausgelöst.
+* Dadurch werden Änderungen an Daten, die nicht vom Server vorgenommen werden, aber nicht
+  berücksichtigt
+* Beispiel: Anderer Benutzer erzeugt einen Kommentar
+* Man kann das Query-Ergebnis (insb. für Listen) mit einer Subscription aktualisieren
+* Beispiel: onNewComment Subscription
+---
+### Aktualisieren des Caches mit Subscriptions
+<!-- .slide: class="left" -->
+* `useQuery` stellt dazu die Funktion `subscribeToMore` zur Verfügung
 * Dieser Funktion wird übergeben:
   * Als Typ-Parameter der Name des Typs, der das Ergebnis der Subscription beschreibt
   * Als Parameter ein Objekt:
@@ -2793,6 +3009,7 @@ root.render(
   mit den alten und neuen Daten aufgerufen
 * In `updateQuery` können die neuen Daten dem Cache hinzugefügt werden
 * <!-- .element: class="demo" --> Cache Verhalten in Apollo Dev Tools
+
 ---
 ### Aktualisieren von Listen mit Subscriptions
 <!-- .slide: class="left" -->
@@ -2838,196 +3055,14 @@ root.render(
   }
   ```
 ---
-
-### Apollo GraphQL: Mutations
-<!-- .slide: class="left" -->
-
-* Ausführen von Mutations ist ähnlich wie das Ausführen eines Queries
-* Hook: [useMutation](https://www.apollographql.com/docs/react/data/mutations/#executing-a-mutation)
-* Der `useMutation` Hook gibt ein Array (Tuple) mit zwei Einträgen zurück:
-  1. Eine Funktion zum Ausführen der Mutation (z.B. nach einer Benutzerinteraktion)
-  2. Das Ergebnis-Objekt, das wir schon bei `useQuery` gesehen haben
-            (zusätzlich: ein `called`-Property, das angibt, ob die Mutation bereits mind. einmal ausgeführt wurde)
-* ```jsx
-  const ADD_COMMENT_MUTATION = gql`...`;
-  type AddCommentMutation = { newComment: ... };
-  type AddCommentVariables = { input: ... };
-
-  function CommentEditor() {
-    const [mutate, { error, data, called }] = useMutation<AddCommentMutation, AddCommentVariables>
-            (ADD_COMMENT_MUTATION);
-
-    // oder generiert:
-    const [mutate, { error, data, called }] = useAddCommentMutation();
-
-    async function addComment(commentInput) {
-      // Verwendung von mutate hier Typsicher, da TS
-      // das 'variables'-Objekt von useMutation kennt
-      mutate({
-          variables: { input: commentInput }
-      });
-    }
-
-    const errorMessage = error ? ... : null;
-
-    if (called && !errorMessage) {
-      // Mutation has been executed and was successful
-      return &lt;SuccessConfirmation />;
-    }
-
-    // Mutation hasn't been run or failed with an error
-    return <form>
-            <input name="comment" ... />
-            {errorMessage && <p>Error: {errorMessage}</p>}
-           </form>
-  }
-  ```
 ---
 
-
-### Übung: eine Mutation
-* <!-- .element: class="todo" -->Später, erst Cache aktualisieren
-*
-*
-
----
-
-### Der Apollo Cache: Aktualisierung
-* Es gibt mehrere Möglichkeiten, den Cache zu aktualisieren:
-  * [Fetch Policy](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy)
-  * [Refetch Function](https://www.apollographql.com/docs/react/data/queries/#refetching)
-  * [Polling](https://www.apollographql.com/docs/react/data/queries/#polling)
-  * [Per Subscription](https://www.apollographql.com/docs/react/data/subscriptions/#subscribing-to-updates-for-a-query)
-  * Sonderfall: [Fetch more]()<!-- .element: class="todo" -->
-  * Nach einer Mutation direkt mit der [Cache API](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly)
-  *
----
-
-### Fetch Policy
-* Mit einer Fetch Policy kannst Du bei `useQuery` einstellen, wann dein Query
-            erneut ausgeführt werden soll
-  * **cache-first**: Wenn die angeforderten Daten bereits im Cache sind, werden sie aus
-              dem Cache zurückgegeben, sonst vom Backend geladen (Default)
-  * **cache-and-network**: Falls vorhanden, Daten aus dem Cache zurückgeben, aber in
-              jedem Fall auch einen Backend-Request auszuführen, um ggf. aktualisierte Daten zu
-              laden (Schnelle Darstellung, die ggf. kurze Zeit später aktualisiert wird)
-  * **network-only**: Immer Daten vom Backend laden (keine Daten vom Cache verwenden),
-              aber mit dem Ergebnis den Cache aktualisieren
-  * **no-cache**: Immer Daten vom Backend laden und auch nicht den Cache aktualisieren
-  * **cache-only**: Nur Daten vom Cache verwenden. Wenn die Daten darin nicht gefunden
-              werden, wird kein Ergebnis zurückgeliefert
----
-
-### Fetch Policy: Beispiel
-* ```javascript
-  function StoryPage() {
-    const { storyId } = useParams();
-
-    const { loading, error, data } = useQuery(STORY_PAGE_QUERY,
-      {
-        variables: { storyId },
-        fetchPolicy: "network-only"
-      }
-    );
-    // ...
-  }
-  ```
-
-
-
-### Polling
-* Du kannst ein `pollInterval` (Zeit in ms) als Query Option angeben. Apollo
-            führt dann den Query dann in dem angegebenen Interval automatisch neu aus und aktualisiert den Cache mit den gelesenen Daten
-* ```javascript
-  function StoryFeedPage() {
-  const { loading, error, data } = useQuery(STORY_FEED_QUERY,
-    { pollInterval: 1500 }
-  );
-
-  // ...wie gesehen...
-  }
-  ```
----
-### Den Cache nach einer Mutation aktualisieren
-* Mit [refetch Queries](https://www.apollographql.com/docs/react/data/mutations/#refetching-queries) kannst Du eine Liste von Queries angeben, die erneut ausgeführt werden, wenn
-              eine Mutation erfolgreich war
-* Mit der [update Function](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly) kannst Du den Cache direkt per API manipulieren, sobald deine Mutation erfolgreich
-              war
----
-
-### Nach einer Mutation... wird der Cache automatisch aktualisiert (eventuell)
-* Wenn deine Mutation ein Objekt zurückliefert, das sich bereits im Cache befindet, wird
-            es dort aktualisiert
-* Beispiel: Du *aktualisierst* eine existierende Story und das Ergebnis der
-            Mutation enthält irgendwo die aktualisierte Story (zumindest die aktualisierten Teile).
-  * Voraussetzung: im Ergebnis kommt auch die `id` der Story vor
-* ```javascript
-  const UpdateStory = gql`
-    mutation {
-      updateStory(storyId: "S1", newTitle: "...", newBody: "...") {
-          id
-          title
-          body
-      }
-    }
-  ```
-* In diesem Beispiel kann Apollo das Objekt <b>S1</b> im Cache automatisch aktualisieren
----
-
-### Grenzen der automatischen Cache-Aktualisierung
-* Es gibt Fälle, da kann Apollo den Cache nach einer Mutation nicht selbstständig aktualisieren
-* Beispiel: Einfügen eines neuen Objektes in eine Liste
-* Apollo weiß nicht, dass das Objekt, dass eine Mutation zurückliefert, (auch) in eine
-            bestehende Liste gehört:
-  * Du liest Stories mit einem Query.
-  * Du führst eine Mutation aus, die eine neue Story anlegt (und diese auch zurückliefert)
-  * Apollo legt das neue Objekt in den Cache, weiß aber nicht, dass es auch in die Liste der
-            gelesenen Stories gehört
-  * Die Liste der Stories wird also nicht aktualisiert
-
----
-
-### Die Apollo Cache API
-* Du kannst den Query auslesen (mit einem GraphQL Query!)
-* Du kannst den Cache direkt modifizieren
----
-
-### Beispiel: Den Cache aktualisieren
-* Du kannst die `update`-Function bei `useMutation` angeben:
-* Diese Funktion wird nach dem Ausführen der Mutation von Apollo aufgerufen
-* Die Funktion bekommt das Mutation-Ergebnis sowie den aktuellen Cache von Apollo
-            übergeben
-* Mit der Cache API kannst Du das neue Objekt in den Cache an allen erforderlichen Stellen einfügen
-* ```javascript
-  const ReadStoriesFromCache = gql`
-    query ReadStories {
-      stories {
-        id
-      }
-    }
-  `;
-
-  function StoryEditor() {
-    function saveStory(newStory) {
-      mutate({
-        variables: {...},
-        update: (cache, {data}) => {
-          const { posts } = cache.readQuery({
-            query: ReadStoriesFromCache
-          });
-          cache.writeQuery({
-            query: ReadStoriesFromCache,
-            data: { posts: stories.concat(data.newStora) }
-          });
-      })
-    }
-
-    return ...;
-  }
-  ```
-
-
-
+### Übung: subscribeToMore
+* Die Liste der Kommentare (`StoryComments`) soll automatisch aktualisiert werden,
+  wenn auf dem Server ein neuer Kommentar erzeugt wird
+* Implementiere dazu die `subscribeToMore`-Funktion
+* TODOs und Hilfestellung dazu findest Du in der Datei `StoryComments.tsx`
+* Lösung in `steps-frontend/30_useQuery_subscribeToMore`
   </textarea
           >
         </section>

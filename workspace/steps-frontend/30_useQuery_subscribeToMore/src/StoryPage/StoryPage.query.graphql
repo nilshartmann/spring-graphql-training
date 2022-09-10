@@ -1,0 +1,25 @@
+query StoryPage($storyId: ID!) {
+  story(storyId: $storyId) {
+    id
+    createdAt
+    title
+    body
+
+    writtenBy {
+      ...BasicMember
+
+      bio
+    }
+
+    comments {
+      id
+      content
+      createdAt
+      writtenBy {
+        user {
+          name
+        }
+      }
+    }
+  }
+}
