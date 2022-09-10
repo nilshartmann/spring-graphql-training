@@ -2221,22 +2221,24 @@ _Schreibe einen Test für unsere GraphQL-API_
           <h2>Clients mit Apollo React</h2>
         </section>
 
-        <section data-markdown>
+        <section data-markdown="">
           <textarea data-template>
-            Vorbereitung
+### Vorbereitung: Workspace starten
 
-* Backend
-  * `publy-backend/src`-Verzeichnis *löschen* (ggf. vorher Eure Änderungen sichern)
-  * `steps/99_complete/src`-Verzeichnis nach `publy-backend` kopieren
+* **Backend**
+*   `publy-backend/src`-Verzeichnis *löschen* (ggf. vorher Eure Änderungen sichern)
+  * `steps/90_app/src`-Verzeichnis nach `publy-backend` kopieren
   * `publy-userservice` starten (Klasse: `nh.graphql.publy.userservice.UserserviceApplication`)
   * `publy-backend` starten (Klasse: `nh.publy.backend.PublyApplication`)
   * Diese beiden Prozesse können im folgenden einfach immer weiter laufen. Wir machen daran keine Änderungen mehr.
-* Frontend
-  * Im Verzeichnis `publy-frontend`:  `pnpm install` und `pnpm start`
+* **Frontend**
+  * Im Verzeichnis `publy-frontend`: `pnpm install` und `pnpm start`
   * Frontend sollte dann auf http://localhost:3000 laufen
+    * Header und "Read more"-Button sollten angezeigt werden
+* Wenn fertig, bitte in Zoom "Hand heben" 🙋
 
-
-          </textarea>
+  </textarea
+          >
         </section>
 
         <section>
@@ -2637,13 +2639,39 @@ root.render(
 * ```typescript
   type UserFragment = { id: string, name: string }; // 😊
   ```
+---
+
+### Refetch Funktion
+* `useQuery` liefert eine **refetch**-Funktion, die Du verwenden kannst, um
+            den Query erneut auszuführen (z.B. nach Klick auf einen "Aktualisieren"-Button)
+* Bei Bedarf kannst Du der `refetch`-Funktion neue Variablen übergeben
+  * Zum Beispiel um eine weitere Seite eines Such-Ergebnisses zu laden
+* ```javascript
+  function StoryFeedPage() {
+    const { loading, error, data, refetch } = useStoryFeedPageQuery();
+
+    if (loading) {
+      return <h1>Loading, please wait...</h1>;
+    }
+
+    if (error) {
+      return <h1>GraphQL Failed: {error.toString()}</h1>;
+    }
+
+    return <TeaserList stories={data.stories} onRefetch={refetch} />;
+  }
+
+  function TeaserList({stories, onRefetch}) {
+    return <div>
+      <button onClick={onRefetch}>Refresh</button>
+      ...
+    </div>
+  }
+  ```
 
 ---
-### Übung: Query ausführen
+### Übung: Query ausführen - Vorbereitung
 
-* <!-- .element: class="todo" -->Evtl. erst noch load more
-*
-*
 
 
 ---
@@ -2745,15 +2773,24 @@ root.render(
 ```
 ---
 
-### Aktualisieren von Listen: Subscriptions
+### Aktualisieren von Listen mit Subscriptions
 <!-- .slide: class="left" -->
 
 * `useQuery` stellt die Funktion `subscribeToMore` zur Verfügung
-* Dieser Funktion wird eine Subscription übergeben - und der (generierte) TypeScript-Typ
+* Dieser Funktion wird übergeben:
+  * Als Typ-Parameter der Name des Typs, der das Ergebnis der Subscription beschreibt
+  * Als Parameter ein Objekt:
+    * mit `document` (Ergebnis des `gql`-Aufrufs mit der Subscription bzw. des generierten Codes)
+    * evtl. `variables` für die Mutation
+    * `updateQuery`-Funktion
 * Immer wenn die Subscription neue Daten liefert, wird die Callback-Funktion `updateQuery`
   mit den alten und neuen Daten aufgerufen
-* In `updateQuery` können die neuen Daten dem Cache hinzugegügt werden
+* In `updateQuery` können die neuen Daten dem Cache hinzugefügt werden
 * <!-- .element: class="demo" --> Cache Verhalten in Apollo Dev Tools
+---
+### Aktualisieren von Listen mit Subscriptions
+<!-- .slide: class="left" -->
+
 * ```javascript
   function StoryComments({ storyId }) {
 
@@ -2763,16 +2800,29 @@ root.render(
     });
 
     React.useEffect(() => {
+
       // Aktualisieren der Liste im Cache mit Subscription
       subscribeToMore<OnNewCommentSubscription>({
         document: OnNewCommentDocument,
         variables: { storyId },
         updateQuery: (prev, { subscriptionData }) => {
+          // Wenn die Subscription keine Daten geliefert hat (z.B. Fehler)
+          // den alten Cache-Inhalt unverändert zurückliefern
           if (!subscriptionData.data) return prev;
+
+          // Bestehenden Cache-Inhalt ('prev') kopieren und in das
+          // 'comments'-Feld den neuen Kommentar einfügen
+
+          // Achtung! Wie das einfügen genau funktioniert, hängt natürlich
+          //  immer von deiner jeweiligen Daten-Struktur ab
           const newComment = subscriptionData.data.onNewComment.newComment;
           const newData = Object.assign({}, prev, {
             comments: [newComment, ...prev.comments],
           });
+
+          // Neuen Wert zurückliefern; dieser ersetzt dann
+          // den gecachten Wert des Queries, für den diese
+          // updateQuery-Funktion ausgeführt wurde
           return newData;
         },
       });
@@ -2877,34 +2927,7 @@ root.render(
   }
   ```
 
----
 
-### Refetch Funktion
-* `useQuery` liefert eine **refetch**-Funktion, die Du verwenden kannst, um
-            den Query erneut auszuführen (z.B. nach Klick auf einen "Aktualisieren"-Button)
-* ```javascript
-  function StoryFeedPage() {
-    const { loading, error, data, refetch } = useQuery(StoryFeedPageQuery);
-
-    if (loading) {
-      return <h1>Loading, please wait...</h1>;
-    }
-
-    if (error) {
-      return <h1>GraphQL Failed: {error.toString()}</h1>;
-    }
-
-    return <TeaserList stories={data.stories} onRefetch={refetch} />;
-  }
-
-  function TeaserList({stories, onRefetch}) {
-    return <div>
-      <button onClick={onRefetch}>Refresh</button>
-      ...
-    </div>
-  }
-  ```
----
 
 ### Polling
 * Du kannst ein `pollInterval` (Zeit in ms) als Query Option angeben. Apollo
@@ -2929,7 +2952,7 @@ root.render(
 ### Nach einer Mutation... wird der Cache automatisch aktualisiert (eventuell)
 * Wenn deine Mutation ein Objekt zurückliefert, das sich bereits im Cache befindet, wird
             es dort aktualisiert
-* Beispiel: Du *aktualisierts* eine existierende Story und das Ergebnis der
+* Beispiel: Du *aktualisierst* eine existierende Story und das Ergebnis der
             Mutation enthält irgendwo die aktualisierte Story (zumindest die aktualisierten Teile).
   * Voraussetzung: im Ergebnis kommt auch die `id` der Story vor
 * ```javascript
