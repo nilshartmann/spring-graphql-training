@@ -92,3 +92,37 @@ jobs:
         run: pnpm run prettier:check
       - name: Build application
         run: pnpm build
+
+  build-workspace-frontend-all:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./workspace/publy-frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - uses: pnpm/action-setup@v2.0.1
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 7
+          run_install: false
+      - name: Copy Backend Step
+        run: |
+          rm -rf ../publy-backend/src
+          cp -r ../steps/90_app/src/ ../publy-backend
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run Codegen
+        run: pnpm run codegen
+      - name: Check Prettier
+        run: pnpm run prettier:check
+      - name: Build application
+        run: pnpm build
