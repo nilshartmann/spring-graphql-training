@@ -1,0 +1,2852 @@
+<html lang="de">
+  <!DOCTYPE html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Crashkurs "Spring for GraphQL"</title>
+
+    <link rel="stylesheet" href="revealjs/reveal.js/dist/reset.css" />
+    <link rel="stylesheet" href="revealjs/reveal.js/dist/reveal.css" />
+    <link rel="stylesheet" href="revealjs/reveal.js/dist/theme/solarized.css" />
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="revealjs/highlight-js-github-theme.css" />
+    <link rel="stylesheet" href="revealjs/styles.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section data-state="title">
+          <h4 style="margin-bottom: 3rem; font-size: 3rem">
+            <span class="transparent-bg">
+              <a href="https://nilshartmann.net" target="_blank"
+                >Nils Hartmann</a
+              >
+              |
+              <a href="https://twitter.com/nilshartmann" target="_blank"
+                >@nilshartmann</a
+              >
+            </span>
+          </h4>
+          <h3 class="title" style="font-size: 5rem; margin-bottom: 3rem">
+            <b>Crashkurs</b>
+          </h3>
+          <h2 class="title" style="font-size: 7rem">
+            <b>Spring for GraphQL</b>
+          </h2>
+
+          <!--          <div style="margin-top: 6rem">-->
+          <!--            <h3><span class="transparent-bg">Slides (online)</span></h3>-->
+          <!--            <p>-->
+          <!--              <a class="Link" href="https://graphql.schule/api2022">https://graphql.schule/api2022</a>-->
+          <!--            </p>-->
+          <!--          </div>-->
+          <!--          <div style="margin-top: 6rem">-->
+          <!--            <h3><span class="transparent-bg">Workspace Installation</span></h3>-->
+          <!--            <p>-->
+          <!--              <a class="Link" href="https://github.com/nilshartmann/spring-graphql-training/blob/main/INSTALL.md">https://graphql.schule/install</a>-->
+          <!--            </p>-->
+          <!--          </div>-->
+        </section>
+        <section>
+          <h2>Nils Hartmann</h2>
+          <p style="margin-top: 2rem">
+            <a href="https://nilshartmann.net" target="_blank"
+              >https://nilshartmann.net</a
+            >
+            /
+            <a href="https://twitter.com/nilshartmann" target="_blank"
+              >@nilshartmann</a
+            >
+          </p>
+          <p style="margin-top: 2rem">
+            <em
+              >Freiberuflicher Software-Entwickler, Berater und Trainer aus
+              Hamburg</em
+            >
+          </p>
+          <p></p>
+          <p style="margin-top: 5rem">
+            Java | JavaScript, TypeScript | React | GraphQL
+          </p>
+          <div style="display: flex; justify-content: center; margin-top: 2rem">
+            <div style="margin-left: 15px">
+              <a href="https://graphql.schule/video-kurs"
+                ><img
+                  style="max-height: 450px"
+                  src="images/screenshot-graphql-kurs.png"
+                /><br />https://graphql.schule/video-kurs</a
+              >
+              <br />
+            </div>
+            <!--  -->
+            <div style="margin-left: 100px">
+              <a href="https://reactbuch.de"
+                ><img
+                  style="max-height: 450px"
+                  src="images/react-buch-v2.jpg"
+                /><br />https://reactbuch.de</a
+              >
+              <br />
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Und ihr?</h2>
+          <ul>
+            <li>Stellt euch doch bitte kurz vor...</li>
+            <li>
+              Eure Vorkenntnisse in <b>GraphQL</b>, <b>Java</b>, <b>Spring</b>
+            </li>
+            <li>
+              Wünsche für diesen Crashkurs? Besondere Themen oder Interessen?
+            </li>
+          </ul>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+
+## Agenda
+
+* GraphQL Anwendungen mit Spring for GraphQL
+  * [Das Schema Definieren](#/schema)
+  * [Die Basis: graphql-java](#/graphql-java)
+  * [GraphQL APIs mit Spring for GraphQL](#/spring-for-graphql)
+* Anhang
+  * [GraphQL Grundlagen](#/graphql)
+---
+
+## Grundsätzliches
+
+* **Jederzeit:** Fragen und Diskussionen!
+* Motto: Es gibt keine dummen Fragen!
+* Ich zeige viel direkt im Editor, aber ihr könnt die Slides als Referenz benutzen
+
+
+---
+
+### Vorbereitung: Das Repository
+
+* `workspace`: Hier arbeiten wir, bitte in der IDE öffnen
+  * `workspace/publy-backend`: Spring Boot-Projekt, in dem wir die GraphQL API implementieren
+  * `workspace/publy-userservice`: Spring Boot-Projekt mit dem UserService
+  * `workspace/steps`: Lösungen für die einzelnen Übungen
+* Nach dem Öffnen in der IDE sollte es keine Compilier-Fehler geben.
+  * Bitte verwende mindestens *JDK 13*
+
+---
+
+### Kurzer Blick in das Beispiel-Projekt
+
+* Was ist darin enthalten
+---
+<!-- .slide: id="api-implementieren" -->
+## Implementieren der GraphQL API
+
+---
+
+### Die Beispiel-Anwendung
+
+<img src="images/publy-architektur.png" />
+
+---
+
+### Die Basis: graphql-java
+<!-- .slide: id="graphql-java" -->
+
+* <img style="height:350px" src="images/java-graphql-frameworks.png" />
+* [graphql-java](https://www.graphql-java.com/) ist die Basis für alle (?) Java-basierten GraphQL-Frameworks
+* Zuständig für die eigentliche Ausführung einer GraphQL Operation:
+  * Schema-Definition mit der SDL (oder per Java API)
+  * Parsen und validieren einer GraphQL Operation
+  * Optimierte Ausführung der `DataFetcher` zum Ermitteln der Daten (z.B. Parallelisierung)
+  * Aber: kein HTTP Endpunkt, keine Security etc.
+* API ist low-level (`DataFetcher`)
+* Andere GraphQL Frameworks abstrahieren davon und stellen weitere Features zur Verfügung
+
+---
+
+
+
+### Verarbeitung eines GraphQL Queries (allgemein)
+
+
+1. <!-- .element: class="xx-list" --> Query kommt an (HTTP Endpunkt)
+2. Query wird geparst und validiert 
+3. Ungültige Queries werden abgewiesen (`errors`-Feld in der Antwort) 
+4. Für jedes Feld wird eine *Resolver-Funktion* (auch *DataFetcher* oder *Mapping-Funktion* genannt) aufgerufen, die verantwortlich dafür ist, die Daten für das jeweilige Feld zu liefern
+5. Die Ergebnisse der Resolver werden validiert (insb. hinsichtlich der Typen)
+6. Das Ergebnis wird als `data`-Feld bereitsgestellt
+7. Das Ergebnis wird an den Client zurückgeschickt 
+
+<!-- .slide: class="left" -->
+* Graphql-java ist für Punkte 2-6 verantwortlich
+
+<!-- end of the list -->
+
+* <!-- .element: class="note" --> Unsere Aufgabe ist es, die _Resolver_ bzw. _DataFetcher_ zu implementieren
+---
+### DataFetcher (graphql-java)
+
+* Zentrales Interface in GraphQL-Java: Ermitteln die Daten für _ein_ Feld eines Queries
+  * Zum Beispiel für das Feld `Query.story` oder `Story.title`
+  * In Spring for GraphQL wird davon abstrahiert
+  * In anderen GraphQL Frameworks auch `Resolver` genannt
+* ```java
+  interface DataFetcher<T> {
+    T get(DataFetchingEnvironment environment); 
+  }  
+  ```
+* `T` ist der Typ, der von diesem DataFetcher zurückgeliefert wird
+
+* Beispiel:
+* ```java  
+  class PingDataFetcher implements DataFetcher<String> {
+
+      @Override
+      public String get(DataFetchingEnvironment env)  {
+        return "Pong";
+      }
+  }
+  ```
+* oder als Lambda:
+* ```java
+  class DataFetchers {
+    public DataFetcher<String> ping = env -> "Pong";
+  }
+  ```
+---
+### DataFetchingEnvironment (graphql-java)
+
+* Jeder DataFetcher bekommt zur Laufzeit ein `DataFetchingEnvironment` übergeben
+* Dieses enthält unter anderem die an ein Feld übergebenen Argumente
+* ```java
+  class PingFetcher<String> {
+      @Override
+      public String get(DataFetchingEnvironment env)  {
+        String msg = env.getArgumentOrDefault("msg", "Pong");
+        return msg;
+      }
+  }
+  ```
+* Oder das `source`-Objekt, das das Ergebnis des übergeordneten DataFetchers zurückliefert:
+* ```java
+  class ExcerptFetcher<Sring> {
+      @Override
+      public String get(DataFetchingEnvironment env)  {
+        Story story = env.getSource();
+        return story.getBody().substring(0, 7);
+      }
+  }
+  ```
+---
+
+### RuntimeWiring
+
+* Im `RuntimeWiring` werden u.a. alle `DataFetcher` den Felder in unserem Schema zugewiesen
+* Um eine Instanz davon zu erzeugen, wird ein `RuntimeWiringBuilder` verwendet
+* An diesem werden für jeden Typ aus unserem Schema (auch `Query`, `Mutation`, `Subscription`)
+            DataFetcher-Instanzen zu Feldern zugeordnet
+* ```java
+    RuntimeWiring wiring = RuntimeWiring.newRuntimeWiring()
+      .type("Query", builder -> {
+        return builder
+          .dataFetcher("stories", new QueryStoriesDataFetcher())
+          .dataFetcher("story", new StoryByIdDataFetcher());
+      })
+      .type("Story", builder -> {
+        return builder.dataFetcher("excerpt", new ExcerptDataFetcher());
+      })
+      .build();
+  ```
+
+---
+
+
+## GraphQL Java Architektur
+
+
+<img src="images/graphql-java-architektur.png" />
+
+---
+
+<!-- .slide: id="spring-for-graphql" -->
+## Spring for GraphQL
+
+
+* [Spring for GraphQL](https://spring.io/projects/spring-graphql) bietet eine Abstraktion von GraphQL-Java an
+* Erstes Release von Spring for GraphQL enthalten in Spring Boot 2.7 (Mai 2022)
+  * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden
+
+* Features:
+  * Automatische Konfiguration des RuntimeWirings
+  * HTTP-Endpunkt für Requests und Subscriptions automatisch
+  * GraphiQL Integration per Property
+  * Gewohntes Spring-Programmiermodell mit Annotationen etc.
+  * Integration in Spring Stack (z.B. Bean Validation, Security)
+  * [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/2.7.3/reference/htmlsingle/#web.graphql) für Spring Boot
+  * Actuator-Endpunkte für Spring Boot
+
+---
+
+### Spring for GraphQL Architektur
+
+* <img src="images/01.07--spring-graphql-architektur.png" />
+
+---
+### Das Schema in Spring for GraphQL
+
+* Das Schema wird in Dateien mit der Endung `.graphqls` abgelegt
+  * Verzeichnis: `main/resources/graphql`
+* Spring Boot sammelt alle Schema-Dateien ein und erzeugt ein Schema daraus
+* Typen können erweitert werden
+
+* <pre class="fragment"><code class="graphql">
+  # story.graphqls
+  extend type Query {
+    story(id: ID!): Story
+  }
+
+  # comment.graphqls
+  extend type Query {
+    comment(id: ID): Comment
+  }
+</code></pre>
+---
+
+## Spring for GraphQL
+
+* <!-- .element: class="demo" --> Demo: Handler-Funktionen mit `Person`-Feld
+* <!-- .element: class="demo" --> Query-Mapping!
+* <!-- .element: class="demo" --> Argumente!
+* <!-- .element: class="demo" --> Schema-Mapping!
+
+---
+
+## Handler-Funktionen
+
+
+* Anstatt `DataFetcher` werden *Handler-Funktionen* an `Controller`-Klassen implementiert
+
+  * ```java
+    @Controller
+    public GraphQLController {
+
+      @QueryMapping
+      public String ping() { return "Pong!" }
+
+    }
+    ```
+  
+  * Handler-Funktionen für Felder am Query-Typen werden mit `@QueryMapping` annotiert
+    * Mutations: `@MutationMapping`, Subscription: `@SubscriptionMapping`
+  * Der Name der Methode entspricht dem Namen des Feldes des entsprechenden Root-Typen (oder explizit mit `value` setzen)
+
+---
+
+### Parameter von Handler-Funktionen
+
+* `@Argument` um ein einzelnes Argument zu erhalten
+* ```graphql
+  type Query {
+    ping(msg: String): String!
+  }
+  ```
+* ```java
+  @QueryMapping
+  public String ping(@Argument String msg) { 
+    return "Hello " + msg; 
+  }
+  ```  
+* `@Arguments`, um Parameter in einer Java-Klasse zusammenzufassen
+* ```graphql
+  type Query {
+    greet(name: String, msg: String): String!
+  }
+  ```
+
+* ```java
+    class GreetingParams { private String name; private String msg; /* getter+setter... */ }
+
+    @QueryMapping
+    public String greet(@Arguments GreetingParams params) { 
+      return "Hello " + params.getName(); 
+    }
+  ```
+* `@ProjectedPayload` um einzelne Parameter in einem Interface zusammenzufassen
+* ```graphql
+    type Query {
+      greet(name: String, msg: String): String!
+    }
+  ```
+
+* ```java
+    @ProjectedPayload
+    interface GreetingParams { String getName(); String getMsg(); }
+
+    @QueryMapping
+    public String greet(@Argument GreetingParams params) { 
+      return "Hello " + params.getName(); 
+    }
+  ```
+
+---
+### Parameter von Handler-Funktionen  
+  
+* Für Input-Typen kann ein Pojo angegeben werden:
+* ```graphql
+  input GreetingInput { name: String, msg: String }
+
+  type Query {
+    greet(input: GreetingInput!): String!
+  }
+  ```
+* ```java
+  class GreetingInput { private String name; private String msg; /* getter+setter... */ }
+
+  // oder Java 17 Records:
+  record GreetingInput(String name, String msg) {}
+
+  @QueryMapping
+  public String greet(@Argument GreetingInput input) { 
+    return "Hello " + input.getName(); 
+  }
+  ```  
+* Argumente können mit Bean Validation validiert werden
+* ```java
+  class GreetingInput { @Size(min=5) private String name; private String msg; /* getter+setter... */ }
+
+  @QueryMapping
+  public String greet(@Valid @Argument GreetingInput input) { 
+    return "Hello " + input.getName(); 
+  }
+  ```  
+
+---
+
+## Übung: Handler-Funktionen
+---
+
+
+### Vorbereitung: Starten der Anwendung
+
+* Ab jetzt arbeiten wir in der "Publy"-Beispiel-Anwendung
+* Diese besteht aus zwei Spring Boot Anwendungen: `publy-userservice` und `publy-backend`
+
+* Schritt 1: User Service starten
+  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
+  * Diese Anwendung kann die ganze Zeit durchlaufen, wir machen hier keine Änderungen
+* Schritt 2: Backend starten
+  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
+  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
+
+---
+
+### Übung: Handler-Funktionen
+<!-- .element: class="todo" -->Schema schon nach main/resources packen
+* Kopiere dein Schema aus der `hello-graphql-java`-Übung (oder aus dem `01-schema`-Verzeichnis)
+  nach `publy-backend/src/main/resources/graphql` (bestehendes Schema überschreiben)
+* Implementiere zwei Handler-Funktionen für die Root-Felder unserer API:
+  * Eine Handler-Funktion für `Query.stories` und für `Query.story(id: ID!)`
+  * Eine Handler-Funktion für das `excerpt`-Feld am `Story`-Typen
+* Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
+* Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
+  * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
+* Folgende Queries sollten danach funktionieren (in GraphiQL http://localhost:8090 ausführen!):
+  * ```graphql
+      query {
+        stories {
+          id title body
+
+          writtenBy { id profileImage }
+        }
+      }
+      ```
+  * ```graphql
+      query {
+        story(storyId: 1) {
+          id title body
+
+          writtenBy { id profileImage }
+        }
+      }
+      ```
+* Eine mögliche Lösung findest Du in `steps/10_handler_function`
+
+---
+
+## Handler-Funktionen an Objekt-Typen
+
+* <!-- .element: class="demo" --> Demo: Excerpt-Feld hinzufügen
+  * <!-- .element: class="demo" --> `SchemaMapping` Implementieren !
+
+---
+
+### Handler-Funktionen an Objekt-Typen
+
+* Felder, die an einem Java-Objekt definiert sind, die von einer Handler-Funktion
+  zurückgeliefert werden, werden automatisch per Reflektion von Spring-GraphQL abgefragt
+  * Voraussetzung: Name des Java-Felder/getter-Methode entspricht Namen am GraphQL Schema
+  * Beispiel: `body`- und `writtenBy`-Feld an der `Story`-Entity
+* Wenn es kein Feld am Java-Objekt gibt, oder es sich anders verhält, als von der GraphQL
+  API erwartet, müssen wir auch dafür Handler-Funktionen schreiben
+* (Felder, die an Java Objekten existieren, aber nicht in der GraphQL API können nie vom 
+  Client abgefragt werden.)
+
+---
+
+### SchemaMapping
+
+* Die Funktion wird dann mit `@SchemaMapping` annotiert
+  * Name muss dem Namen des Feldes in der API entsprechen
+  * Parameter bestimmt das `Source`-Objekt, auf dem das Feld ermittelt werden soll
+  * Das Source-Objekt stammt aus einem vorherigen DataFetcher
+
+* ```java
+  @Controller
+  class GraphQLController {
+    @SchemaMapping
+    public String excerpt(Story source, @Argument int maxLength) {
+      return source.getBody().substring(0, maxLength);
+    }
+  }
+  ```
+
+* Wenn die als Parameter übergebene Klasse nicht so heißt, wie im GraphQL Schema,
+  kann mit `typename` der GraphQL-Typ explizit gesetzt werden
+
+* ```java
+  @SchemaMapping(typeName="Story")
+  public String excerpt(StoryDto source) {
+    // ...
+  }
+  ```
+
+* `@QueryMapping`, `@SubscriptionMapping` und `@MutationMapping` sind nur Aliase für
+  * `@SchemaMapping(typeName="Query")`
+  * `@SchemaMapping(typeName="Mutation")`
+  * `@SchemaMapping(typeName="Subscription")`
+
+  
+---
+
+## Asynchrone Handler-Funktionen
+
+* <!-- .element: class="demo" --> Instrumentation hinzufügen
+  * <!-- .element: class="demo" --> excerpt-Feld slowdown aktivieren
+  * <!-- .element: class="demo" --> stories abfragen und Report auswerten
+  * <!-- .element: class="demo" --> CompletableFuture
+
+
+---
+
+### Asynchrone Handler-Funktionen
+
+* Handler-Funktionen werden grundsätzlich nacheinander ausgeführt 
+* Handler-Funktionen können aber `CompletableFuture`, `Flux` oder `Mono`-Objekte zurückliefern
+  * `Flowable`-Objekte aus rxjava können mit `Flux.from` bzw. `Mono.from` konvertiert werden
+* Dann werden mehrere Handler-Funktionen parallel ausgeführt
+
+* ```java fragment
+  @Service
+  public class DomainService {
+    @Async
+    CompletableFuture<String> determineExcerpt(Story story, int maxLenght) {
+      // long running task...
+    }
+  }
+
+  @Controller
+  public class GraphQLController {
+    @Autowired DomainService domainService;
+
+    @SchemaMapping
+    public CompletableFuture<String> excerpt(Story story, @Argument int maxLength) {
+      return domainService.determineExcerpt(story, maxLength); // asynchron bzw. reaktiv
+    }
+  }
+  ```
+
+---
+
+### Übung: Zugriff auf externen Service
+
+* Wir erweitern den Member-Typen um das User-Objekt:
+
+* ```graphql
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+  }
+
+  type Member {
+    # ...
+    user: User
+  }
+  ```
+* Die `Member`-Klasse hat aber keine Referenz auf den User (nur dessen Id)
+* ```java
+  @Entity
+  public class Member {
+    // ...
+    @NotNull
+    private String userId;
+
+    public String getUserId() { return this.userId };
+  }
+  ```
+* Der User kommt aus dem `UserService` (externer Micro-Service)
+
+
+---
+
+### Übung: Schema-Mapping 
+
+* Ergänze das Schema
+  * Neuer Type `User`, Felder: `id` (ID), `name` (String) und `email` (String). Alle non-nullable. 
+  * Erweiter den `Member`-Typen um das Feld `user` (Type: `User`, nullable).
+* Führe den untenstehenden Query aus. Was kommt für `user` zurück und warum?  
+* Implementiere die Schema-Mapping-Funktion für das Feld
+  * Die Schema-Mapping-Funktion soll asynchron funktionieren
+  * Der `UserService` ist bereits implementiert
+* Der folgende Query sollte dann einen User zurückliefern:
+* ```graphql
+  query {
+    story(storyId: 1) {
+      id 
+      writtenBy {
+        id
+
+        # Hier sollten nun Daten kommen:
+        user {
+          id name email
+        }
+
+      }
+    }
+  }
+  ```
+
+* Eine mögliche Lösung findest Du in `steps/15_schema-mapping`
+
+---
+
+## Mutation und Subscriptions
+
+* Funktionieren analog zum `QueryMapping` nur für den Mutation- und Subscription-Type
+* Bei Mutations dürfen wir Daten verändern, ansonsten völlig identisch zu `QueryMapping`
+* Bei Subscriptions werden die Daten erst zum Server geschickt, nachdem sie erzeugt wurde
+  * Etwas tricktreich, deswegen etwas später
+
+---
+
+### Interaktiv: eine addPerson-Mutation
+
+* <!-- .element: class="demo" --> AddPersonMutation, die eine Person mit firstName und lastName hinzufügt
+  * <!-- .element: class="demo" --> Material dazu in `material/Person.txt`
+  * <!-- .element: class="demo" --> Wie sieht das Schema aus?
+  * <!-- .element: class="demo" --> Wie sieht die Java Implementierung für `input` aus?
+  * <!-- .element: class="demo" --> Wie sieht die Java Implementierung für Rückgabewert aus?
+
+---
+
+### Eine Mutation, um Kommentare hinzuzufügen
+
+* Eine Story hat mehrere Kommentare:
+* ```graphql
+  type Comment {
+      id: ID!
+
+      story: Story!
+      writtenBy: Member!
+      content: String!
+  }
+
+  type Story {
+    # ...
+    comments: [Comment!]!
+  }
+  ```
+* 🤔 wie könnte eine Mutation aussehen, mit der ein Kommentar hinzugefügt wird
+
+---
+
+### Eine Mutation, um Kommentare hinzuzufügen
+
+* Eingabe-Parameter werden mit einem `input-Type ausgedrückt, der alle notwendigen Informationen entgegen nimmt
+* ```graphql
+  input AddCommentInput {
+      storyId: ID!
+      memberId: ID!
+      content: String!
+  }
+
+  type Mutation {
+    addComment(input: AddCommentInput!): Comment!
+  }
+  ```
+* 🤔 Ist der Rückgabe-Typ hier so gut?
+  * Was könnte problematisch sein oder werden?
+
+---
+
+### API Design von Mutations
+
+* Wie ihr die Mutation designed ist natürlich Euch überlassen, es gibt aber Best-Practices:
+  * Anstatt n einzelne Argumente zu verwenden, **ein** Input-Objekt
+    * Das Objekt heißt immer wie die Mutation mit `Input` am Ende
+    * Das Argument heißt _immer_ `input`
+  * Der Rückgabe-Typ sollte ebenfalls ein eigenes Objekt sein
+    * Es heißt wie die Mutation mit `Payload` am Ende
+    * Dieses Objekt enthält dann das erzeugte neue Objekt
+    * Ihr könnt später diesen Typen um weitere Informationen, etwa zu Fehlern erweitern
+      * Dazu später mehr
+* Dadurch ist die API einheitlich und man findet sich schnell zurecht
+* Diese Regeln könntet ihr grundsätzlich auch für Queries und Subscriptions verwenden
+
+---
+
+### Eine Mutation, um Kommentare hinzuzufügen
+<!-- .slide: class="left" -->
+* Fertige Mutation
+* ```graphql
+  input AddCommentInput {
+      storyId: ID!
+      memberId: ID!
+      content: String!
+  }
+
+  type AddCommentPayload {
+    newComment: Comment!
+  }
+
+  type Mutation {
+    addComment(input: AddCommentInput!): AddCommentPayload!
+  }
+  ```
+---
+
+### Übung: addComment Mutation implementieren
+#### Teil 1: Schema erweitern
+* Ergänze das Schema um den `Comment`-Type und die `addComment` Mutation
+  * `Comment`-Type soll die Felder haben: `id` (`ID`), `story`, `member` und `content` (`String`)
+    * Alle Felder Pflicht (non-nullable)
+  * Der `Story`-Type soll eine Feld `comments` bekommen, das eine Liste von `Comment`-Objekten zurückliefert
+  * Der folgende Query sollte nun funktionieren und einen Kommentar zurückliefern:
+    * ```graphql
+      query {
+        story(storyId:"2") {
+          comments { id content }
+        }
+      }
+    ```
+  * Die `addComment`-Mutation soll ein `input`-Argument haben, das ein Objekt ist, das `storyId`, `memberId` (jeweils `ID!`)
+            und `content` (`String!`) enthält
+  * Der Rückgabewert soll `AddCommentPayload` heißen, mit einem Feld `newComment`, das den neuen Kommentar enthält
+---
+
+### Übung: addComment Mutation implementieren
+#### Teil 2: Implementieren in Java
+  * Erweitere den `PublyGraphQLController` um die `MutationMapping`-Funktion
+    * Baue dir jeweils eine Java-Klasse für das `input`-Argument und den Rückgabetyp
+      * Wichtig: die benötigen jeweils einen Constructor, in den alle Daten übergeben werden können (Argumente so benennen wie in GraphQL!)
+    * Du kannst dir über den `PublyGraphQLController`-Konstruktor den fertigen `PublyDomainService` übergeben lassen
+      * Daran gibt es eine Methode `addComment`, der einen Kommentar in der DB speichert
+      * Ruf diese Methode auf und gib das Ergebnis an GraphQL zurück
+  * Danach sollte folgende Mutation funktionieren:
+    * ```graphql
+      mutation {
+        addComment(input:{
+          storyId:1, memberId:1, content: "tolle story!"
+        }) {
+        newComment {id content}
+        }
+    }
+    ```
+
+
+* Eine mögliche Lösung findest Du in `steps/17_mutations`
+---
+### Subscriptions
+
+* Subscriptions liefern einen Strom von Daten
+* Eine Subscription kann Argumente entgegennehmen, wie Query und Mutation auch
+* Der Rückgabewert in Java muss ein [Reactive Streams](https://www.reactive-streams.org/) `Publisher`-Objekt sein:
+  * `Flux`- (oder `Mono`)-Objekt aus [Project Reactor](https://projectreactor.io/) (häufig in Spring verwendet)
+  * `Flowable` aus [RxJava](https://github.com/ReactiveX/RxJava)
+---
+
+### Interaktiv: Eine Subscription
+* <!-- .element: class="demo" --> onNewNumber liefert Zahlen zurück
+  * <!-- .element: class="demo" --> (DemoNumberPublisher)
+  * <!-- .element: class="demo" --> Wie sieht das Schema aus?
+  * <!-- .element: class="demo" --> Wie können wir die Zahlen filtern, so dass z.B. nur gerade oder ungerade Zahlen kommen?
+---
+
+### Übung: Eine Subscription für neue Kommentare
+#### Baue eine Subscription, die ein `OnNewCommentEvent` mit einem neuen Kommentar für   eine ausgewählte Story zurückliefert
+* Erweiter das Schema:
+  * Die Subscription soll die `storyId` als Argument haben
+  * Das `OnNewCommentEvent` soll ein Feld `newComment` mit dem neuen Kommentar (`Comment`) haben
+* Implementiere die `SubscriptionMapping`-Funktion
+  * Am `PublyDomainService` gibt es eine Methode, `getOnNewCommentEventPublisher`, die ein `Flowable`
+            zurückliefert, dass neue Kommentare publiziert
+* Um zu testen, kannst Du den `DemoCommentGenerator` verwenden
+  * Der erzeugt jede Sekunde einen neuen Kommentar für die Story `1`
+  * Einschalten mit `publy.dummyContentGenerator.enable-auto=true` in der `application.properties`-Datei
+* Danach sollte folgende Subscription funktionieren
+* ```graphql
+  subscription {
+    onNewComment(storyId:1) {
+      newComment {
+        id content
+        story { id title }
+      }
+    }
+  }
+```
+* Mögliche Lösung in `steps/18_subscriptions`
+---
+
+## Optimierungen
+
+---
+
+### Ein einfacher Query...
+
+* 🤔 Was passiert, wenn wir folgenden Query ausführen:
+* ```graphql
+  query {
+    stories {
+      writtenBy { user { id email } }
+    }
+  }
+  ```
+* Wir haben sehr viele einzelne Calls zum Micro-Service 😨
+* Wir haben doppelte Aufrufe zum Micro-Service 😱 😱
+
+---
+
+### Problem
+
+<img src="images/dataloader-01.png" />
+
+---
+
+### DataLoder
+
+* Ein `DataLoader` "verzögert" das Laden von Daten
+
+* <img src="images/dataloader-02.png" />
+
+---
+
+### DataLoader
+
+* Ein `DataLoader` "verzögert" das Laden von Daten
+* In einem DataFetcher/Handler-Funktion übergibst Du an einen DataLoader eine ID o.ä.
+* Der DataLoader sammelt die IDs ein
+* Wenn alle IDs eingesammelt wurden, wird die Implementierung des DataLoaders aufgerufen
+* In der Implementierung bekommst Du alle IDs übergeben und kannst einen optimierten Call machen
+  * Zum Beispiel Zusammenfassung in SQL-Statements (`where ID in ...`)
+* DataLoader sind ein allgemeines GraphQL-Konzept
+  * Nicht in der Spec, aber de-facto Standard
+* Java-Implementierung kommt aus dem [java-dataloader](https://github.com/graphql-java/java-dataloader)-Project
+  * Wie bei `graphql-java` abstrahiert Spring for GraphQL davon
+---
+
+### Verwenden vom DataLoader
+
+* Den DataLoader kannst Du dir in deine Handler-Funktionen übergeben lassen
+* Es handelt sich dabei um ein Interface mit zwei Typ-Parametern:
+  * `Key`: Typ des Keys, den Du beim Verwenden an den DataLoader übergeben willst
+  * `Value`: Typ des Java-Objekts, das der DataLoader für einen Key zurückliefert
+* Die Handler-Funktion *muss* dann ein `CompletableFuture` zurückliefern
+* ```java
+  public CompletableFuture<User> user(Member member, DataLoader<String, User> userLoader) {
+    String userId = member.getUserId();  // userId ist in DB gespeichert
+
+    return userLoader.load(userId); // Laden des Users wird verzögert
+  }
+  ```
+
+---
+
+
+### Implementierung und Registrieren vom DataLoader
+
+* Es gibt mehrere Wege
+* In der `BatchLoaderRegistry` gibt es Hilfsfunktionen
+* Die `BatchLoaderRegistry` steht als Spring Bean zur Verfügung
+* Mit `forTypePair` registrierst Du einen BatchLoader für ein Key-Value-Paar
+* Die Methode erwartet eine Callback-Funktion:
+  *  zwei Parameter: die Liste mit den Keys und das `BatchLoaderEnvironment`
+  *  Rückgabe: die Liste mit den geladenen Objekten als [Flux](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Flux.html)
+* ```java
+  public PublyGraphQLController(/* ... */, BatchLoaderRegistry registry) {
+
+    registry.forTypePair(String.class, User.class).registerBatchLoader(
+
+      (List<String> keys, BatchLoaderEnvironment env) -> {
+        // hier zum Beispiel DB-Aufruf oder REST-Aufruf
+        // findUsers liefert Flux<User> zurück.
+        return userService.findUsers(keys);
+      }
+    );
+
+  }
+  ```
+* Jeder Key wird nur einmal in die Liste eingefügt, du bekommst also keine doppelten Keys
+  * Selbst wenn Du also nicht _alle_ Objekte  mit _einem_ Request laden/ermitteln kannst,
+    verhinderst Du immerhin doppeltes Laden
+* Wichtig! Die Funktion muss die Objekte in derselben Reihenfolge zurückliefern,
+  in der die Keys übergeben wurden.
+  * Konnte für einen Key kein Objekt ermittelt werden, muss an der Stelle `null`
+  zurückgegeben werden
+
+---
+
+### MappedBatchLoader
+
+* Der BatchLoader liefert eine _Liste_ von Objekten zurück
+* Die enthaltenen Objekte müssen in derselben Menge und Reihenfolge wie die Keys zurückgeliefert werden.
+* Alternativ kann ein `MappedBatchLoader` verwendet werden, der ein [Mono](https://projectreactor.io/docs/core/release/api/reactor/core/publisher/Mono.html)-Objekt mit einer Map zurückliefert
+* Die Map enthält dann Key-Value-Paare mit einem gelesenen Objekt jeweils für einen Key. Objekte, die nicht gefunden
+  wurden werdenauch nicht in die Map aufgenommen.
+* ```java
+  public PublyGraphQLController(/*... */, BatchLoaderRegistry registry) {
+
+    registry.forTypePair(String.class, User.class).registerMappedBatchLoader(
+
+      (List<String> keys, BatchLoaderEnvironment env) -> {
+        // zurückgeben: Mono<Map<String, User>>
+      }
+
+    );
+  }
+  ```
+
+
+---
+
+### BatchMapping
+
+* In einfachen Fällen kann der `MappedBatchLoader` mit einer BatchMapping-Funktion implementiert werden
+* Das ist eine Handler-Funktion, der automatisch eine Liste von Objekten übergeben wird (zum Beispiel Liste von `Member`-Objekten)
+* Die Handler-Funktion liefert dann entweder ein `Mono` mit einer `Map` oder ein `Flux` mit Objekten zurück (wie vorher gesehen).
+* Achtung! Darauf achten, dass `equals` und `hashCode`-Methoden in den Objekten, die als Keys verwendet werden, korrekt implementiert sind!
+* ```java
+  @Controller
+  public class PublyGraphQLController {
+
+    @BatchMapping
+    public Flux<User> user(List<Member> member) {
+      List<String> keys = member.stream().map(Member::getUserId).collect(Collectors.toList());
+
+      return userService.findUsers(keys);
+    }
+
+    // -- oder: --
+
+    @BatchMapping
+    public Mono<Map<Member, User>> user(List<Member> member) {
+      // ...
+    }
+
+
+    // BatchLoaderRegistry und SchemaMapping für User-Feld entfallen jetzt
+  }
+  ```
+
+---
+
+### Optimierung 2
+
+* Ein Query...
+  * ```graphql
+    query {
+      story(storyId: 1) {
+        title
+        body
+      }
+    }
+  ```
+* Ein anderer Query...
+  * ```graphql
+    query {
+      story(storyId: 1) {
+        title
+        body
+        comments { id content }
+      }
+    }
+  ```
+* 🤔 Wie generieren wir optimale Datenbank-Zugriffe
+  * Je nach Query mit oder ohne Comments?
+
+---
+
+### DataFetchingFieldSelectionSet
+
+* Das `DataFetchingFieldSelectionSet` aus `graphql-java` enthält eine Liste aller Felder, die im aktuellen Query unterhalb des Feldes einer Handler-Funktion abgefragt sind
+* Das `DataFetchingFieldSelectionSet` kannst Du an deine Handler-Funktionen übergeben lassen.
+* Mit `contains` kannst Du mit einem Pattern fragen, ob bestimmte Felder im Query vorhanden sind
+* Hiermit kannst Du weitere Optimierungen der Query-Verarbeitung vornehmen, zum Beispiel optimale
+  SQL-Queries generieren
+* ```java
+  @QueryMapping
+  List<Story> stories(DataFetchingFieldSelectionSet selectionSet) {
+
+    if (s.contains("comments/**") ) {
+      // SQL Statement mit JOIN auf Comment-Tabelle
+      return ...;
+    }
+
+    // SQL Statement nur mit Stories
+    return ...;
+
+  }
+  ```
+
+---
+### Übung: DataLoader
+#### Implementiere den DataLoader zum Laden des Users für einen Member aus dem User-Microservice
+
+* <!-- .element: class="small" --> Stelle die Implementierung der `SchemaMapping`-Funktion von `user` für den `Member`-Typen auf den DataLoader um
+  * Als neuen, zweiten Parameter benötigt die Methode einen DataLoader, der für die User-Keys die User laden kann.
+  * Denk dran, dass Du den Rückgabetyp der Funktion auch anpassen musst!
+* Erweitere den Konstruktur von `PublyGraphQLController` und füge als neuen Parameter die `BatchLoaderRegistry` hinzu
+* Registriere an der `BatchLoaderRegistry` einen BatchLoader, der für die Keys der User die entsprechenden User laden kann
+  * Zum Laden der User kannst Du wieder die Klasse `UserService` verwenden
+* Führe folgenden Query aus. Wieviele `User` sind im Ergebnis vorhanden? Wieviele User(-Ids) werden im BatchLoader geladen?
+* ```graphql
+  query {
+    stories {
+      writtenBy { user { id name } }
+      comments { writtenBy { user { id name } } }
+    }
+  }
+  ```
+* Eine Lösung findest Du in `steps/20_dataloader`
+* Optional: kannst Du die Funktion auf eine `@BatchMapping`-Funktion umstellen?
+  * Dann brauchst Du die `BatchLoaderRegistry` nicht mehr
+  * Eine Lösung findest Du in `steps/25_batchmapping`
+
+---
+
+
+## Fehlerbehandlung
+
+* <!-- .element: class="demo" --> Beispiel: Bean Validation mit `addPerson`-Mutation
+  * <!-- .element: class="demo" --> @Size und @Valid hinzufügen
+  * <!-- .element: class="demo" --> Errors-Objekt beschreiben
+  * <!-- .element: class="demo" --> Was können wir besser machen: Optionen für Fehlerbehandlung durchspielen
+
+---
+
+### Fehlerbehandlung
+
+* Fehler, die nicht in einer Handler-Funktion verarbeitet werden, werden im `errors`-Feld zurückgeliefert:
+* ```json
+  {
+    "errors": [
+      {
+        "message": "addComment.input.content: Größe muss zwischen 5 und 2147483647 sein",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ],
+        "path": [
+          "addComment"
+        ],
+        "extensions": {
+          "classification": "INTERNAL_ERROR"
+        }
+      }
+    ]
+  }
+  ```
+* ```json
+  {
+    "errors": [
+      {
+        "message": "Unauthorized",
+        "locations": [
+          {
+            "line": 2,
+            "column": 3
+          }
+        ],
+        "path": [
+          "addComment"
+        ],
+        "extensions": {
+          "classification": "UNAUTHORIZED"
+        }
+      }
+    ]
+  }
+  ```
+
+---
+
+### Fehlerbehandlung
+
+* Das `errors`-Objekt ist nur eingeschränkt spezifiziert:
+  * `message`: Fehlermeldung
+  * `locations`: Auf welche Code-Stelle im Query bezieht sich der Fehler (wenn vorhanden)
+  * `path`: Pfad zum Feld, das den Fehler verursacht hat (wenn vorhanden)
+  * `extensions`: Proprietäre Erweiterungen (`classification` kommt von Spring for GraphQL)
+  * Keines dieser Felder ist im Schema beschrieben!
+* `errors`-Objekt nur für "Request Errors" verwenden, wenn der Query gar nicht
+  oder nicht vernünftig ausgeführt werden kann
+* Sonst lieber "fachliche" Fehler-Objekte zurückliefern
+  * Das ist insbesondere bei Mutations sinnvoll, da hier Fehler nicht unwahrscheinlich sind
+  * Auch für andere Felder überlegen, um API abwärtskompatibel zu halten
+
+---
+
+### Explizite Rückgabetypen
+
+* Beispiel 1: **Query-Ergebnisse**
+* ```graphql
+  type Query {
+    stories: [Story!]!
+  }
+  ```
+* Was machen wir, wenn wir dem Ergebnis weitere Informationen hinzufügen wollen, z.B. wie viele Stories gibt es eigentlich?
+* Änderung am Rückgabetyp wäre hier nicht abwärtskompatibel! 😢
+* ```graphql
+  type StoriesPayload {
+    stories: [Story!]!
+
+    maxStories: Int!
+  }
+
+  type Query {
+    stories: [Story!]!
+  }
+  ```
+---
+
+### Explizite Rückgabetypen
+
+* Beispiel 2: **Behandlung von Fehlern**
+* Hier können wir keine Informationen hinterlegen, warum das Anlegen eines Kommentars möglicherweise nicht geklappt hat:
+  * ```graphql
+    type Mutation {
+      addComment: [Comment!]!
+    }
+    ```
+* Mit einem eigenen Rückgabe-Objekt können wir weitere Informationen hinzufügen:
+  * ```graphql
+    type AddCommentPayload {
+      newComment: Comment
+      errorMessage: String
+    }
+
+    type Mutation {
+      addComment: AddCommentPayload!
+    }
+    ```
+* Dieses Objekt können wir jederzeit erweitern, ohne das Clients angepasst werden müssen.
+---
+
+### Explizite Rückgabetypen
+* Fehler- und nicht-Fehlerfall können mit jeweils eigenen Typen ausgedrückt werden.
+* Zusammengefasst werden sie in einem `union`-Typen:
+  * ```graphql
+    type AddCommentSuccessPayload { newComment: Comment! }
+    type AddCommentFailedPayload { errorMsg: String! }
+    union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
+    type Mutation {
+      addComment(inpit: AddCommentInput!): AddCommentPayload!
+    }
+    ```
+* Der Server liefert je nach Situationen einen der beiden Typen zurück.
+  * ```graphql
+    mutation {
+      addComment(input: {storyId: 1, memberId: 1, content: "Toll"}) {
+        ... on AddCommentSuccessPayload {
+          newComment { id content }
+        }
+        ... on AddCommentFailedPayload { errorMsg }
+      }
+    }
+  ```
+  * Achtung! Umstellung von type- auf union-Type im Rückgabewert ist nicht abwärtskompatibel!
+
+---
+### Übung: Union Types
+#### Stelle die `addComment`-Mutation auf einen Union-Type um
+* Passe das Schema an:
+  * Füge den `AddCommentSuccessPayload` und `AddCommentFailedPayload` Typen hinzu
+    * Bennene `AddCommentPayload in `AddCommentSuccessPayload` um
+    * `AddCommentFailedPayload` soll ein `String!` Feld `errorMsg` haben
+  * Definiere den `union`-Typen `AddCommentPayload` der aus den beiden Typen besteht
+* Passe die Implementierung der `addComment`-Mutation an
+  * Deinen bestehenden Java-Typen für `AddCommentPayload` kannst Du in `AddCommentSuccessPayload` umbennen
+  * Du brauchst einen neuen Java-Typen für `AddCommentFailedPayload`
+  * Wenn beim Aufruf des `PublyDomainService` eine Exception fliegt, gib `AddCommentFailedPayload` zurück mit einer Fehlermeldung
+  * Sonst gib den neuen Kommentar in `AddCommentSuccessPayload` zurück
+* Führe `addComment` aus und frag den neuen Kommentar bzw. die `errorMsg` ab
+  * Um den Fehlerfall zu testen, kannst Du einen Kommentar speichern, der kürzer als fünf Zeichen ist.
+* Mögliche Lösung: `steps/30_error_handling`
+---
+## Security
+
+* Wie üblich Spring Security verwenden
+* 🤔Überlegung: wo wird GraphQL API abgesichert?
+  * /graphql-Endpunkt absichern
+  * und/oder einzelne Handler-Funktionen mit `@PreAuthorize` absichern
+  * und/oder Domain-Layer absichern mit `@PreAuthorize` absichern
+
+---
+
+### Beispiel: Security
+
+* <!-- .element: class="demo" --> AddCommentMutation
+  * <!-- .element: class="demo" --> AuthenticationPrincipal für Member
+  * <!-- .element: class="demo" --> PreAuthorize
+
+---
+
+### Handler-Funktionen mit Security
+
+* Handler-Funktionen können mit `@AuthenticationPrincipal` sich den aktuellen Principal übergeben lassen
+
+* ```java
+  @MutationMapping
+  @PreAuthorize("hasRole('USER')")
+  public AddCommentPayload addComment(@Argument AddCommentInput input, @AuthenticationPrincipal User user) {
+
+    Long memberId = publyDomainService.getMemberForUser(user);
+
+    // ...
+    Comment newComment = publyDomainService.addComment(
+      input.getStoryId(),
+      memberId,
+      input.getContent()
+    );
+
+    return ...;
+  }
+  ```
+
+---
+# GraphQL APIs testen
+
+---
+
+### Test
+
+* Zum Testen deiner Anwendung gibt es einen `@GraphQLTest`.
+* Dieser erzeugt u.a. Controller-Klassen und RuntimeWirings (also GraphQL Infrastruktur)
+* In diesem Test kann ein `GraphQlTester` verwendet werden, um GraphQL Queries auszuführen
+* Das Ergebnis des Queries kann dann validiert werden
+  * Mit JSON-Path ausdrücken kann auf Teile des Ergebnisses zugegriffen werden
+  * Die Teile können in unterschiedliche Formate konvertiert werden
+
+* ```java fragment
+
+  @GraphQlTest
+  public class PublyGraphQLControllerTest {
+
+    // ausgelassen: Mocks konfigurieren, z.B. für Repositories mit @MockBean
+
+    @Autowired
+    GraphQlTester graphQlTester;
+
+    private final String query = "query { ping }";
+
+    @Test
+    void pingReturnsPong() {
+      // Query ausführen
+      GraphQlTester.Response response = graphQlTester.document(query)
+        .execute();
+
+      // Ergebnis validieren
+      response
+        .path("ping").entity(String.class).isEqualTo("pong");
+
+    }
+  ```
+
+---
+
+### GraphQlTester
+
+* Der Query kann entweder direkt als String übergeben werden (wie gesehen)
+* oder in einer Datei abgelegt werden (`xyz.graphql`), die im Klassenpfad sein muss
+
+* ```java
+  @Test
+  void pingReturnsPong() {
+
+    graphQlTester.document("query { ping } "); // ...
+
+    graphQlTester.documentName("ping-test-query"); // erwartet ping-test-query.graphql im Klassenpfad
+  }
+
+  ```
+
+---
+
+### Der WebGraphQlTester
+
+* Mit dem `WebGraphQlTester` können GraphQL Requests über HTTP gemacht werden
+* An einen laufenden Server oder in-place
+* Dazu kann ein gewohnten `@SpringBootTest` geschrieben werden
+* Die Testklasse muss außerdem mit `@AutoConfigureHttpGraphQlTester` annotiert werden
+* API ansonsten wie GraphQlTester
+
+* ```java
+  @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+  @AutoConfigureHttpGraphQlTester
+  public class PublyGraphQLControllerWebTest {
+    @Autowired
+    private WebGraphQlTester webGraphQlTester;
+
+    @Test
+    void pingReturnsPong() {
+      // Query ausführen
+      webGraphQlTester.document("query { ping }")
+        .execute()
+        .validate(/* ... */);
+    }
+  }
+  ```
+
+---
+
+### WebGraphQlTester
+
+* Der injizierte `WebGraphQlTester` ist fertig konfiguriert
+* Kann aber pro Request angepasst werden, z.B. um HTTP Header zu setzen
+* dazu muss eine neue Instanz mit `mutate` erzeugt werden
+
+* ```java
+  graphQlTester
+      .mutate() // erzeugt neue Instant, die konfiguriert werden kann
+      .header("Authorization", "Bearer user-mock-token")
+      .build()
+      .document(query) /* konfigurierte Instanz verwenden... */
+  ```
+
+---
+
+### Übung: Tests
+
+_Schreibe einen Test für unsere GraphQL-API_
+
+* <!-- .element: class="small" --> Der Test kann z.B. eine einzelne Story mit einer ID abfragen, und sicherstellen, dass die abgefragten Felder korrekt in der Antwort enthalten sind:
+  * ```graphql
+
+    query {
+      story(storyId: 1) {
+        title
+        body
+
+        member { id }
+      }
+    }
+    ```
+
+* Verwende den `@GraphlTest`
+  * Der Controller wird dabei erzeugt, aber die Repositories müssen gemockt werden
+* Im Workspace findest Du im `test`-Verzeichnis eine Klasse `AbstractPublyGraphQLTest`, die Du als Basis verwenden kannst
+  * Darin sind schon die Mock-Beans konfiguriert
+  * Es gibt Hilfsfunktionen zum Aufsetzen der Mockdaten (`given_`), die Du je nach Testfall aufrufen kannst
+  * Du kannst natürlich auch eigene Mocks für andere Tests schreiben
+* Leite deine Testklasse davon ab
+  * Du musst deine Testklasse mit `@GraphQlTest` annotieren
+* Bespiele findest Du in `steps/50_test`
+
+
+
+             </textarea
+          >
+        </section>
+
+        <!-- ============================= GRAPHQL ANFANG =================================================================== -->
+        <section id="t-apollo-react">
+          <h3>Teil 3</h3>
+          <h1>GraphQL</h1>
+          <h2>Clients mit Apollo React</h2>
+        </section>
+
+        <section data-markdown="">
+          <textarea data-template>
+### Vorbereitung: Workspace starten
+
+* **Backend**
+*   `publy-backend/src`-Verzeichnis *löschen* (ggf. vorher Eure Änderungen sichern)
+  * `steps/90_app/src`-Verzeichnis nach `publy-backend` kopieren
+  * `publy-userservice` starten (Klasse: `nh.graphql.publy.userservice.UserserviceApplication`)
+  * `publy-backend` starten (Klasse: `nh.publy.backend.PublyApplication`)
+  * Diese beiden Prozesse können im folgenden einfach immer weiter laufen. Wir machen daran keine Änderungen mehr.
+* **Frontend** (Verzeichnis: `publy-frontend`)
+  * Verzeichnis `publy-frontend/src` löschen
+  * `frontend-steps/01_initial_uebungen/src` nach `publy-frontend/src` kopieren
+  * Im Verzeichnis `publy-frontend` Packages installieren und starten:
+    * `pnpm install`
+    * `pnpm start`
+  * Frontend sollte dann auf http://localhost:3000 laufen
+    * Header und "Read more"-Button sollten angezeigt werden
+* Wenn fertig, bitte in Zoom "Hand heben" 🙋
+  </textarea
+          >
+        </section>
+
+        <section>
+          <h3>Apollo Client</h3>
+          <p>
+            <a href="https://www.apollographql.com/docs/react/"
+              >https://www.apollographql.com/docs/react/</a
+            >
+          </p>
+          <p>React Hooks um mit GraphQL Services zu kommunizieren</p>
+          <p>
+            Stellt einen <b>globalen Cache</b> zur Verfügung, um konsistente
+            Daten in der ganzen Anwendung sicherzustellen
+          </p>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section>
+          <h3>Apollo Client DevTools</h3>
+
+          <p>Browser-Erweiterung, stellt z.B. den Inhalt des Caches dar</p>
+
+          <ul>
+            <li>
+              <a
+                href="https://chrome.google.com/webstore/detail/apollo-client-devtools/jdkknkkbebbapilgoeccciglkfbmbnfm"
+                >Chrome</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://addons.mozilla.org/de/firefox/addon/apollo-developer-tools/"
+                >Firefox</a
+              >
+            </li>
+          </ul>
+        </section>
+
+        <section data-markdown>
+          <textarea data-template>
+### Apollo Client
+
+* Das `ApolloClient`-Objekt ist unter anderem für den Netzwerkverkehr, den Cache
+            und Fehlerbehandlung zuständig
+* Der `ApolloClient` ist React-unabhängig und kann auch mit anderen JavaScript-Frameworks
+            verwendet werden.
+* ```javascript
+  import ApolloClient from "apollo-client";
+
+  const client = new ApolloClient({
+    link: new HttpLink({uri: "http://localhost:4000"}),
+    cache: new InMemoryCache()
+  }};
+  ```
+
+---
+
+### Link
+
+* Mit einem `Link` wird beschrieben, wie Apollo die HTTP-Requests zum Server machen soll
+  * Man kann zum Beispiel eigene HTTP Header hinzufügen
+  * Auch die Konfiguration für Websockets für Subscriptions erfolgt darüber
+* Für verschiedene Aufgaben gibt es verschiedene `Link`-Implementierungen, die
+  hintereinander ausgeführt werden können
+
+---
+
+### Link
+
+* Beispiel: Header für Authentifizierung
+* ```javascript
+  const authLink = setContext((_, { headers }) => {
+    // get the authentication token from local storage if it exists
+    const token = localStorage.getItem("publy.token");
+    if (!token) {
+      return headers;
+    }
+    // return the headers to the context so httpLink can read them
+    return {
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  });
+  ```
+
+---
+
+### Subscriptions
+
+* Um mit Subscriptions zu arbeiten, braucht man einen eigenen `Link`
+  * "Reguläre" Requests (für Queries und Mutations) müssen an den HTTP-Endpunkt gehen
+  * Für Subscriptions müssen die Requests über das WS-Protokoll an den WS-Endpunkt gehen
+* Es gibt einen eigenen Link dafür: `GraphQLWsLink`
+* ```javascript
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: "ws://localhost:8080",
+    })
+  );
+  ```
+
+---
+
+### Subscriptions
+
+* Mit einem _Splitter_ kann ausgewählt werden, mit welchem `Link` ein Request an den Server gesendet werden soll
+* Damit können Subscriptions mit dem eigenen Websocket-Link ausgeführt werden
+* ```javascript
+  const wsLink = ...;
+  const httpLink = ...;
+
+  const remoteLink = split(
+    // split based on operation type
+    ({ query }) => {
+      const def = getMainDefinition(query);
+      return (
+        def.kind === "OperationDefinition" && def.operation === "subscription"
+      );
+    },
+    wsLink,
+    httpLink
+  );
+  ```
+
+---
+
+### Links
+
+* Die Links werden beim erzeugen des Apollo Clients aneinander gehängt
+* ```javascript
+  const client = new ApolloClient({
+    link: ApolloLink.from([authLink, remoteLink]),
+    cache: new InMemoryCache()
+  });
+```
+
+
+          </textarea>
+        </section>
+
+        <!-- ============================================================================= -->
+        <section>
+          <h3>Apollo React Client</h3>
+          <p>
+            Die Komponenten bzw. die React-spezifische API des Apollo Clients,
+            benötigt Zugriff auf den ApolloClient
+          </p>
+          <p>Das Client-Objekt muss der Anwendung bereitgestellt werden</p>
+          <p>
+            Dazu wird die <code>ApolloProvider</code>-Komponente verwendet, die
+            allen darunterliegenden Komponenten Zugriff auf den ApolloClient
+            ermöglicht:
+          </p>
+
+          <pre class="fragment"><code class="javascript">
+import { ApolloProvider } from "@apollo/client";
+
+const client = ...;
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+    &lt;ApolloProvider client={client}>
+      &lt;App />
+    &lt;ApolloProvider>
+  );
+</code></pre>
+          <p class="fragment">
+            (Der Apollo Client verwendet intern die
+            <a ref="https://reactjs.org/docs/context.html">React Context API</a
+            >)
+          </p>
+        </section>
+        <section>
+          <h3>Apollo GraphQL Client in React</h3>
+          <p>Live: workspace-graphql</p>
+        </section>
+        <section data-markdown="">
+          <textarea data-template>
+### GraphQL Operationen beschreiben
+
+* GraphQL Operationen können inline oder in einer eigenen Datei beschrieben werden
+* Inline: mit der `gql` [Tagged Template Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#tagged_templates) direkt im Code
+* Die `gql`-Funktion erzeugt ein **GraphQL Document Object**, das die geparste Operation enthält
+    * Dieses Objekt verwenden wir zum Ausführen der Operation
+* ```javascript
+  import { gql } from "@apollo/client";
+
+  const PostListQuery = gql`
+    query PostListQuery {
+      posts {
+        id
+        title
+        teaser(maxLength: 20)
+        date
+      }
+    }
+  `;
+  ```
+* Um die GraphQL-Operationen in einer eigenen Datei abzulegen und zu importieren, müsst ihr [Euer Setup anpassen](https://create-react-app.dev/docs/loading-graphql-files/)
+  * Wenn ihr mit dem [GraphQL Codegenerator](https://www.graphql-code-generator.com/) arbeitet, braucht ihr das _nicht_
+
+
+---
+
+### Verwenden des Apollo React Clients
+* Apollo stellt für die drei GraphQL Operationstypen jeweils eigene
+              Hooks zur Verfügung:
+  * [useQuery](https://www.apollographql.com/docs/react/data/queries/#usequery-api) bzw. [useLazyQuery](https://www.apollographql.com/docs/react/data/queries/#manual-execution-with-uselazyquery)
+  * [useMutation](https://www.apollographql.com/docs/react/data/mutations/#usemutation-api)
+  * [useSubscription](https://www.apollographql.com/docs/react/data/subscriptions/#usesubscription-api-reference)
+* Die Hooks funktionieren alle ähnlich:
+  * Sie erwarten ein Dokument mit einer GraphQL Operation (Ergebnis von `gql`)
+  * Verhalten kann mit weiteren Argumenten konfiguriert werden, z.B. Setzen von Variablen
+  * Der Rückgabetyp ist ein Objekt mit Informationen über den Request (loading, data, error). Bei
+    `useMutation` kommt kommt außerdem eine Funktion zum Ausführen der Mutation zurück
+
+---
+
+### useQuery: GraphQL Query ausführen
+* Der `useQuery`-Hook führt einen GraphQL aus:
+* ```typescript
+  const FeedPageQuery = gql`...`;
+  function Feedpage() {
+    const { loading, error, data } = useQuery(FeedPageQuery);
+
+    if (loading) {
+      return <h1>Loading, please wait...</h1>;
+    }
+
+    if (error) {
+      return <h1>GraphQL Failed: {error.toString()}</h1>;
+    }
+
+    return &lt;TeaserList story={data.stories} />;
+  }
+  ```
+---
+
+### useQuery - Lebenszyklus
+* `useQuery`führt den übergebenen Query automatisch aus, sobald die Komponente _gemounted_ wurde
+* Sobald der Request läuft, gibt die Funktion ein Objekt zurück, in dem `loading` auf `true` gesetzt ist. Damit kannst Du z.B. einen Loading Indikator anzeigen
+* Sobald die Antwort des Queries ankommt, wird deine Komponente erneut gerendert
+  * Der useQuery-Hook gibt nun ein Objekt zurück, in dem entweder <code>error</code> oder
+              `data` gesetzt ist und `loading` nun `false` ist.
+  * Du kannst die Informationen nutzen, um die Darstellung zu aktualisieren
+  * Wenn der Request erfolgreich war, aktualisiert Apollo den globalen Cache mit den
+              geladenen Daten
+  * _Alle_ sichtbaren Komponenten, die (Teile der) geladenen Daten darstellen,
+              werden automatisch aktualisiert
+
+---
+
+### useQuery: Variablen
+* GraphQL Queries können Variablen enthalten
+* Das (optionale) zweite Argument von `useQuery` ist ein Objekt mit Konfigurationsoptionen
+* Mit diesem Argument kannst Du Variablen an deinen Query übergeben
+* ```graphql
+  const STORY_PAGE_QUERY = gql`
+    query StoryPageQuery($storyId: ID!) {
+      story(storyId: $storyId) {
+        id title createdAt
+        body member { user { name } }
+      }
+    }
+  `;
+  ```
+* ```graphql
+  function StoryPage() {
+    // Example: Receive storyId from URL params
+    const { storyId } = useParams();
+
+    const { loading, error, data } = useQuery(STORY_PAGE_QUERY,
+      {
+        variables: { storyId }
+      }
+    );
+    // ...
+  }
+  ```
+---
+### Apollo Hooks mit TypeScript
+* Die Apollo Hooks können mit Typ-Parametern typsicher gemacht werden.
+* In der Regel können zwei Parameter angegeben werden:
+  * `TData`: beschreibt, wie die gelesenen Daten aussehen (`data`-Knoten)
+  * `TVariables`: beschreibt, ob/wie benötigte Variablen aussehen
+* ```typescript
+  const STORY_PAGE_QUERY = gql`...`;
+
+  type StoryPageQuery = {
+    id: String, title: String, body: string, member: { id: string, bio?: string } }
+  }
+
+  type StoryPageVariables = { storyId: string }
+
+  function StoryPage({storyId}: {storyId: string}) {
+    const result = useQuery<StoryPageQuery, StoryPageVariables>({
+            variables: { storyId });
+
+    result.data?.id; // OK
+    result.data?.content; // ERROR content not in data
+    // ...
+  }
+  ```
+* Das `data`-Field in dem Ergebnis ist in TypeScript _immer_ optional, da es
+  im Fehlerfall nicht gesendet wird!
+* ```typescript
+  const {data} = useQuery<...>();
+
+  data.story.id; // ERROR: data might be undefined
+  if (!data) {
+    return <h1>No Data!</h1>;
+  }
+  data.story.id; // OK
+  ```
+---
+
+### TypeScript Code generieren
+* Das Project [GraphQL Code Generator](https://www.the-guild.dev/graphql/codegen) bietet Code Generatoren für eine Reihe von GraphQL Frameworks, u.a. Apollo/React
+* Generiert werden können damit:
+  * Typen für das Query-Ergebnis (`TData`)
+  * Variablen (`TVariables`)
+  * Typen für verwendete Fragmente
+  * Fertige Hook-Funktionen
+
+---
+### Code Generator: Konfiguration
+* Je nach Konfiguration sucht der Generator nach `.graphql`-Dateien mit Queries und/oder `gql`-Funktionen
+* Die Typen werden in eine Datei (z.B. `generated.tsx`) geschrieben
+* Der Generator braucht Zugriff auf das Schema (lokal oder remote)
+* Der Generator kann im watch-Modus betrieben werden, dann wird automatisch neu generiert, wenn neue Queries geschrieben werden
+* ```yml
+  overwrite: true
+  schema:
+    # Lokales Schema, aber remote-Schema geht auch
+    - "../publy-backend/src/main/resources/graphql/publy.graphqls"
+  # In welchen Dateien soll nach GraphQL Queries gesucht werden?
+  documents: "./src/**/{*.graphql,*.tsx}"
+  # Was (und wohin) soll generiert werden:
+  generates:
+    src/generated/graphql.tsx:
+      plugins:
+        - "typescript"
+        - "typescript-operations"
+        - "typescript-react-apollo"
+```
+* Empfehlung: Code Generator auch im CI Build ausführen lassen!
+
+---
+### Code Generator
+* _Empfehlung_: Typen und Hooks generieren lassen
+* Die generierten Hooks sind "nur" Wrapper-Funktionen um `useQuery`, `useMutation`, ersparen
+  aber das hinschreiben der Typ-Informationen und des Dokuments mit dem Query
+* ```typescript
+  function StoryPage({storyId}: {storyId: string}) {
+
+    // useQuery:
+    const { data } = useQuery<StoryPageQuery, StoryPageQueryVariables>(
+            STORY_PAGE_QUERY, { variables: { storyId } });
+
+    // generierter Hook:
+    const { data } = useStoryPage({ variables: { storyId } });
+
+    // data-Objekte in beiden Fällen gleich
+  ```
+---
+### Code Generator: Fragmente
+* Für verwendete Fragmente wird ein eigener TypeScript-Typ generiert, das kann praktisch
+  sein, wenn man Typen für Teile eines Queries benötigt.
+* Beispiel:
+* ```graphql
+  query { stories { member { user { id name } } } }
+```
+* Generierter Typ (konzeptionell):
+* ```typescript
+  type StoriesQuery = { stories: Array<{ member: { user: { id: string, name: string } } }> }
+  ```
+* Um nur den Typen für den User zu ermitteln (z.B. um in einer Komponente als Property zu verwenden),
+ kann man schreiben:
+* ```javascript
+  type UserType = StoriesQuery["stories"][0]["member"]["user"]; // 🤯 😱
+  ```
+* Einfacher mit einem Fragment:
+* ```graphql
+  fragment UserFragment on User { id name }
+  query { stories { member { user { ...UserFragment } } } }
+  ```
+* Nun wird ein `UserFragment`-Typ generiert:
+* ```typescript
+  type UserFragment = { id: string, name: string }; // 😊
+  ```
+---
+
+### Refetch Funktion
+* `useQuery` liefert eine **refetch**-Funktion, die Du verwenden kannst, um
+            den Query erneut auszuführen (z.B. nach Klick auf einen "Aktualisieren"-Button)
+* Bei Bedarf kannst Du der `refetch`-Funktion neue Variablen übergeben
+  * Zum Beispiel um eine weitere Seite eines Such-Ergebnisses zu laden
+* ```javascript
+  function StoryFeedPage() {
+    const { loading, error, data, refetch } = useStoryFeedPageQuery();
+
+    if (loading) {
+      return <h1>Loading, please wait...</h1>;
+    }
+
+    if (error) {
+      return <h1>GraphQL Failed: {error.toString()}</h1>;
+    }
+
+    return <TeaserList stories={data.stories} onRefetch={refetch} />;
+  }
+
+  function TeaserList({stories, onRefetch}) {
+    return <div>
+      <button onClick={onRefetch}>Refresh</button>
+      ...
+    </div>
+  }
+  ```
+
+---
+### Übung: Query ausführen
+
+* Die `FeedPage` soll eine Liste von Stories ("Feed") anzeigen
+* Ergänze in `src/FeedPage/Feedpage.tsx` den dazu notwendigen Code
+* In der Datei findest Du TODOs mit weiteren Informationen
+* Eine mögliche Lösung findest Du in `steps-frontend/10-useQuery`
+
+---
+
+### useQuery: Caching
+* Wenn deine Komponente erneut gerendert wird, wird dein Query
+            **nicht erneut ausgeführt**, sofern Apollo das Ergebnis noch im Cache findet
+* <!-- .element: class="demo" -->Netzwerk-Tab
+---
+
+### Der Apollo Cache
+* Apollo _normalisiert_ die Daten bevor sie in den Cache gelegt werden:
+* Für jedes Objekt, das als Teil deines Queries geladen wurde (egal auf welchem Level),
+            Apollo ermittelt den **typename** (`__typename`-Feld)
+  * Das `__typename`-Feld wird dafür automatisch allen Queries von Euch
+            hinzugefügt!
+* Für jedes Objekt extrahiert Apollo dessen `id`
+  * Wenn das `id`-Feld eines Objektes nicht `id` heißt, muss das in der
+            Konfiguration von Apollo gesetzt werden
+  * **Empfehlung:** *Immer* das `id`-Feld in jedem Objekt in jedem Query
+            abfragen!
+* Achtung! Listen werden *nicht* aktualisiert, bzw. nicht erweitert/gekürzt
+---
+
+### Der Apollo Cache: Aktualisierung
+* Es gibt mehrere Möglichkeiten, den Cache zu aktualisieren:
+  * [Fetch Policy](https://www.apollographql.com/docs/react/data/queries/#setting-a-fetch-policy)
+  * [Refetch Function](https://www.apollographql.com/docs/react/data/queries/#refetching)
+  * [Polling](https://www.apollographql.com/docs/react/data/queries/#polling)
+  * Für Paginierung von Listen mit der [Fetch more](https://www.apollographql.com/docs/react/pagination/core-api/#the-fetchmore-function)-Funktion
+  * [Per Subscription](https://www.apollographql.com/docs/react/data/subscriptions/#subscribing-to-updates-for-a-query)
+  * Nach einer Mutation direkt mit der [Cache API](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly)
+---
+
+### Fetch Policy
+* Mit einer Fetch Policy kannst Du bei `useQuery` einstellen, wann dein Query
+            erneut ausgeführt werden soll
+  * **cache-first**: Wenn die angeforderten Daten bereits im Cache sind, werden sie aus
+              dem Cache zurückgegeben, sonst vom Backend geladen (Default)
+  * **cache-and-network**: Falls vorhanden, Daten aus dem Cache zurückgeben, aber in
+              jedem Fall auch einen Backend-Request auszuführen, um ggf. aktualisierte Daten zu
+              laden (Schnelle Darstellung, die ggf. kurze Zeit später aktualisiert wird)
+  * **network-only**: Immer Daten vom Backend laden (keine Daten vom Cache verwenden),
+              aber mit dem Ergebnis den Cache aktualisieren
+  * **no-cache**: Immer Daten vom Backend laden und auch nicht den Cache aktualisieren
+  * **cache-only**: Nur Daten vom Cache verwenden. Wenn die Daten darin nicht gefunden
+              werden, wird kein Ergebnis zurückgeliefert
+* <!-- .element: class="demo" --> Cache-Policy zeigen
+---
+
+### Fetch Policy: Beispiel
+* ```javascript
+  function StoryPage() {
+    const { storyId } = useParams();
+
+    const { loading, error, data } = useQuery(STORY_PAGE_QUERY,
+      {
+        variables: { storyId },
+        fetchPolicy: "network-only"
+      }
+    );
+    // ...
+  }
+  ```
+
+### Polling
+* Du kannst ein `pollInterval` (Zeit in ms) als Query Option angeben. Apollo
+            führt dann den Query dann in dem angegebenen Interval automatisch neu aus und aktualisiert den Cache mit den gelesenen Daten
+* ```javascript
+  function StoryFeedPage() {
+  const { loading, error, data } = useQuery(STORY_FEED_QUERY,
+    { pollInterval: 1500 }
+  );
+
+  // ...wie gesehen...
+  }
+  ```
+---
+### Aktualisieren von Listen
+* Wenn neue Daten für eine Liste geladen werden (oder welche entfernt werden),
+  weiß Apollo nicht, wie damit umzugehen ist
+* Der Cache kann dann nicht automatisch aktualisiert werden
+* Beispiel:
+  * Zusätzliche Stories werden auf der FeedPage gelesen (nächste "page")
+  * Müssen die gelesenen Stories am Anfang oder Ende der bestehenden Liste eingefügt werden?
+  * Sollen sie dort überhaupt eingefügt werden?
+* Beispiel 2:
+  * Ein Kommentar wird mit einer Mutation angelegt
+  * In welche bestehenden Listen im Cache muss der Kommentar?
+
+---
+### Aktualisieren von Listen
+* Grundsätzlich können Listen mit verschiedenen Strategien aktualisiert werden:
+  * **fetch more**: Jemand klickt z.B. auf "Weitere Einträge laden"-Link
+    * Beispiel: Liste von Stories in Feed-Page
+  * **subscription**: Eine Subscription liefert neue Elemente, die (auch) in eine bestehende Liste eingefügt werden
+    * Beispiel: Neuer Kommentar in `StoryComments`
+    * Diesen Fall sehen wir uns im Zusammenhang mit Mutations an
+  * **update**: Nach einer Mutation, die ein neues Objekte erzeugt (oder löscht), soll das Objekt
+            in eine Liste hinzugefügt (oder gelöscht) werden
+    * Diesen Fall sehen wir uns im Zusammenhang mit Mutations an
+* In jedem Fall müssen wir dazu implementieren, *wie* die neuen Daten in die gecachten Listen kommen
+
+---
+### Aktualisieren von Listen: Pagination mit fetchMore
+* Anwendungsfall:
+  * es gibt eine Liste, durch die durchgeblättert werden kann
+  * die jeweils neu geladenen Objekte sollen der Liste auch im Cache hinzugefügt werden
+  * Vorteil: wenn Benutzer dann nochmal zurückblättert, sind die Objekte schon da
+* Dazu liefert `useQuery` eine weitere Funktion zurück: `fetchMore`
+
+* Diese Funktion akzeptiert im einfachsten Fall neue Query _Variablen_ und führt den Query neu aus
+* ```javascript
+  function FeedPage() {
+    const { loading, data, error, fetchMore } = useFeedPageQuery();
+
+    // ...
+
+    const handleFetchMore = () => {
+      fetchMore({
+        variables: {
+          page: data.stories.page.pageNumber + 1, // fetch next page
+        },
+      });
+    };
+
+    return <div>
+       {data.page.hasNext && <button onClick={handleFetchMore}>Next</button>}
+       // ...
+    </>
+  }
+  ```
+* Die geladenen Daten landen aber nicht im Cache 😭
+* <!-- .element: class="demo" --> Cache im DevTools mit fetchMore
+---
+
+### Type Policy
+* Mit einer **Type Policy** muss die Aktualisierung des Caches für ein Feld angepasst werden
+  * Achtung 1: Das ist - je nach Schema, Query und Fachlichkeit - nicht trivial!
+  * Achtung 2: TypeScript-Support an der Stelle nur eingeschränkt!
+* In der Cache-Konfiguration beim Erzeugen des Apollo Clients:
+* ```javascript
+  const apolloClient = new ApolloClient({
+    // ...
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            stories: {
+              keyArgs: false,
+              merge(
+                existing: StoryConnection | undefined | null,
+                incoming: StoryConnection
+              ) {
+                if (!existing) { return incoming; }
+                const merged = {
+                  page: incoming.page,
+                  stories: [...existing.stories, ...incoming.stories],
+                };
+                return merged;
+              }  }  }  } }
+            }),
+        });
+  ```
+  * <!-- .element: class="demo" -->Der Cache in den Developer-Tools mit fetchMore-Funktion in FeedPage
+
+---
+
+
+### Apollo GraphQL: Mutations
+<!-- .slide: class="left" -->
+
+* Ausführen von Mutations ist ähnlich wie das Ausführen eines Queries
+* Hook: [useMutation](https://www.apollographql.com/docs/react/data/mutations/#executing-a-mutation)
+* Der `useMutation` Hook gibt ein Array (Tuple) mit zwei Einträgen zurück:
+  1. Eine Funktion zum Ausführen der Mutation (z.B. nach einer Benutzerinteraktion)
+  2. Das Ergebnis-Objekt, das wir schon bei `useQuery` gesehen haben
+            (zusätzlich: ein `called`-Property, das angibt, ob die Mutation bereits mind. einmal ausgeführt wurde)
+* ```jsx
+  const ADD_COMMENT_MUTATION = gql`...`;
+  type AddCommentMutation = { newComment: ... };
+  type AddCommentVariables = { input: ... };
+
+  function CommentEditor() {
+    const [mutate, { error, data, called }] = useMutation<AddCommentMutation, AddCommentVariables>
+            (ADD_COMMENT_MUTATION);
+
+    // oder generiert:
+    const [mutate, { error, data, called }] = useAddCommentMutation();
+
+    function addComment(commentInput) {
+      // Verwendung von mutate hier Typsicher, da TS
+      // das 'variables'-Objekt von useMutation kennt
+      mutate({
+          variables: { input: commentInput }
+      });
+    }
+
+    const errorMessage = error ? ... : null;
+
+    if (called && !errorMessage) {
+      // Mutation has been executed and was successful
+      return &lt;SuccessConfirmation />;
+    }
+
+    // Mutation hasn't been run or failed with an error
+    return <form>
+            <input name="comment" ... />
+            {errorMessage && <p>Error: {errorMessage}</p>}
+           </form>
+  }
+  ```
+---
+
+### Die mutate-Funktion
+
+* Der `mutate`-Funktion können (fast) alle Argumente übergeben werden, die
+  auch an `useMutation` übergeben werden können (insb. Variablen)
+* Beim Aufruf der `mutate`-Funktion wird die Mutation ausgelöst und die Komponente
+  wird mit neuen Ergebnissen (oder Fehlern) neu gerendert (wie bei `useQuery`)
+* Die `mutate`-Funktion liefert ein Promise zurück, das mit dem Ergebnis
+  der Mutation (`data` oder `errors`) aufgelöst wird, sobald das Ergebnis da ist
+* Damit kannst Du weitere Logik unmittelbar nach dem Abschluss der Mutation ausführen
+* ```javascript
+  function CommentEditor({onCommentSaved}) {
+    const [mutate, { error, data, called }] = useAddCommentMutation();
+
+    async function addComment(commentInput) {
+      // Verwendung von mutate hier Typsicher, da TS
+      // das 'variables'-Objekt von useMutation kennt
+      const {data, error} = mutate({
+          variables: { input: commentInput }
+      });
+
+      if (data) {
+       // Alles OK, z.B. Redirect hier machen
+       history.push("/...");
+       // oder Callback von Oberkomponente aufrufen:
+       onCommentSaved();
+      }
+    }
+
+```
+---
+
+### Übung: eine Mutation
+* Die Logik zum Anlegen eines Kommentars implementieren
+* Die Mutation (`AddCommentMutation`) ist schon fertig und der Code dafür generiert
+* In `CommentEditor` musst Du den Code vervollständigen, siehe dort für weitere Informationen
+* Achtung: Der neue Kommentar wird (noch) nicht automatisch angezeigt, d.h. Du musst nach dem erfolgreichen speichern die Seite neu laden!
+* Mögliche Lösung in `steps-frontend/20_useMutation`
+
+---
+### Nach einer Mutation... wird der Cache automatisch aktualisiert (eventuell)
+* Wenn deine Mutation ein Objekt zurückliefert, das sich bereits im Cache befindet, wird
+            es dort aktualisiert
+* Beispiel: Du *aktualisierst* eine existierende Story und das Ergebnis der
+            Mutation enthält irgendwo die aktualisierte Story (zumindest die aktualisierten Teile).
+  * Voraussetzung: im Ergebnis kommt auch die `id` der Story vor
+* ```javascript
+  const UpdateStory = gql`
+    mutation {
+      updateStory(storyId: "S1", newTitle: "...", newBody: "...") {
+          id
+          title
+          body
+      }
+    }
+  ```
+* In diesem Beispiel kann Apollo das Objekt <b>S1</b> im Cache automatisch aktualisieren
+---
+### Den Cache nach einer Mutation aktualisieren
+* Mit [refetch Queries](https://www.apollographql.com/docs/react/data/mutations/#refetching-queries) kannst Du eine Liste von Queries angeben, die erneut ausgeführt werden, wenn
+              eine Mutation erfolgreich war
+* Mit der [update Function](https://www.apollographql.com/docs/react/data/mutations/#updating-the-cache-directly) kannst Du den Cache direkt per API manipulieren, sobald deine Mutation erfolgreich
+              war
+---
+
+### Die Apollo Cache API
+* Du kannst den Query auslesen (mit einem GraphQL Query!)
+* Du kannst den Cache direkt modifizieren
+---
+
+### Beispiel: Den Cache aktualisieren
+* Du kannst die `update`-Function bei `useMutation` angeben:
+* Diese Funktion wird nach dem Ausführen der Mutation von Apollo aufgerufen
+* Die Funktion bekommt das Mutation-Ergebnis sowie den aktuellen Cache von Apollo
+            übergeben
+* Mit der Cache API kannst Du das neue Objekt in den Cache an allen erforderlichen Stellen einfügen
+* ```javascript
+  const ReadStoriesFromCache = gql`
+    query ReadStories {
+      stories {
+        id
+      }
+    }
+  `;
+
+  function StoryEditor() {
+    function saveStory(newStory) {
+      mutate({
+        variables: {...},
+        update: (cache, {data}) => {
+          const { posts } = cache.readQuery({
+            query: ReadStoriesFromCache
+          });
+          cache.writeQuery({
+            query: ReadStoriesFromCache,
+            data: { posts: stories.concat(data.newStora) }
+          });
+      })
+    }
+
+    return ...;
+  }
+  ```
+
+---
+### Aktualisieren des Caches mit Subscriptions
+<!-- .slide: class="left" -->
+* Bei den bisher gesehen Aktualisierungen, hat der Client die Aktualisierung
+  ausgelöst.
+* Dadurch werden Änderungen an Daten, die nicht vom Server vorgenommen werden, aber nicht
+  berücksichtigt
+* Beispiel: Anderer Benutzer erzeugt einen Kommentar
+* Man kann das Query-Ergebnis (insb. für Listen) mit einer Subscription aktualisieren
+* Beispiel: onNewComment Subscription
+---
+### Aktualisieren des Caches mit Subscriptions
+<!-- .slide: class="left" -->
+* `useQuery` stellt dazu die Funktion `subscribeToMore` zur Verfügung
+* Dieser Funktion wird übergeben:
+  * Als Typ-Parameter der Name des Typs, der das Ergebnis der Subscription beschreibt
+  * Als Parameter ein Objekt:
+    * mit `document` (Ergebnis des `gql`-Aufrufs mit der Subscription bzw. des generierten Codes)
+    * evtl. `variables` für die Mutation
+    * `updateQuery`-Funktion
+* Immer wenn die Subscription neue Daten liefert, wird die Callback-Funktion `updateQuery`
+  mit den alten und neuen Daten aufgerufen
+* In `updateQuery` können die neuen Daten dem Cache hinzugefügt werden
+* <!-- .element: class="demo" --> Cache Verhalten in Apollo Dev Tools
+
+---
+### Aktualisieren von Listen mit Subscriptions
+<!-- .slide: class="left" -->
+
+* ```javascript
+  function StoryComments({ storyId }) {
+
+    // initial Kommentare für eine Story lesen
+    const { data, loading, error, subscribeToMore } = useStoryCommentsQuery({
+      variables: { storyId },
+    });
+
+    React.useEffect(() => {
+
+      // Aktualisieren der Liste im Cache mit Subscription
+      subscribeToMore<OnNewCommentSubscription>({
+        document: OnNewCommentDocument,
+        variables: { storyId },
+        updateQuery: (prev, { subscriptionData }) => {
+          // Wenn die Subscription keine Daten geliefert hat (z.B. Fehler)
+          // den alten Cache-Inhalt unverändert zurückliefern
+          if (!subscriptionData.data) return prev;
+
+          // Bestehenden Cache-Inhalt ('prev') kopieren und in das
+          // 'comments'-Feld den neuen Kommentar einfügen
+
+          // Achtung! Wie das einfügen genau funktioniert, hängt natürlich
+          //  immer von deiner jeweiligen Daten-Struktur ab
+          const newComment = subscriptionData.data.onNewComment.newComment;
+          const newData = Object.assign({}, prev, {
+            comments: [newComment, ...prev.comments],
+          });
+
+          // Neuen Wert zurückliefern; dieser ersetzt dann
+          // den gecachten Wert des Queries, für den diese
+          // updateQuery-Funktion ausgeführt wurde
+          return newData;
+        },
+      });
+    }, [subscribeToMore, storyId]);
+
+    return ...;
+  }
+  ```
+---
+---
+
+### Übung: subscribeToMore
+* Die Liste der Kommentare (`StoryComments`) soll automatisch aktualisiert werden,
+  wenn auf dem Server ein neuer Kommentar erzeugt wird
+* Implementiere dazu die `subscribeToMore`-Funktion
+* TODOs und Hilfestellung dazu findest Du in der Datei `StoryComments.tsx`
+* Lösung in `steps-frontend/30_useQuery_subscribeToMore`
+  </textarea
+          >
+        </section>
+
+        <section data-markdown="">
+          <textarea data-template>
+<!-- .slide: id="graphql" -->
+# Hintergrund
+### GraphQL Basics
+---
+
+# GraphQL
+
+
+_"GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data"_ ([https://graphql.org](https://graphql.org))
+
+---
+
+# GraphQL
+
+
+_"GraphQL is a **query language for APIs** and a runtime for fulfilling those queries with your existing data"_ ([https://graphql.org](https://graphql.org))
+
+---
+<!-- .slide: data-transition="none" -->
+
+# GraphQL
+
+_"GraphQL is a query language for APIs and a **runtime for fulfilling** those queries with your existing data"_ ([https://graphql.org](https://graphql.org))
+
+---
+<!-- .slide: data-transition="none" -->
+
+# GraphQL
+
+_"GraphQL is a query language for APIs and a runtime for fulfilling those queries with **your existing data**"_ ([https://graphql.org](https://graphql.org))
+
+---
+
+## Spezifikation
+
+* https://spec.graphql.org/
+* Umfasst:
+  * Query Sprache und -Ausführung
+  * Schema Definition Language
+* Kein fertiges Produkt, keine fertige Bibliothek
+   * Es gibt Bibliotheken, die dir helfen, GraphQL APIs zu implementieren und bereitzustellen
+   * Die abgefragten Daten müssen wir selbst ermitteln
+   * GraphQL macht keine Aussage darüber, wo diese Daten herkommen (Datenbank, Micro-Service, Berechnung ...)
+
+---
+
+## Die Beispiel-Anwendung
+
+<img style="border: 1px solid grey" src="images/publy-screenshot.png" />
+
+[http://localhost:3000](http://localhost:3000)
+
+---
+
+## Beispiel: GraphiQL
+
+<img style="border: 1px solid grey" src="images/screenshot-graphiql.png" />
+
+[http://localhost:8080](http://localhost:8080)
+
+---
+
+
+## Beispiel: GraphQL Tooling
+
+* <!-- .element: class="demo" --> IntelliJ IDEA
+  * <!-- .element: class="demo" --> graphql-Extension (hello.graphql)
+  * <!-- .element: class="demo" --> GraphQL.md im publy-Verzeichnis
+  * <!-- .element: class="demo" --> language=GraphQL in einer leeren Java-Datei
+
+* <!-- .element: class="demo" --> TypeScript (optional)
+  * <!-- .element: class="demo" --> publy-frontend, npm run codegen:watch
+  * <!-- .element: class="demo" --> StoryPage.query.graphql zeigen und story-Feld entfernen
+---
+
+<!-- .slide: id="graphql-sprache" -->
+# Die GraphQL Abfrage-Sprache
+---
+
+### Sprache, um **Felder** aus einem **Objekt-Graphen** abzufragen
+
+```graphql
+  query {
+    story {
+      id title writtenBy {
+        id user { name }
+      }
+    }
+  }
+
+---
+
+### Felder können **Argumente** haben
+
+<pre><code class="graphql">
+  query {
+    story(storyId: 5) {
+      id title writtenBy {
+        id user { name }
+      }
+    }
+  }
+</code></pre>
+
+---
+
+### Die **Antwort** sieht immer so aus, wie die Abfrage
+
+<img src="images/query-antwort.png" />
+
+---
+
+### Operation-Type
+
+Ausgeführt werden **Operationen**.
+Der **Operation-Type** beschreibt, was in der Anfrage getan werden soll
+
+* **query**: Daten lesen (Default-Operation, Schlüsselwort "query" kann weggelassen werden)
+* **mutation**: Daten verändern
+* **subscription**: Daten vom Server bekommen, sobald sie erzeugt wurden (ähnlich wie Events)
+
+---
+
+
+### Operation-Type
+
+Der Operation-Type bestimmt auch den Einstiegspunkt in den Objekt-Graphen
+
+<img src="images/einstiegspunkte.png" />
+
+---
+
+### Namen von Operationen
+
+* Operationen können **Namen** haben.
+* Das ist vor allem für Debugging und Code-Generatoren relevant
+
+* <pre class="fragment"><code class="graphql">
+query NewestStory {
+    story {
+      id
+      title
+    }
+}
+</code></pre>
+
+---
+
+### Fragmente
+
+* Mit einem **Fragment** beschreibst Du eine wiederverwendbare Menge von Feldern
+* ```graphql
+  fragment BaseMember on Member {
+      id joined
+      user { is username }
+  }
+
+  query {
+      story {
+        writtenBy { ...BaseMember }
+
+        reactions {
+          givenBy { ...BaseMember }
+        }
+      }
+  }
+  ```
+
+---
+
+### Union-Typen
+
+Ein **Union-Type** kann mehr als einen Typ zurückliefern:
+
+```graphql
+  mutation  addComment
+      (input: { storyId: "1", content: "..." }) {
+
+      ...on AddCommentSuccessPayload {
+        newComment { id }
+      }
+
+      ...on AddCommentFailurePayload {
+        errorMessage
+      }
+  }
+```
+
+---
+### Interfaces
+
+* Ein Interface erzwingt gemeinsame Felder an den Objekten, die das Interface implementieren (ähnlich
+    wie in Java mit Methoden)
+
+* Beispiel: `id` und `createdAt` sind am `Node`-Interface definiert
+
+* ```graphql
+  query {
+      node(id: "...") {
+
+        id
+        createdAt
+
+        ...on Story { title body }
+        ...on Comment { content }
+      }
+  }
+  ```
+
+
+---
+
+### Variablen
+
+* Queries können **Variablen** haben.
+* Variablen müssen im Query deklariert werden
+* Werte für Variablen werden in einem eigenen JSON-Objekt an den Server geschickt
+
+* ```graphql
+  query ($storyId: ID!) {
+    story(id: $storyId) {
+      id
+      title body
+    }
+  }
+  ```
+
+---
+
+## Übung: Einen Query ausführen
+
+_Mach' dich mit der GraphQL-Abfragesprache vertraut_
+
+* Öffne GraphiQL auf meinem Computer (URL gebe ich euch)
+* Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert und folgende Felder abfragt:
+  * Id, Titel, Excerpt, Veröffentlichungsdatum, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
+  * Kannst Du den Query so erweitern, dass er die ersten zehn _neusten_ Stories zurückliefert?
+* Bau eine Fragment (`Author`), das aus dem `Member` dessen Id, sowie `name` und `id` des Users enthält
+  * Verwende das Fragment, um in den Stories und den Kommentaren jeweils die Member-Informationen abzufragen
+  * In den Stories zusätzlich noch `skills` des Members abfragen
+* Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
+* Mögliche Lösung: [https://graphql.schule/queries](https://graphql.schule/queries)
+
+---
+
+### GraphQL Requests
+
+* <!-- .element: class="demo" --> HTTP Request an die GraphQL API
+  * <!-- .element: class="demo" --> request.http im publy-Ordner
+  * <!-- .element: class="demo" --> Fehler zeigen
+---
+
+## GraphQL Requests
+
+* Üblicherweise nur HTTP POST-Request
+  * andere HTTP Verben spielen keine Rolle
+  * HTTP Status-Code meist 200 OK, auch im Fehlerfall!
+  * Großer Unterscheid zu REST APIs
+* Antwort-JSON-Objekt besteht aus maximal drei Feldern:
+  * `data`: Die gelesenen Daten (Struktur darunter entspricht der Abfrage)
+  * `errors`: Liste mit (technischen) Fehlern, u.a. Fehlermeldung
+  * `extensions`: Freibelegbares Objekt für proprietäre Erweiterungen (z.B. Debug-Informationen)
+
+
+---
+
+### Teil II
+<!-- .slide: id="graphql-apis-bereitstellen" -->
+# GraphQL APIs bereitstellen
+
+---
+<!-- .slide: id="schema" -->
+### Das GraphQL Schema
+
+* GraphQL APIs müssen in einem Schema beschrieben werden.
+* In dem Schema werden Objekte (Typen) mit Feldern beschrieben.
+* Das Schema selbst ist zur Laufzeit mit einem _Introspection Query_ abfragbar
+  * 🧑‍💻 Beispiel in GraphiQL
+* Je nach Framework gibt's unterschiedliche Möglichkeiten, das Schema zu definieren
+  * **Schema-first**: erst Schema beschreiben, dann implementieren
+  * **Code-first**: Schema wird aus (Java-)Code generiert
+  * Java-Frameworks verwenden i.d.R. Schema-first (bis auf MicroProfile GraphQL)
+
+---
+
+### Beschreibung des Schemas
+
+* Mit der [Schema Definition Language](https://graphql.org/learn/schema/)
+* Per [Java API](https://www.graphql-java.com/documentation/schema) in
+  GraphQL-Java
+* In der Regel wird die **SDL** verwendet
+
+---
+
+### Die SDL
+
+* <!-- .element: class="demo" --> Demo: Schema-Definition
+  * <!-- .element: class="demo" --> ping-Feld mit Message Object
+  * <!-- .element: class="demo" --> Argument!
+  * <!-- .element: class="demo" --> Rückgabewert-String
+  * <!-- .element: class="demo" --> Doku
+
+---
+
+### Die SDL
+
+Beschreibung eines *Objekt Types*
+
+<pre><code class="graphql">
+  type Story {
+    id: ID!
+
+    title: String!
+    body: String!
+  }
+</code></pre>
+
+* Beschrieben werden **Felder** mit **Return Types**
+* Ein Ausrufezeichen zeigt an, dass das Feld nicht _nullable_ ist
+
+---
+
+### Dokumentation und Kommentare
+
+* Dokumentation mit drei doppelten Anführungszeichen
+  * Markdown zur Formatierung erlaubt
+* Kommentare mit Hash-Zeichen
+  * Dokumentation ist Bestandteil der API, Kommentare nicht
+
+* ```graphql
+  """
+  A `Story` is the main object in our service.
+  """
+  type Story {
+    """Identifies this object"""
+    id: ID!
+
+    # todo: implement new tags-field (PROJ-666)
+  }
+  ```
+
+---
+
+## Skalare Typen
+
+* Skalare Typen entsprechen primitiven Typen in Java
+  * Sind die Enden im Objekt-Graphen
+* Standard-Typen: ID, String, Boolean, Int, Float
+  * ID wird als String gelesen und geschrieben, soll aber nicht interpretiert werden
+
+
+* ```graphql
+  type Member {
+    id: ID!
+
+    username: String!
+
+    # no exclamation mark: can be null
+    likes: Int
+
+    amount: Float!
+
+    activeMember: Boolean
+  }
+  ```
+
+
+* Man kann eigene skalare Typen bauen
+---
+
+### Aufzählungstypen (enum)
+
+* Wie in Java
+
+* <!-- .element: style="min-width: 500px" -->
+  ```graphql
+  enum ReactionType {
+    like,
+    laugh,
+    thumbUp
+  }
+  ```
+
+---
+
+### Referenzen
+
+* Referenzen auf andere Objekt-Typen
+
+* <!-- .element: style="min-width: 900px" -->
+  ```graphql
+  type Member {
+    # ...
+  }
+
+  type Comment {
+    # ...
+  }
+
+  type Story {
+    """Reference to the Member that has written this Story"""
+    writtenBy: Member!
+
+    comments: [Comment!]!
+
+  }
+  ```
+
+---
+
+### Argumente
+
+* Felder können Argumente haben
+  * Solche Felder werden auch _Methoden_ genannt
+* Die Felder mit ihren Namen und Typen müssen in der API definiert werden
+  * Namen sind entscheidend (wie "named arguments" in Kotlin), nicht Reihenfolge (wie in Java)
+* Argumente können Default-Werte haben
+* Achtung! Argumente dürfen keine Objekt-Typen sein!
+
+
+* ```graphql
+  type Story {
+
+    # Mandatory argument maxLength, defaults to 20
+    #  if not specified by the client
+    excerpt(maxLength: Int! = 20): String!
+
+  }
+  ```
+
+---
+
+### Root-Typen
+
+* Root-Typen bilden den Einstiegspunkt für Queries in den Objekt-Graphen
+* Root-Typen sind **Query**, **Mutation** und **Subscription**
+  * **Query** ist Pflicht, die beiden anderen Typen optional
+* Syntax und Verhalten genauso wie bei Objekt-Typen
+* Felder an den Root-Typen werden auch **Root-Felder** genannt
+
+
+* ```graphql
+  type Query {
+    """Returns a List of all stories"""
+    stories: [Story!]!
+
+    """Returns a story by its ID or null"""
+    story(id: ID!): Story
+  }
+
+  type Mutation {
+    addComment(storyId: ID!, memberId: ID!, content: String!): Comment!
+  }
+  ```
+---
+
+### Input-Typen
+
+* Objekt-Typen können nicht als Argument an ein Feld übergeben
+* Als Argumente an Feldern können nur skalare Typen, Enums und Input-Typen übergeben werden.
+* Ein Input-Type wird mit `input` definiert, sieht ansonsten aus wie ein Objekt-Type
+  * Ein Input-Type darf keine Objekt-Typen referenzieren
+
+* ```graphql
+  input AddCommentInput {
+    storyId: ID!
+    memberId: ID!
+    content: String!
+  }
+
+  type Mutation {
+    addComment(input: AddCommentInput!): Comment!
+  }
+  ```
+
+---
+
+### Union Types
+
+* Union Types bilden eine Menge von anderen Typen
+* Ein Feld kann ein Typen aus dieser Menge zurückliefern ("A _oder_ B")
+
+
+* ```graphql
+  type AddCommentSuccess { newComment: Comment! }
+  type AddCommentFailed { errorMessage: String! }
+
+  union AddCommentResult = AddCommentSuccess | AddCommentFailed
+
+  type Mutation {
+    addComment(input: AddCommentInput!): AddCommentResult!
+  }
+  ```
+
+
+---
+
+### Interfaces
+
+* Mit einem Interface wird erzwungen, dass Objekte über gleiche Felder verfügen
+  * Vergleichbar mit Interfaces in Java
+
+
+* ```graphql
+  interface Node {
+    id: ID!
+  }
+
+  type Story implements Node {
+    id: ID!  # Field defined in Node-Interface
+
+    title: String! # additional Story fields
+  }
+
+  type Comment implements Node {
+    id: ID!
+
+    content: String!
+  }
+
+  type User {
+    id: ID!
+    email: String
+  }
+
+  type Query {
+    # Returns either Story or Comment, but not User
+
+    node(id: ID!): Node
+  }
+  ```
+
+---
+
+### Schema-Evolution
+
+* In GraphQL gibt es nur _eine Version_ der API (kein `/api/v1`, `/api/v2`)
+* Das Schema kann jederzeit erweitert werden
+  * Clients fragen explizit Felder ab, d.h. durch neue Felder werden sie nicht beeinträchtigt
+* Man kann Felder mit `deprecated` markieren, um anzuzeigen, dass sie nicht genutzt werden sollen
+
+* ```graphql
+  type Query {
+    # Ausgangspunkt
+    getStoryById(id: ID!): Story
+  }
+  ```
+
+* ```graphql
+  type Query {
+    getStoryById(id: ID!): Story
+
+    # Neues Feld, beeinträchtigt bestehenden Client nicht
+    stories: [Story!]!
+  }
+  ```
+
+* ```graphql
+  type Query {
+    getStoryById(id: ID!): Story @deprecated("Use story instead")
+    story(id: ID!): Story
+
+    stories: [Story!]!
+  }
+  ```
+---
+### _Eine_ API für ganze Anwendung
+
+* Üblicherweise hat eine Anwendung *eine* GraphQL API
+  * In REST gibt es mehrere Endpunkte, die auf unterschiedliche Server verteilt sein können
+  * GraphQL soll zentrale API sein
+  * Untereinander kommunizieren die Services per REST o.ä.
+          </textarea>
+        </section>
+
+        <section>
+          <h2>Geschafft! 😊</h2>
+          <h3>Vielen Dank für Eure Teilnahme!</h3>
+          <h3>Viel Spaß und Erfolg mit GraphQL!</h3>
+          <p>Wenn ihr noch Fragen habt, könnt ihr mich erreichen:</p>
+          <p>
+            <a href="mailto:nils@nilshartmann.net">nils@nilshartmann.net</a>
+          </p>
+          <p>
+            <a href="https://nilshartmann.net" target="_blank"
+              >https://nilshartmann.net</a
+            >
+          </p>
+          <p>
+            <a
+              href="https://www.xing.com/profile/Nils_Hartmann2/cv"
+              target="_blank"
+              >Xing</a
+            >
+          </p>
+
+          <p>
+            Twitter:
+            <a href="https://twitter.com/nilshartmann" target="_blank"
+              >@nilshartmann</a
+            >
+          </p>
+        </section>
+      </div>
+    </div>
+    <script src="revealjs/reveal.js/dist/reveal.js"></script>
+    <script src="revealjs/reveal.js/plugin/notes/notes.js"></script>
+    <script src="revealjs/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="revealjs/reveal.js/plugin/highlight/highlight.js"></script>
+    <script src="revealjs/config.js"></script>
+  </body>
+</html>
