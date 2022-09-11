@@ -1,4 +1,4 @@
-# Spring for GraphQL Training
+# Spring-GraphQL Training
 
 Hier findest Du alles, was Du zur Vorbereitung auf das GraphQL Training wissen musst.
 
@@ -10,6 +10,7 @@ Auf deinem Laptop/PC sollte installiert sein:
 
 - Git (zum klonen des Workspaces)
 - Java JDK (mindestens Version 11)
+- Docker
 - Browser
 - Eine Java IDE, zum Beispiel [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) (Evaluationsversion reicht)
 - Für Schulungen, die wir über **Zoom** machen: bitte den Zoom **Client** installieren (und nicht die Web-Version von Zoom verwenden). Du benötigst _keinen_ Zoom-Account.
@@ -29,7 +30,7 @@ klonen und die Projekte installieren.
 
 Das Repository besteht aus zwei Verzeichnissen: `app` und `workspace`
 - Wir arbeiten nur in `workspace`. Es reicht, wenn Du dieses Verzeichnis in deiner IDE öffnest (am Besten als Gradle-Projekt importieren)
-- Das `app`-Verzeichnis enthält eine "fertige" Anwendung, die braucht ihr nicht zu verwenden. Falls ihr die ausprobieren wollt, findet ihr weiter unten eine Beschreibung.
+- Das `app`-Verzeichnis entält eine "fertige" Anwendung, die braucht ihr nicht zu verwenden. Falls ihr die ausprobieren wollt, findet ihr weiter unten eine Beschreibung.
 
 Die folgenden Schritte beziehen sich also immer auf das `workspace`-Verzeichnis, soweit nicht anders angegeben.
 
@@ -37,10 +38,12 @@ Die folgenden Schritte beziehen sich also immer auf das `workspace`-Verzeichnis,
 
 Die Anwendung benötigt folgende folgende Ports:
 
+
 - 8090 (Backend für die GraphQL API)
 - 8091 (UserService)
 
-Bitte achte darauf, dass diese Ports bei dir nicht belegt sind.
+Bitte achte darauf, dass diese Ports nicht belegt sind.
+
 
 # Den Workspace für die Übungen einrichten
 
@@ -62,32 +65,51 @@ cd workspace
 ./gradlew clean build -x :hello-graphql-java:test
 ```
 
+## Schritt 3: Frontend Packages installieren
 
-## Schritt 3: Öffnen des Workspaces in der IDE
+Achtung! Port 3000 darf nicht belegt sein.
+
+Voraussetzung: Der Package-Manager [pnpm](https://pnpm.io/) (Version 7.9.5) ist installiert.
+- Installation von pnpm siehe: https://pnpm.io/installation
+- Bei mir habe ich pnpm wie folgt installiert:
+  ```bash
+  corepack enable
+  corepack prepare pnpm@7.9.5 --activate
+  ```
+- (Möglicherweise funktioniert das Starten auch mit yarn oder npm, aber ich teste mit pnpm).
+- Meine Node-Version ist `16.17.0`
+
+
+Installieren der Packages und testweise Bauen des Frontends:
+```bash
+
+cd workspace/publy-frontend
+
+pnpm install
+
+pnpm build
+```
+
+Wenn Du möchtest, kannst Du das Frontend auch testweise starten:
+
+```bash
+cd workspace/publy-frontend
+
+pnpm start
+```
+
+Du kannst nun das Frontend über `http://localhost:3000` in deinem Browser öffnen.
+
+
+## Schritt 4: Öffnen des Workspaces in der IDE
 
 Wenn Du möchstest, kannst Du das `workspace`-Verzeichnis schon in deiner IDE öffnen. Dort sollten vier (Gradle-)Projekte erkannt und compiliert werden:
+* `hello-graphql-java`
 * `publy-backend`
 * `publy-userservice`
-Die folgenden beiden Projekten sind ebenfalls im `workspace` vorhanden, werden von uns während diese Trainings aber nicht benötigt. Du kannst sie einfach ignorieren:
-* `hello-graphql-java` 
 * `publy-frontend`
 
-Die anderen Verzeichnisse in diesem Repository brauchst Du _nicht_ in der IDE zu öffnen. 
-Wir arbeiten ausschliesslich in dem `workspace`-Verzeichnis.
-
-### Schritt 4: Starten der Backend Services
-
-Testweise kannst Du schon einmal die beiden Backend-Services ("Backend" und "UserService") starten.
-
-* "User Service" starten
-    * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
-    * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
-* "Backend" starten
-    * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
-    * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
-
-Bei den beiden Services handelt es sich um "normale" Spring Boot Anwendungen,
-im Logfile müsste jeweils `Tomcat started on port(s)...` auftauchen.
+Die anderen Verzeichnisse in diesem Repository brauchst Du _nicht_ in der IDE zu öffnen. Wir arbeiten ausschliesslich in dem `workspace`-Verzeichnis.
 
 **Das ist alles!**
 
@@ -96,8 +118,7 @@ Bei Fragen oder Problemen melde dich gerne bei mir.
 # Die fertige Anwendung
 
 Im Verzeichnis `app` findest Du eine vollständige GraphQL-Anwendungen. Einen kleinen Teil dieser Anwendung, bzw. dessen API, werden wir im Laufe des
-Trainings gemeinsam bauen, aber die fertige Anwendung enthält noch viel mehr Beispiele 
-und eine etwas realistischere API.
+Trainings gemeinsam bauen.
 
 Es ist nicht erforderlich, dass Du die fertige Anwendung ausführst oder verwendest. Ich werde sie dir auf meinem Computer zeigen.
 
