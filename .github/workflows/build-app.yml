@@ -93,8 +93,17 @@ jobs:
       - name: Build application
         run: pnpm build
 
-  build-workspace-frontend-all:
+  build-workspace-frontend-steps:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        frontend_step:
+          - '01_initial_uebungen'
+          - '10_useQuery'
+          - '15_useQuery-fetchMore'
+          - '20_useMutation'
+          - '30_useQuery_subscribeToMore'
+          - '80_complete'
     defaults:
       run:
         working-directory: ./workspace/publy-frontend
@@ -118,11 +127,10 @@ jobs:
         run: |
           rm -rf ../publy-backend/src
           cp -r ../steps/90_app/src/ ../publy-backend
-      - name: Copy Frontend 01_initial_uebungen
+      - name: Copy Frontend Step ${{ matrix.frontend_step }}
         run: |
           rm -rf src
-          cp -r ../steps-frontend/01_initial_uebungen/src/ .
-          ls -lR .
+          cp -r ../steps-frontend/${{ matrix.frontend_step }}/src/ .
       - name: Install dependencies
         run: pnpm install
       - name: Run Codegen
