@@ -118,6 +118,11 @@ jobs:
         run: |
           rm -rf ../publy-backend/src
           cp -r ../steps/90_app/src/ ../publy-backend
+      - name: Copy Frontend 01_initial_uebungen
+        run: |
+          rm -rf src
+          cp -r ../steps-frontend/01_initial_uebungen/src/ .
+          ls -lR .
       - name: Install dependencies
         run: pnpm install
       - name: Run Codegen
