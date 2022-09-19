@@ -6,6 +6,8 @@ type Story  {
     title: String!
     body: String!
 
+    excerpt: String!
+
     writtenBy: Member!
 }
 

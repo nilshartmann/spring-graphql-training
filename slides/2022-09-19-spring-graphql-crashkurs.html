@@ -101,7 +101,6 @@
 ## Agenda
 
 * GraphQL Anwendungen mit Spring for GraphQL
-  * [Das Schema Definieren](#/schema)
   * [Die Basis: graphql-java](#/graphql-java)
   * [GraphQL APIs mit Spring for GraphQL](#/spring-for-graphql)
 * Anhang
@@ -414,60 +413,6 @@
     return "Hello " + input.getName(); 
   }
   ```  
-
----
-
-## Übung: Handler-Funktionen
----
-
-
-### Vorbereitung: Starten der Anwendung
-
-* Ab jetzt arbeiten wir in der "Publy"-Beispiel-Anwendung
-* Diese besteht aus zwei Spring Boot Anwendungen: `publy-userservice` und `publy-backend`
-
-* Schritt 1: User Service starten
-  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
-  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
-  * Diese Anwendung kann die ganze Zeit durchlaufen, wir machen hier keine Änderungen
-* Schritt 2: Backend starten
-  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
-  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
-  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
-
----
-
-### Übung: Handler-Funktionen
-<!-- .element: class="todo" -->Schema schon nach main/resources packen
-* Kopiere dein Schema aus der `hello-graphql-java`-Übung (oder aus dem `01-schema`-Verzeichnis)
-  nach `publy-backend/src/main/resources/graphql` (bestehendes Schema überschreiben)
-* Implementiere zwei Handler-Funktionen für die Root-Felder unserer API:
-  * Eine Handler-Funktion für `Query.stories` und für `Query.story(id: ID!)`
-  * Eine Handler-Funktion für das `excerpt`-Feld am `Story`-Typen
-* Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
-* Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
-  * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
-* Folgende Queries sollten danach funktionieren (in GraphiQL http://localhost:8090 ausführen!):
-  * ```graphql
-      query {
-        stories {
-          id title body
-
-          writtenBy { id profileImage }
-        }
-      }
-      ```
-  * ```graphql
-      query {
-        story(storyId: 1) {
-          id title body
-
-          writtenBy { id profileImage }
-        }
-      }
-      ```
-* Eine mögliche Lösung findest Du in `steps/10_handler_function`
-
 ---
 
 ## Handler-Funktionen an Objekt-Typen
@@ -485,7 +430,7 @@
   * Beispiel: `body`- und `writtenBy`-Feld an der `Story`-Entity
 * Wenn es kein Feld am Java-Objekt gibt, oder es sich anders verhält, als von der GraphQL
   API erwartet, müssen wir auch dafür Handler-Funktionen schreiben
-* (Felder, die an Java Objekten existieren, aber nicht in der GraphQL API können nie vom 
+* (Felder, die an Java Objekten existieren, aber nicht in der GraphQL API können nie vom
   Client abgefragt werden.)
 
 ---
@@ -522,7 +467,59 @@
   * `@SchemaMapping(typeName="Mutation")`
   * `@SchemaMapping(typeName="Subscription")`
 
-  
+
+---
+
+## Übung: Handler-Funktionen
+---
+
+
+### Vorbereitung: Starten der Anwendung
+
+* Ab jetzt arbeiten wir in der "Publy"-Beispiel-Anwendung
+* Diese besteht aus zwei Spring Boot Anwendungen: `publy-userservice` und `publy-backend`
+
+* Schritt 1: User Service starten
+  * Entweder in der IDE `nh.graphql.publy.userservice.UserserviceApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-userservice:bootRun`
+  * Diese Anwendung kann die ganze Zeit durchlaufen, wir machen hier keine Änderungen
+* Schritt 2: Backend starten
+  * Entweder in der IDE `nh.publy.backend.PublyApplication` starten
+  * oder: im `workspace`-Verzeichnis: `./gradlew :publy-backend:bootRun`
+  * Nach Änderungen (und Speichern, Compilieren) sollte sich das Backend automatisch neu starten
+
+---
+
+### Übung: Handler-Funktionen
+* Kopiere das Schema aus dem Verzeichnis `steps/01-schema` nach `publy-backend/src/main/resources/graphql`
+  (bestehendes Schema überschreiben)
+* Implementiere zwei Handler-Funktionen für die Root-Felder unserer API:
+  * Eine Handler-Funktion für `Query.stories` und für `Query.story(id: ID!)`
+  * Eine Handler-Funktion für das `excerpt`-Feld am `Story`-Typen
+* Die Handler-Funktionen kannst Du in der Klasse `nh.publy.backend.graphql.PublyGraphQLController` implementieren.
+* Du kannst in der Controller-Klasse das `StoryRepository` verwenden.
+  * Darin sind Methoden zum Ermitteln der Stories aus der Datenbank enthalten.
+* Folgende Queries sollten danach funktionieren (in GraphiQL http://localhost:8090 ausführen!):
+  * ```graphql
+      query {
+        stories {
+          id title body
+
+          writtenBy { id profileImage }
+        }
+      }
+      ```
+  * ```graphql
+      query {
+        story(storyId: 1) {
+          id title body
+
+          writtenBy { id profileImage }
+        }
+      }
+      ```
+* Eine mögliche Lösung findest Du in `steps/10_handler_function`
+
 ---
 
 ## Asynchrone Handler-Funktionen
