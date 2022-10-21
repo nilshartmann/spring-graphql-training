@@ -2,7 +2,7 @@ on:
   - push
 
 jobs:
-  build-app-backend:
+  app-backend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -17,7 +17,7 @@ jobs:
           java-version: "17"
       - run: ./gradlew build
 
-  build-app-frontend:
+  app-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -48,7 +48,7 @@ jobs:
       - name: Build application
         run: pnpm build
 
-  build-ws-backend:
+  ws-backend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -64,7 +64,7 @@ jobs:
       - run: ./gradlew clean build -x :hello-graphql-java:test
 
 
-  build-ws-backend-steps:
+  ws-backend-steps:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -99,7 +99,7 @@ jobs:
       - name: Build step
         run: ./gradlew clean build -x :hello-graphql-java:test
 
-  build-ws-frontend:
+  ws-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -130,7 +130,7 @@ jobs:
       - name: Build application
         run: pnpm build
 
-  build-ws-frontend-steps:
+  ws-frontend-steps:
     runs-on: ubuntu-latest
     strategy:
       matrix:
