@@ -48,7 +48,7 @@ jobs:
       - name: Build application
         run: pnpm build
 
-  build-workspace-backend:
+  build-ws-backend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -64,10 +64,7 @@ jobs:
       - run: ./gradlew clean build -x :hello-graphql-java:test
 
 
-
-
-
-  build-workspace-backend-steps:
+  build-ws-backend-steps:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -102,7 +99,7 @@ jobs:
       - name: Build step
         run: ./gradlew clean build -x :hello-graphql-java:test
 
-  build-workspace-frontend:
+  build-ws-frontend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -133,7 +130,7 @@ jobs:
       - name: Build application
         run: pnpm build
 
-  build-workspace-frontend-steps:
+  build-ws-frontend-steps:
     runs-on: ubuntu-latest
     strategy:
       matrix:
