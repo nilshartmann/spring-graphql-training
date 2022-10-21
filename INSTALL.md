@@ -7,7 +7,7 @@ Hier findest Du alles, was Du zur Vorbereitung auf den GraphQL Workshop wissen m
 Es gibt zwei Wege, wie Du den Workspace während des Workshops
 für Übungen und Experimente verwenden kannst:
 
-- **lokal**: dafür musst Du JDK, Editor, Git etc. auf deinem Laptop installiert haben. Mehr dazu, siehe unten.
+- **lokal**: dafür musst Du JDK, Editor, Git etc. auf deinem Laptop installiert haben. Mehr dazu: siehe unten.
 - **GitPod**: GitPod ist eine Cloud-basierte Web-IDE, die du direkt aus deinem Browser starten kannst. Die Schritte für GitPod findest Du in [README-gitpod.md](./README-gitpod.md).
 
 # Lokale Installation
@@ -26,6 +26,8 @@ Auf deinem Laptop/PC sollte installiert sein:
 **Internetzugang**
 
 - Bitte überprüfe, dass dein Internet-Zugang auch **für Git und Gradle/Maven** funktioniert (Proxies, VPN, Firewall beachten!)
+- Auch wenn die Installation im Vorwege gemacht hast, kann es vorkommen, dass wir während des Workshops noch Dinge installieren müssen,
+    daher sollte das Internet-Zugriff auch während der Schulung funktionieren.
 
 ## Ports
 
@@ -46,7 +48,17 @@ git clone https://github.com/nilshartmann/spring-graphql-training
 
 **Achtung:** Aus dem Repository werden wir nur das `workspace` Unterverzeichnis verwenden. Bitte nicht das ganze Repository in der IDE öffnen (siehe unten).
 
-## Schritt 2: Öffnen in der IDE
+## Schritt 2: Testweise den Workspace bauen
+
+1. Im Verzeichnis **workspace** des Repositories einmal den Gradle-Build ausführen, damit werden dann auch gleich alle benötigten Module geladen:
+
+```
+cd workspace
+
+./gradlew clean build -x :hello-graphql-java:test
+```
+
+## Schritt 3: Öffnen in der IDE
 
 Importiere nun das **`workspace`-Unterverzeichnis** in deiner IDE. Dort sollten zwei (Gradle-)Projekte erkannt und compiliert werden: `publy-backend` und `publy-userservice`.
 
@@ -55,7 +67,7 @@ Importiere nun das **`workspace`-Unterverzeichnis** in deiner IDE. Dort sollten 
 
 Die anderen Top-Level-Verzeichnisse in diesem Repository bitte _nicht_ in der IDE zu öffnen. Wir arbeiten ausschließlich in dem `workspace`-Verzeichnis.
 
-## Schritt 3: Anwendungen starten
+## Schritt 4: Anwendungen starten
 
 Bitte starte aus deiner IDE auf dem gewohnten Weg die beiden Java Anwendungen:
 
