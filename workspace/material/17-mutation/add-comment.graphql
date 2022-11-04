@@ -1,0 +1,8 @@
+mutation {
+  addComment(input: { storyId: 1, memberId: 1, content: "tolle story!" }) {
+    newComment {
+      id
+      content
+    }
+  }
+}

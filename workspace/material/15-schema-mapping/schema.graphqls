@@ -1,0 +1,9 @@
+type User {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+extend type Member {
+    user: User
+}

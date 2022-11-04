@@ -1,0 +1,21 @@
+
+type AddCommentSuccessPayload {
+    newComment: Comment!
+}
+
+type AddCommentFailedPayload {
+    errorMsg: String!
+}
+
+union AddCommentPayload = AddCommentSuccessPayload | AddCommentFailedPayload
+
+input AddCommentInput {
+    storyId: ID!
+    memberId: ID!
+    content: String!
+}
+
+
+type Mutation {
+    addComment(input: AddCommentInput!): AddCommentPayload!
+}
