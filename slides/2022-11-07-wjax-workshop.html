@@ -739,7 +739,7 @@ Beschreibung eines *Objekt Types*
 
 ---
 ### Übung: Schema beschreiben
-* Vervollständige die Datei `publy-backend`resources/graphql/publy.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
+* Vervollständige die Datei `publy-backend/resources/graphql/publy.graphqls` und beschreibe darin eine API, die folgende Objekt-Typen enthält:
   * **Member** mit `id` und `profileImage`
   * **Story** mit `id`, `title`, `body`, `excerpt` und einer Referenz (`writtenBy`) auf den Member
   * Alle Felder in den beiden Typen sind Pflicht (non-nullable), das `id`-Feld ist vom Typ `ID` alle anderen Strings
@@ -1114,7 +1114,7 @@ Beschreibung eines *Objekt Types*
     (darin ist eine `main`-Methoden vorhanden)
 * Vorbereitung 2: Ergänze das Schema
   * Bitte kopiere den Inhalt von `material/15-schema-mapping/schema.graphqls` an das Ende deiner `publy.graphqls`-Schema-Datei.
-  * Darin ist ein `User`-Typ definiert und der `Member`-Typ wird um ein `writtenBy`-Feld erweitert.
+  * Darin ist ein `User`-Typ definiert und der `Member`-Typ wird um ein `user`-Feld erweitert.
 * Implementiere die Schema-Mapping-Funktion für das Feld `Member.user`
   * Die Schema-Mapping-Funktion soll asynchron funktionieren
   * Der `UserService` ist bereits implementiert
@@ -1233,7 +1233,7 @@ Beschreibung eines *Objekt Types*
 * <!-- .element: class="small" -->
 * **Vorbereitung:**
   * Wenn Du mit der vorherigen Übung nicht fertig geworden bist, kopiere dir den `PublyGraphQLController` aus `steps/15_schema-mapping`
-  * Kopiere den Inhalt von `steps/material/17-mutation/schema.graphqls` an das Ende deiner bestehenden `publy.graphqls`-Datei
+  * Kopiere den Inhalt von `material/17-mutation/schema.graphqls` an das Ende deiner bestehenden `publy.graphqls`-Datei
   * Darin ist die Erweiterung des Schemas vorhanden: 
     * Eine `Story` hat nun `comments`. Es gibt die `addComment`-Mutation.
 * **Implementiere die MutationMapping-Funktion am `PublyGraphQLController`**
@@ -1272,7 +1272,7 @@ Beschreibung eines *Objekt Types*
 
 ---
 
-### DataLoder
+### DataLoader
 <!-- .slide: id="dataloader" -->
 * Ein `DataLoader` "verzögert" das Laden von Daten
 
