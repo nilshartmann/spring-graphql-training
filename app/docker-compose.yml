@@ -11,5 +11,5 @@ services:
       - POSTGRES_USER=klaus
       - POSTGRES_DB=publy_db
     volumes:
-      - ./docker/initdb:/docker-entrypoint-initdb.d
-      - ./docker/db-data:/var/lib/postgresql/data
+#      - ./docker/initdb:/docker-entrypoint-initdb.d
+      - ./docker/db-data-neu:/var/lib/postgresql/data
