@@ -32,15 +32,13 @@ public class PublyGraphQLExceptionResolver extends DataFetcherExceptionResolverA
 
     if (ex instanceof BindException bindException) {
       FieldError fieldError = bindException.getFieldError();
-      if (fieldError != null && fieldError.contains(Throwable.class)) {
-        Throwable fieldEx = NestedExceptionUtils.getMostSpecificCause(fieldError.unwrap(Throwable.class));
-        if (fieldEx instanceof InvalidIdFormatException ife) {
+      if (fieldError != null && "nodeId".equals(fieldError.getObjectName())) {
+        var id = String.valueOf(fieldError.getRejectedValue());
           return GraphqlErrorBuilder.newError(env)
-            .message("Could not parse id " + ife.getId())
-            .extensions(Map.of("id", ife.getId()))
+            .message("Could not parse id " + id)
+            .extensions(Map.of("id", id))
             .errorType(PublyErrorType.invalidNodeId)
             .build();
-        }
       }
     }
 

@@ -14,7 +14,7 @@ public abstract class AbstractPublyConnection<T extends Identifiable> implements
 
   private final PaginationInput paginationInput;
   private ConnectionData<T> connectionData;
-  private BigInteger totalCount;
+  private Long totalCount;
 
   public AbstractPublyConnection(PaginationInput paginationInput) {
     this.paginationInput = paginationInput;
@@ -34,7 +34,7 @@ public abstract class AbstractPublyConnection<T extends Identifiable> implements
     return getConnectionData().nodes();
   }
 
-  public BigInteger getTotalCount() {
+  public Long getTotalCount() {
     if (this.totalCount == null) {
       this.totalCount = loadTotalCount();
     }
@@ -44,7 +44,7 @@ public abstract class AbstractPublyConnection<T extends Identifiable> implements
 
   protected abstract List<T> loadData(boolean fromFirst, Optional<Long> after, Optional<Long> before, int limit);
 
-  protected abstract BigInteger loadTotalCount();
+  protected abstract Long loadTotalCount();
 
   protected ConnectionData<T> getConnectionData() {
     if (this.connectionData == null) {

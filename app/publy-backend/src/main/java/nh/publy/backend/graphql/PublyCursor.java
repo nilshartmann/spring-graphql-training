@@ -3,7 +3,7 @@ package nh.publy.backend.graphql;
 import graphql.relay.DefaultConnectionCursor;
 import nh.publy.backend.domain.Identifiable;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Base64;
 
 public class PublyCursor {

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.graphql.execution.ErrorType;
 import org.springframework.graphql.test.tester.WebGraphQlTester;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -28,6 +29,7 @@ import static org.mockito.BDDMockito.given;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql("/stories-test-data.sql")
 @AutoConfigureHttpGraphQlTester
+@EnableMethodSecurity
 public class PublyGraphQLControllerWebTest {
 
   @Container

@@ -1,7 +1,7 @@
 package nh.publy.backend.graphql.sql;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import java.util.Optional;
 
 import static java.lang.String.*;

@@ -4,9 +4,9 @@ import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,7 +43,7 @@ public class Story implements Identifiable {
   @Column(name = "tags")
   @NotNull
   @Size(min = 1)
-  @Type(type = "nh.publy.backend.util.PostgreSqlStringArrayType")
+  @Type(nh.publy.backend.util.PostgreSqlStringArrayType.class)
   private String[] tags;
 
   @NotNull

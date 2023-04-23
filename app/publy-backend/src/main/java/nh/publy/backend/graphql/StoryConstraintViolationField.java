@@ -1,6 +1,6 @@
 package nh.publy.backend.graphql;
 
-import javax.validation.Path;
+import jakarta.validation.Path;
 
 public enum StoryConstraintViolationField {
   title, body, tags, other;

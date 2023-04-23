@@ -1,6 +1,6 @@
 package nh.publy.backend.graphql;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.util.Collection;
 import java.util.Set;
 

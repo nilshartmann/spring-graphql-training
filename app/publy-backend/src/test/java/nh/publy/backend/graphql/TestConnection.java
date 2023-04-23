@@ -19,7 +19,7 @@ class TestConnection {
 
   public TestConnection withTotalCount(long expectedCount) {
     assertNotNull(this.actualConnection.getTotalCount());
-    assertEquals(BigInteger.valueOf(expectedCount), this.actualConnection.getTotalCount());
+    assertEquals(expectedCount, this.actualConnection.getTotalCount());
     return this;
   }
 

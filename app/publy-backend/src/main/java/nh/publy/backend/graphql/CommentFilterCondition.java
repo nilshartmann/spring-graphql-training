@@ -18,7 +18,7 @@ public class CommentFilterCondition implements SqlFilterCondition {
 
   public Object getValue() {
     if (value instanceof String v) {
-      NodeId nodeId = new NodeId(v);
+      NodeId nodeId = NodeId.parse(v);
       return nodeId.getId();
     }
 

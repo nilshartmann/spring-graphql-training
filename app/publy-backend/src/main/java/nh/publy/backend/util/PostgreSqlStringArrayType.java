@@ -15,20 +15,20 @@ import java.util.Arrays;
  *
  * @see <a href="https://thorben-janssen.com/mapping-arrays-with-hibernate/">Taken from: "Mapping Arrays with Hibernate" by Thorben Janssen</a>
  */
-public class PostgreSqlStringArrayType implements UserType {
+public class PostgreSqlStringArrayType implements UserType<String[]> {
 
   @Override
-  public int[] sqlTypes() {
-    return new int[]{Types.ARRAY};
+  public int getSqlType() {
+    return Types.ARRAY;
   }
 
   @Override
-  public Class returnedClass() {
+  public Class<String[]> returnedClass() {
     return String[].class;
   }
 
   @Override
-  public boolean equals(Object x, Object y) throws HibernateException {
+  public boolean equals(String[] x, String[] y) throws HibernateException {
     if (x instanceof String[] && y instanceof String[]) {
       return Arrays.deepEquals((String[]) x, (String[]) y);
     } else {
@@ -37,30 +37,29 @@ public class PostgreSqlStringArrayType implements UserType {
   }
 
   @Override
-  public int hashCode(Object x) throws HibernateException {
+  public int hashCode(String[] x) throws HibernateException {
     return Arrays.hashCode((String[]) x);
   }
 
   @Override
-  public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner)
-    throws HibernateException, SQLException {
-    Array array = rs.getArray(names[0]);
-    return array != null ? array.getArray() : null;
+  public String[] nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
+    var array = rs.getArray(position);
+    return array != null ? (String[])array.getArray() : null;
   }
 
   @Override
-  public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
+  public void nullSafeSet(PreparedStatement st, String[] value, int index, SharedSessionContractImplementor session)
     throws HibernateException, SQLException {
     if (value != null && st != null) {
-      Array array = session.connection().createArrayOf("text", (String[]) value);
+      Array array = st.getConnection().createArrayOf("text", (String[]) value);
       st.setArray(index, array);
     } else {
-      st.setNull(index, sqlTypes()[0]);
+      st.setNull(index, Types.ARRAY);
     }
   }
 
   @Override
-  public Object deepCopy(Object value) throws HibernateException {
+  public String[] deepCopy(String[] value) throws HibernateException {
     String[] a = (String[]) value;
     return Arrays.copyOf(a, a.length);
   }
@@ -71,17 +70,17 @@ public class PostgreSqlStringArrayType implements UserType {
   }
 
   @Override
-  public Serializable disassemble(Object value) throws HibernateException {
+  public Serializable disassemble(String[] value) throws HibernateException {
     return (Serializable) value;
   }
 
   @Override
-  public Object assemble(Serializable cached, Object owner) throws HibernateException {
-    return cached;
+  public String[] assemble(Serializable cached, Object owner) throws HibernateException {
+    return (String[])cached;
   }
 
   @Override
-  public Object replace(Object original, Object target, Object owner) throws HibernateException {
+  public String[] replace(String[] original, String[] target, Object owner) throws HibernateException {
     return original;
   }
 }

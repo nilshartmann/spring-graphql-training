@@ -5,9 +5,9 @@ import nh.publy.backend.graphql.sql.SelectCountSqlBuilder;
 import nh.publy.backend.graphql.sql.SelectNodesSqlBuilder;
 import nh.publy.backend.graphql.sql.SqlOrder;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -60,10 +60,10 @@ public class CommentConnection extends AbstractPublyConnection<Comment> {
   }
 
   @Override
-  protected BigInteger loadTotalCount() {
+  protected Long loadTotalCount() {
     Query countQuery = new SelectCountSqlBuilder("comments", this.condition)
       .buildCountQuery(entityManager);
-    return (BigInteger) countQuery.getSingleResult();
+    return (Long) countQuery.getSingleResult();
 
   }
 }

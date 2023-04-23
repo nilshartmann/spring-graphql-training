@@ -2,8 +2,8 @@ package nh.publy.backend.graphql.sql;
 
 import nh.publy.backend.graphql.OrderDirection;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import java.util.Optional;
 import java.util.StringJoiner;
 

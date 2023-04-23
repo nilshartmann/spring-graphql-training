@@ -16,8 +16,8 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.graphql.execution.BatchLoaderRegistry;
 import org.springframework.stereotype.Controller;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.Optional;
 
 import static java.lang.String.*;

@@ -14,17 +14,16 @@ public class NodeId {
       throw new IllegalArgumentException("value of a NodeId must not be null");
     }
 
-    return new NodeId(String.valueOf(value));
-  }
+    var id = String.valueOf(value);
 
-  public NodeId(String id) {
     if (!useComplexNodeIds) {
-      this.nodeType = null;
+      long parsedId;
       try {
-        this.id = Long.parseLong(id);
+        parsedId = Long.parseLong(id);
       } catch (Exception ex) {
         throw new InvalidIdFormatException(id);
       }
+      return new NodeId(parsedId, null);
     } else {
       try {
         String decoded = decode(id);
@@ -34,15 +33,44 @@ public class NodeId {
         }
 
         String typeName = parts[0];
-        this.nodeType = NodeType.valueOf(typeName);
+        var nodeType = NodeType.valueOf(typeName);
         String rawValue = parts[1];
-        this.id = parseRawValue(rawValue);
+        var parsedId = Long.parseLong(rawValue);
+
+        return new NodeId(parsedId, nodeType);
 
       } catch (Exception ex) {
         throw new InvalidIdFormatException(id);
       }
     }
   }
+
+//  public NodeId(String id) {
+//    if (!useComplexNodeIds) {
+//      this.nodeType = null;
+//      try {
+//        this.id = Long.parseLong(id);
+//      } catch (Exception ex) {
+//        throw new InvalidIdFormatException(id);
+//      }
+//    } else {
+//      try {
+//        String decoded = decode(id);
+//        String[] parts = decoded.split(":");
+//        if (parts.length != 2) {
+//          throw new InvalidIdFormatException(id);
+//        }
+//
+//        String typeName = parts[0];
+//        this.nodeType = NodeType.valueOf(typeName);
+//        String rawValue = parts[1];
+//        this.id = parseRawValue(rawValue);
+//
+//      } catch (Exception ex) {
+//        throw new InvalidIdFormatException(id);
+//      }
+//    }
+//  }
 
   public NodeId(Long id, NodeType nodeType) {
     this.id = id;
@@ -102,10 +130,6 @@ public class NodeId {
 
   public NodeType getNodeType() {
     return nodeType;
-  }
-
-  private Long parseRawValue(String rawValue) {
-    return Long.parseLong(rawValue);
   }
 
   private static String decode(String base64String) {
