@@ -7,7 +7,6 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,19 +24,20 @@ import static nh.publy.backend.graphql.DemoConfig.enableUserServiceSlowDown;
  * @author Nils Hartmann (nils@nilshartmann.net)
  */
 @Service
-public class UserService {
-  private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+public class RemoteUserServiceClient implements UserServiceClient {
+  private static final Logger logger = LoggerFactory.getLogger(RemoteUserServiceClient.class);
 
   private final RestTemplate restTemplate;
   private final String userServiceUrl;
   private final WebClient webClient;
 
-  public UserService(RestTemplateBuilder restTemplateBuilder, @Value("${publy.userservice.url}") String userServiceUrl) {
+  public RemoteUserServiceClient(RestTemplateBuilder restTemplateBuilder, @Value("${publy.userservice.url}") String userServiceUrl) {
     this.userServiceUrl = userServiceUrl;
     this.restTemplate = restTemplateBuilder.build();
     this.webClient = WebClient.builder().baseUrl(userServiceUrl).build();
   }
 
+  @Override
   public Optional<User> getCurrentUser() {
     return getAuthentication()
       .map(Authentication::getPrincipal)
@@ -45,6 +45,7 @@ public class UserService {
       .map(principal -> (User) principal);
   }
 
+  @Override
   public User findUserSync(String userId) {
 
     URI uri = UriComponentsBuilder.fromHttpUrl(this.userServiceUrl)
@@ -63,6 +64,7 @@ public class UserService {
     return user;
   }
 
+  @Override
   public Mono<User> findUserAsync(String userId) {
     logger.debug("Loading user with Id '{}'", userId);
     var userMono = webClient.get()
@@ -77,6 +79,7 @@ public class UserService {
     return userMono;
   }
 
+  @Override
   public Flux<User> findUsers(List<String> userIds) {
     logger.debug("Loading users with Ids '{}'", userIds);
 
@@ -92,7 +95,4 @@ public class UserService {
     return result;
   }
 
-  private Optional<Authentication> getAuthentication() {
-    return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication());
-  }
 }

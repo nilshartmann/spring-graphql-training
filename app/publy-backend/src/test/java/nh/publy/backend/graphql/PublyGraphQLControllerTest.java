@@ -2,7 +2,7 @@ package nh.publy.backend.graphql;
 
 
 import nh.publy.backend.domain.*;
-import nh.publy.backend.domain.user.UserService;
+import nh.publy.backend.domain.user.UserServiceClient;
 import nh.publy.backend.graphql.runtime.PublyGraphQLConfig;
 import nh.publy.backend.graphql.runtime.PublyGraphQLExceptionResolver;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,8 @@ public class PublyGraphQLControllerTest {
   @MockBean CommentRepository commentRepository;
   @MockBean CommentEventPublisher commentEventPublisher;
   @MockBean ReactionRepository reactionRepository;
-  @MockBean UserService userService;
+  @MockBean
+  UserServiceClient userService;
   @MockBean EntityManagerFactory entityManagerFactory;
 
   @Autowired

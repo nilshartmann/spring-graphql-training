@@ -8,6 +8,11 @@ import java.util.Objects;
  * @author Nils Hartmann (nils@nilshartmann.net)
  */
 public class User {
+
+  public static final String ROLE_USER = "ROLE_USER";
+  public static final String ROLE_GUEST = "ROLE_GUEST";
+  public static final String ROLE_EDITOR = "ROLE_EDITOR";
+
   private String id;
   private String username;
   private String name;

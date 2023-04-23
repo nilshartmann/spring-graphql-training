@@ -1,7 +1,7 @@
 package nh.publy.backend.domain;
 
 import nh.publy.backend.domain.user.User;
-import nh.publy.backend.domain.user.UserService;
+import nh.publy.backend.domain.user.UserServiceClient;
 import nh.publy.backend.security.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +29,13 @@ public class PublyDomainService {
 
   private final ApplicationEventPublisher applicationEventPublisher;
   private final AuthenticationService authenticationService;
-  private final UserService userService;
+  private final UserServiceClient userService;
   private final MemberRepository memberRepository;
   private final CommentRepository commentRepository;
   private final StoryRepository storyRepository;
   private final ReactionRepository reactionRepository;
 
-  public PublyDomainService(ApplicationEventPublisher applicationEventPublisher, AuthenticationService authenticationService, UserService userService, MemberRepository memberRepository, CommentRepository commentRepository, StoryRepository storyRepository, ReactionRepository reactionRepository) {
+  public PublyDomainService(ApplicationEventPublisher applicationEventPublisher, AuthenticationService authenticationService, UserServiceClient userService, MemberRepository memberRepository, CommentRepository commentRepository, StoryRepository storyRepository, ReactionRepository reactionRepository) {
     this.applicationEventPublisher = applicationEventPublisher;
     this.authenticationService = authenticationService;
     this.userService = userService;

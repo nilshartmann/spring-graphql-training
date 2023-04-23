@@ -3,7 +3,7 @@ package nh.publy.backend.graphql;
 import nh.publy.backend.domain.Member;
 import nh.publy.backend.domain.MemberRepository;
 import nh.publy.backend.domain.user.User;
-import nh.publy.backend.domain.user.UserService;
+import nh.publy.backend.domain.user.UserServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +29,13 @@ public class MemberGraphQLController {
   private EntityManager entityManager;
 
   private final MemberRepository memberRepository;
-  private final UserService userService;
+  private final UserServiceClient userService;
 
   private final String profileImageBaseUrl;
 
   private static final Logger log = LoggerFactory.getLogger(MemberGraphQLController.class);
 
-  public MemberGraphQLController(MemberRepository memberRepository, UserService userService, @Value("${publy.profileImageBaseUrl}") String profileImageBaseUrl,
+  public MemberGraphQLController(MemberRepository memberRepository, UserServiceClient userService, @Value("${publy.profileImageBaseUrl}") String profileImageBaseUrl,
                                  BatchLoaderRegistry batchLoaderRegistry) {
     this.memberRepository = memberRepository;
     this.userService = userService;
