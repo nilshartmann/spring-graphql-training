@@ -1,0 +1,8 @@
+schema: ./publy-backend/src/main/resources/graphql/publy.graphqls
+extensions:
+  endpoints:
+    Publy App GraphQL Endpoint:
+      url: http://localhost:8080/graphql
+      headers:
+        user-agent: JS GraphQL
+      introspect: false
