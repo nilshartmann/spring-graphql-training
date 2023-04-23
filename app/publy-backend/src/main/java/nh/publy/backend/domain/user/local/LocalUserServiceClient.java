@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Profile("with-loal-user-service")
+@Profile("with-local-user-service")
 @Primary
 public class LocalUserServiceClient implements UserServiceClient {
 
