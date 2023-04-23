@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserServiceClient {
-  Optional<User> getCurrentUser();
+  default Optional<User> getCurrentUser() {
+    return getAuthentication()
+      .map(Authentication::getPrincipal)
+      .filter(principal -> principal instanceof User)
+      .map(principal -> (User) principal);
+  }
 
   User findUserSync(String userId);
 

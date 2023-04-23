@@ -38,14 +38,6 @@ public class RemoteUserServiceClient implements UserServiceClient {
   }
 
   @Override
-  public Optional<User> getCurrentUser() {
-    return getAuthentication()
-      .map(Authentication::getPrincipal)
-      .filter(principal -> principal instanceof User)
-      .map(principal -> (User) principal);
-  }
-
-  @Override
   public User findUserSync(String userId) {
 
     URI uri = UriComponentsBuilder.fromHttpUrl(this.userServiceUrl)
