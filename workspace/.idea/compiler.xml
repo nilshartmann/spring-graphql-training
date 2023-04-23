@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11">
+    <bytecodeTargetLevel target="17">
       <module name="helperly-backend" target="17" />
+      <module name="workspace.publy-backend" target="17" />
+      <module name="workspace.publy-backend.main" target="17" />
+      <module name="workspace.publy-backend.test" target="17" />
+      <module name="workspace.publy-userservice" target="17" />
+      <module name="workspace.publy-userservice.main" target="17" />
+      <module name="workspace.publy-userservice.test" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

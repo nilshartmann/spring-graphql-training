@@ -1,13 +1,4 @@
-pluginManagement {
-  repositories {
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url 'https://repo.spring.io/snapshot' }
-    gradlePluginPortal()
-  }
-}
-
-
-rootProject.name = 'workspace'
+rootProject.name = 'spring-graphql-training-workspace'
 
 include 'hello-graphql-java'
 include 'publy-userservice'

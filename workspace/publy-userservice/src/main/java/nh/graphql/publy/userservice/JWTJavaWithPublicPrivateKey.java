@@ -3,12 +3,12 @@ package nh.graphql.publy.userservice;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.UnsupportedEncodingException;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -21,6 +21,8 @@ import java.util.Map;
 
 @Service
 public class JWTJavaWithPublicPrivateKey {
+  private static final Logger log = LoggerFactory.getLogger(JWTJavaWithPublicPrivateKey.class);
+
   private final PrivateKey privateKey;
   private final PublicKey publicKey;
 
@@ -98,5 +100,29 @@ public class JWTJavaWithPublicPrivateKey {
     return claims;
   }
 
-  
+  // Get RSA keys. Uses key size of 2048.
+  private static Map<String, Object> getRSAKeys() throws Exception {
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+    keyPairGenerator.initialize(2048, new SecureRandom(new byte[123]));
+    KeyPair keyPair = keyPairGenerator.generateKeyPair();
+    PrivateKey privateKey = keyPair.getPrivate();
+    PublicKey publicKey = keyPair.getPublic();
+    String publicString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+    String privateString = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+
+    log.info("public '{}'", publicString);
+    log.info("private '{}'", privateString);
+
+    Map<String, Object> keys = new HashMap<String, Object>();
+    keys.put("private", privateKey);
+    keys.put("public", publicKey);
+    return keys;
+  }
+
+//  static void abc() throws Exception {
+//    byte[] b1 = Base64.getDecoder().decode(privateKeyString);
+//    PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(b1);
+//    KeyFactory kf = KeyFactory.getInstance("RSA");
+//    PrivateKey privateKey = kf.generatePrivate(spec);
+//  }
 }

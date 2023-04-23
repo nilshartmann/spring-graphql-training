@@ -1,40 +1,12 @@
-//plugins {
-//  id 'application'
-//}
-//
-//sourceCompatibility = '11'
-//
-//repositories {
-//  mavenCentral()
-//}
-//
-//dependencies {
-//  implementation "org.slf4j:slf4j-api:1.7.35"
-//  implementation "org.slf4j:slf4j-simple:1.7.35"
-//
-//
-//
-//  testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
-//}
-//
-//application {
-//  mainClass = 'nh.graphql.GraphQLApi'
-//}
-//
-//tasks.named('test') {
-//  // Use JUnit Platform for unit tests.
-//  useJUnitPlatform()
-//}
-
 plugins {
-  id 'org.springframework.boot' version '2.7.3'
-  id 'io.spring.dependency-management' version '1.0.13.RELEASE'
   id 'java'
+  id 'org.springframework.boot' version '3.0.6'
+  id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'nh.graphql'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 bootJar {
   enabled = false

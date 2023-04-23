@@ -5,12 +5,12 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -62,16 +62,31 @@ public class JwtTokenService {
     User user = Users.users().get(0);
     String userToken = createToken(user, issued.getTime(), expiry.getTime());
 
-    logger.info("        ===============================================================\n" +
-        "        NEVER EXPIRING JWT TOKENS\n" +
-        "        ===============================================================\n" +
-        "        ROLE_USER (can create stories, leave comments and reactions)\n" +
-        "        login: '{}'\n" +
-        "\n" +
-        "        {\"Authorization\": \"Bearer {}\"}\n" +
-        "        ===============================================================\n",
+    // ROLE_GUEST => cannot create stories
+    User guest = Users.users().stream().filter(User::isGuest).findFirst().orElseThrow(() -> new IllegalStateException("No user with guest role found"));
+    String guestToken = createToken(guest, issued.getTime(), expiry.getTime());
+
+    logger.info("""
+
+        ===============================================================
+        NEVER EXPIRING JWT TOKENS
+        ===============================================================
+        ROLE_USER (can create stories, leave comments and reactions)
+        login: '{}'
+
+        {"Authorization": "Bearer {}"}
+
+        ROLE_GUEST (cannot create stories, but leave comments and reactions)
+        login: '{}'
+         
+        {"Authorization": "Bearer {}"}
+
+        ===============================================================
+        """,
       user.getUsername(),
-      userToken);
+      userToken,
+      guest.getUsername(),
+      guestToken);
 
   }
 

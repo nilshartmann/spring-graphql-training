@@ -18,8 +18,8 @@ für Übungen und Experimente verwenden kannst:
 
 Auf deinem Laptop/PC sollte installiert sein:
 
+- Java JDK (mindestens **Version 17**)
 - Git (zum Klonen des Workspaces)
-- Java JDK (mindestens Version 11)
 - Browser
 - Eine Java IDE, zum Beispiel [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) (Evaluationsversion reicht)
 
@@ -27,7 +27,7 @@ Auf deinem Laptop/PC sollte installiert sein:
 
 - Bitte überprüfe, dass dein Internet-Zugang auch **für Git und Gradle/Maven** funktioniert (Proxies, VPN, Firewall beachten!)
 - Auch wenn die Installation im Vorwege gemacht hast, kann es vorkommen, dass wir während des Workshops noch Dinge installieren müssen,
-    daher sollte das Internet-Zugriff auch während der Schulung funktionieren.
+  daher sollte das Internet-Zugriff auch während der Schulung funktionieren.
 
 ## Ports
 
