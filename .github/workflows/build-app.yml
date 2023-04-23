@@ -56,13 +56,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install JDK11
+      - name: Install JDK17
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '11'
+          distribution: "temurin" # See 'Supported distributions' for available options
+          java-version: "17"
       - run: ./gradlew clean build -x :hello-graphql-java:test
-
 
   ws-backend-steps:
     runs-on: ubuntu-latest
@@ -72,27 +71,27 @@ jobs:
     strategy:
       matrix:
         backend_step:
-          - '00_initial'
-          - '01_schema'
-          - '10_handler-function'
-          - '15_schema-mapping'
-          - '17_mutations'
-          - '18_subscriptions'
-          - '20_dataloader'
-          - '25_batchmapping'
-          - '30_error_handling'
-          - '40_security'
-          - '50_test'
-          - '70_complete'
+          - "00_initial"
+          - "01_schema"
+          - "10_handler-function"
+          - "15_schema-mapping"
+          - "17_mutations"
+          - "18_subscriptions"
+          - "20_dataloader"
+          - "25_batchmapping"
+          - "30_error_handling"
+          - "40_security"
+          - "50_test"
+          - "70_complete"
       fail-fast: false
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install JDK11
+      - name: Install JDK17
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '11'
+          distribution: "temurin" # See 'Supported distributions' for available options
+          java-version: "17"
       - name: Copy Backend Step ${{ matrix.backend_step }}
         run: |
           cp -r ./steps/${{ matrix.backend_step }}/src/ ./publy-backend
@@ -135,12 +134,12 @@ jobs:
     strategy:
       matrix:
         frontend_step:
-          - '01_initial_uebungen'
-          - '10_useQuery'
-          - '15_useQuery-fetchMore'
-          - '20_useMutation'
-          - '30_useQuery_subscribeToMore'
-          - '80_complete'
+          - "01_initial_uebungen"
+          - "10_useQuery"
+          - "15_useQuery-fetchMore"
+          - "20_useMutation"
+          - "30_useQuery_subscribeToMore"
+          - "80_complete"
     defaults:
       run:
         working-directory: ./workspace/publy-frontend
