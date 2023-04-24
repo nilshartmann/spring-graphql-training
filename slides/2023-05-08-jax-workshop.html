@@ -371,21 +371,21 @@ Ein **Union-Type** kann mehr als einen Typ zurückliefern:
     }
   }
   ```
-
+  
 ---
 
 ## Übung: Einen Query ausführen
 
 _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
-* Öffne GraphiQL auf meinem Computer (URL gebe ich euch)
+* Öffne GraphiQL auf diesem Demo-Server: https://graphql.schule/publy
 * Versuche einen Query auszuführen, der die ersten zehn Stories zurückliefert und folgende Felder abfragt:
   * Id, Titel, Excerpt, Veröffentlichungsdatum, Wer hat die Story geschrieben und die jeweils ersten zehn Kommentare
   * Kannst Du den Query so erweitern, dass er die ersten zehn _neusten_ Stories zurückliefert?
 * Bau eine Fragment (`Author`), das aus dem `Member` dessen Id, sowie `name` und `id` des Users enthält
   * Verwende das Fragment, um in den Stories und den Kommentaren jeweils die Member-Informationen abzufragen
   * In den Stories zusätzlich noch `skills` des Members abfragen
-* Du kannst Code-Completion und den `Docs`-Explorer (rechts oben) verwenden, um die API zu untersuchen
+* Du kannst Code-Completion und den `Docs`-Explorer (Buch-Symbol links oben) verwenden, um die API zu untersuchen
 * Mögliche Lösung: [https://graphql.schule/queries](https://graphql.schule/queries)
 
 ---
@@ -394,7 +394,7 @@ _Mach' dich mit der GraphQL-Abfragesprache vertraut_
 
 * <!-- .element: class="demo" --> HTTP Request an die GraphQL API
   * <!-- .element: class="demo" --> `app/demo/request.http` im publy-Ordner
-  * <!-- .element: class="demo" --> Fehler zeigen
+  * <!-- .element: class="demo" --> Fehler (falsches Feld) zeigen
 ---
 
 ## GraphQL Requests
