@@ -25,7 +25,7 @@ jobs:
           distribution: "temurin" # See 'Supported distributions' for available options
           java-version: "17"
       - run: ./gradlew build
-      - run: ./gradlew :publy-backend:bootBuildImage
+      - run: ./gradlew -Pdocker.publishRegistry.username=${{ github.actor }} -Pdocker.publishRegistry.password=${{ secrets.GITHUB_TOKEN }} :publy-backend:bootBuildImage --publishImage
 
   app-frontend:
     runs-on: ubuntu-latest

@@ -63,5 +63,5 @@ tasks.named('test') {
 }
 
 tasks.named("bootBuildImage") {
-  imageName = "nilshartmann/${project.name}:${project.version}"
+  imageName = "ghcr.io/nilshartmann/${project.name}:${project.version}"
 }
