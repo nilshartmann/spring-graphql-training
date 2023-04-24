@@ -64,6 +64,8 @@ tasks.named('test') {
 tasks.named("bootBuildImage") {
   imageName = "ghcr.io/nilshartmann/${project.name}:${project.version}"
 
+  environment["BP_OCI_SOURCE"] = "https://github.com/nilshartmann/spring-graphql-training"
+
   docker {
     publishRegistry {
       username = getProperty('publy_docker_username')
