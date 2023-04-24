@@ -61,8 +61,13 @@ dependencyManagement {
 tasks.named('test') {
   useJUnitPlatform()
 }
+
+def docker_tag ="ghcr.io/nilshartmann/${project.name}:${System.getenv('GITHUB_SHA').substring(0,7)}";
+println(docker_tag)
+
 tasks.named("bootBuildImage") {
   imageName = "ghcr.io/nilshartmann/${project.name}:${project.version}"
+  tags = [docker_tag]
 
   environment["BP_OCI_SOURCE"] = "https://github.com/nilshartmann/spring-graphql-training"
 
