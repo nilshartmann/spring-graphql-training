@@ -38,20 +38,20 @@ VALUES (1, 1, '2021-10-01T20:07:37.917Z', 15,
         'H Story 1', '{"java","graphql"}',
         'Body Story 1');
 
-INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown, rc)
+INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (2, 1, '2021-10-02T20:07:37.917Z', 13,
         'D Story 2', '{"graphql","spring"}',
-        'Body Story 2', 2);
+        'Body Story 2');
 
-INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown, rc)
+INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (3, 1, '2021-10-03T20:07:37.917Z', 10,
         'A Story 3', '{"spring"}',
-        'Body Story 3', 1);
+        'Body Story 3');
 
-INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown, rc)
+INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (4, 1, '2021-10-04T20:07:37.917Z', 15,
         'I Story 4', '{"graphql","java"}',
-        'Body Story 4', 3);
+        'Body Story 4');
 
 INSERT INTO stories (id, version, created_at, written_by_id, title, tags, body_markdown)
 VALUES (5, 1, '2021-10-05T20:07:37.917Z', 12,

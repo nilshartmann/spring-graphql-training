@@ -23,8 +23,7 @@ public class StoriesSqlOrderByIdStoryConnectionIntegrationTest extends AbstractS
   static JdbcDatabaseContainer<?> database = new PostgreSQLContainer<>("postgres:14")
     .withDatabaseName("springboot")
     .withPassword("springboot")
-    .withUsername("springboot")
-    .withInitScript("schema.sql");
+    .withUsername("springboot");
 
   @DynamicPropertySource
   static void setDatasourceProperties(DynamicPropertyRegistry propertyRegistry) {
