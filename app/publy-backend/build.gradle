@@ -62,12 +62,14 @@ tasks.named('test') {
   useJUnitPlatform()
 }
 
-def docker_tag ="ghcr.io/nilshartmann/${project.name}:${System.getenv('GITHUB_SHA').substring(0,7)}";
+def githubSha = System.getenv('GITHUB_SHA');
+def shortSha = githubSha != null ? githubSha.substring(0, 7) : "local";
+def docker_tag = "ghcr.io/nilshartmann/${project.name}:${shortSha}"
 println(docker_tag)
 
 tasks.named("bootBuildImage") {
   imageName = "ghcr.io/nilshartmann/${project.name}:${project.version}"
-  tags = [docker_tag]
+  tags = [dockerTag]
 
   environment["BP_OCI_SOURCE"] = "https://github.com/nilshartmann/spring-graphql-training"
 
