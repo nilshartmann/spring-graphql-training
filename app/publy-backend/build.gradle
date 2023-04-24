@@ -61,7 +61,13 @@ dependencyManagement {
 tasks.named('test') {
   useJUnitPlatform()
 }
-
 tasks.named("bootBuildImage") {
   imageName = "ghcr.io/nilshartmann/${project.name}:${project.version}"
+
+  docker {
+    publishRegistry {
+      username = getProperty('publy_docker_username')
+      password = getProperty('publy_docker_secret')
+    }
+  }
 }
