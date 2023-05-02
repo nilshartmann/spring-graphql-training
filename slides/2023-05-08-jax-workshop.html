@@ -177,37 +177,51 @@ _"GraphQL is a query language for APIs and a **runtime for fulfilling** those qu
 _"GraphQL is a query language for APIs and a runtime for fulfilling those queries with **your existing data**"_ ([https://graphql.org](https://graphql.org))
 
 ---
-
-## Spezifikation
-
-* https://spec.graphql.org/
-* Umfasst:
-  * Query Sprache und -Ausführung
-  * Schema Definition Language
-* Kein fertiges Produkt, keine fertige Bibliothek
-   * Es gibt Bibliotheken, die dir helfen, GraphQL APIs zu implementieren und bereitzustellen
-   * Die abgefragten Daten müssen wir selbst ermitteln
-   * GraphQL macht keine Aussage darüber, wo diese Daten herkommen (Datenbank, Micro-Service, Berechnung ...)
-
----
-
-## Die Beispiel-Anwendung
+## Die Beispiel-Anwendung "Publy"
 
 <img style="border: 1px solid grey" src="images/publy-screenshot.png" />
 
 [http://localhost:3000](http://localhost:3000)
 
 ---
+### Eine API für Publy
 
+* Ansatz 1: Backend bestimmt Aussehen der Endpunkte / Daten
+  * REST
+* <img src="images/arten-von-apis_rest.png" width="2400px" style="margin-top:120px"/>
+---
+### Eine API für Publy
+
+* Ansatz 2: Client diktiert die API nach seinen Anforderungen
+  * "Backend for Frontend"          
+* <img src="images/arten-von-apis_02_bff.png" width="2400px" style="margin-top:120px"/>
+
+---
+### Eine API für Publy
+
+* Ansatz 3: GraphQL
+  * Aus Ansatz 1: Server bestimmt, wie Datenmodell aussieht
+* <img src="images/arten-von-apis_03_graphql_01.png" width="2400px" style="margin-top:120px"/>  
+  
+---
+### Eine API für Publy
+<!-- .slide: class="no-fragment" -->
+
+* Ansatz 3: GraphQL
+  * Aus Ansatz 1: Server bestimmt, wie Datenmodell aussieht
+  * ...aber Client kann pro Ansicht wählen, welche Daten er daraus benötigt
+* <img src="images/arten-von-apis_03_graphql_02.png" width="2400px" style="margin-top:120px"/>  
+
+  
+---
 ## Beispiel: GraphiQL
 
 <img style="border: 1px solid grey" src="images/screenshot-graphiql.png" />
 
 [http://localhost:8080](http://localhost:8080)
 
+
 ---
-
-
 ## Beispiel: GraphQL Tooling
 
 * <!-- .element: class="demo" --> IntelliJ IDEA
@@ -218,8 +232,27 @@ _"GraphQL is a query language for APIs and a runtime for fulfilling those querie
 * <!-- .element: class="demo" --> TypeScript (optional)
   * <!-- .element: class="demo" --> publy-frontend, npm run codegen:watch
   * <!-- .element: class="demo" --> StoryPage.query.graphql zeigen und story-Feld entfernen
+  
 ---
+## Spezifikation
 
+* https://spec.graphql.org/
+* Umfasst:
+  * Query Sprache und -Ausführung
+  * Schema Definition Language
+* Kein fertiges Produkt, keine fertige Bibliothek
+    * Es gibt Bibliotheken, die dir helfen, GraphQL APIs zu implementieren und bereitzustellen
+    * Die abgefragten Daten müssen wir selbst ermitteln
+    * GraphQL macht keine Aussage darüber, wo diese Daten herkommen (Datenbank, Micro-Service, Berechnung ...)
+
+---
+### Wir veröffentlichen mit GraphQL eine fachliche API
+* Welche Daten wir zur Verfügung stellen ist unsere Aufgabe
+* Wir legen fest, in welcher Form die Daten zur Verfügung gestellt werden
+  * 👉 Wir legen damit explizit selbst fest, wie unsere API aussehen soll 
+  * 👉 GraphQL erzeugt die API nicht auf "magische" Weise selbst  
+
+---
 <!-- .slide: id="graphql-sprache" -->
 # Die GraphQL Abfrage-Sprache
 ---
@@ -839,7 +872,7 @@ Beschreibung eines *Objekt Types*
 
 * [Spring for GraphQL](https://spring.io/projects/spring-graphql) bietet eine Abstraktion von GraphQL-Java an
 * Erstes Release von Spring for GraphQL enthalten in Spring Boot 2.7 (Mai 2022)
-  * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.3&packaging=jar&jvmVersion=11&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden
+  * Projekte können mit dem [Spring initializr](https://start.spring.io/#!type=maven-project&language=java&platformVersion=3.0.6&packaging=jar&jvmVersion=17&groupId=com.example&artifactId=demo&name=demo&description=Demo%20project%20for%20Spring%20Boot&packageName=com.example.demo&dependencies=graphql) erzeugt werden
 
 * Features:
   * Automatische Konfiguration des RuntimeWirings
@@ -847,7 +880,7 @@ Beschreibung eines *Objekt Types*
   * GraphiQL Integration per Property
   * Gewohntes Spring-Programmiermodell mit Annotationen etc.
   * Integration in Spring Stack (z.B. Bean Validation, Security)
-  * [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/2.7.3/reference/htmlsingle/#web.graphql) für Spring Boot
+  * [`spring-boot-starter-graphql`](https://docs.spring.io/spring-boot/docs/3.0.6/reference/htmlsingle/#web.graphql) für Spring Boot
   * Actuator-Endpunkte für Spring Boot
 
 ---
