@@ -208,7 +208,7 @@ body.title .transparent-bg {
 }
 
 body.title a.Link {
-  font-family: 'Courier New', Courier, monospace;  
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   font-size: 4rem;
   padding: 0.5rem;
@@ -226,11 +226,11 @@ body.title a.Link {
 
 li.demo:before {
   content: "👨‍💻 ";
-} 
+}
 
 li.demo li.demo:before {
   content: none;
-} 
+}
 
 ul.note {
   display: block;
@@ -241,7 +241,7 @@ li.note {
   margin-top: 5px;
   font-weight: bold;
   list-style-type: none;
-  
+
 }
 
 li.note:before {
