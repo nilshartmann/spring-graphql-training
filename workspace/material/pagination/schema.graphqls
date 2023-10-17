@@ -1,0 +1,32 @@
+"""
+This is a `Story`.
+"""
+type Story  {
+    id: ID!
+    title: String!
+    body: String!
+    createdAt: String!
+
+    writtenBy: Member!
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+type Member {
+    id: ID!
+
+    profileImage: String!
+    user: User
+}
+
+type Query {
+    "Returns the newest `Story` in our backend or null if no Story available"
+    story(storyId: ID): Story
+
+    stories(first: Int, before: ID, last: Int, after: ID): StoryConnection
+}
+

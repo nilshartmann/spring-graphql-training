@@ -1,0 +1,8 @@
+  @QueryMapping
+  public Window<Story> stories(ScrollSubrange scrollSubrange) {
+    var scrollPosition = scrollSubrange.position().orElse(ScrollPosition.offset());
+
+    var limit = Limit.of(scrollSubrange.count().orElse(5));
+
+    return storyRepository.findAllBy(scrollPosition, limit, Sort.by("createdAt"));
+  }
