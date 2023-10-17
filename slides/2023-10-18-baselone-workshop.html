@@ -1298,10 +1298,17 @@ Beschreibung eines *Objekt Types*
 ### Beispiel: Paginierung von Stories
 
 * <!-- .element: class="demo" --> Schema anpassen
-  * <!-- .element: class="demo" --> stories(first:Int, after:String, last:Int, before:String): PostConnection!
+  * <!-- .element: class="demo" --> stories(first:Int, after:String, last:Int, before:String): StoryConnection
+  * <!-- .element: class="demo" --> Story: createdAt String!
 * <!-- .element: class="demo" --> QueryMapping fuer stories um ScrollSubrange erweitern 
-* <!-- .element: class="demo" --> Sortierung konfigurierbar machen
 ---
+
+---
+### Sortierung
+
+* Auch für Sortierung gibt es nichts fertiges
+* 🤔 Wie können wir das Ergebnis der Stories sortieren?
+* <!-- .element: class="demo" --> Sortierung konfigurierbar machen
 
 
 ## Fehlerbehandlung
