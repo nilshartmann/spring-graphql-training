@@ -32,7 +32,7 @@ public class UserController {
     Optional<User> userWithId = userRepository.findUserWithId(userId);
     slowDown(enableSlowdown);
 
-    logger.info("Returning User {}", userWithId);
+//    logger.info("Returning User {}", userWithId);
 
     return userWithId;
   }

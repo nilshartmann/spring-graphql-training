@@ -33,6 +33,10 @@ public class UserService {
       .map(principal -> (User) principal);
   }
 
+  public Optional<User> findUserWithId(String userId) {
+    return findUser(userId).blockOptional();
+  }
+
   public Mono<User> findUser(String userId) {
 
     var userMono = webClient.get()
