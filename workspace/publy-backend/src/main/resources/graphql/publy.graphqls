@@ -1,3 +1,8 @@
 type Query {
-    ping: String
+  # Dieses Feld ist nur ein Platzhalter, da eine
+  # leere Schema-Datei syntaktisch ungueltig ist.
+  #
+  # Du kannst dieses Feld einfach loeschen und "deine"
+  # Root-Felder hier einfuegen.
+  todo: String
 }

@@ -15,9 +15,4 @@ public class PublyGraphQLController {
     this.storyRepository = storyRepository;
     this.userService = userService;
   }
-
-  @QueryMapping
-  public String ping() {
-    return "Pong!";
-  }
 }
