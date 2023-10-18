@@ -1,0 +1,14 @@
+query {
+ stories(first:3) {
+  pageInfo { hasNextPage startCursor endCursor}
+  edges {
+    cursor
+    node {
+      title
+      createdAt
+
+
+    }
+  }
+}
+}
