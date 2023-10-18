@@ -46,7 +46,10 @@ Bitte achte darauf, dass diese Ports nicht belegt sind.
 git clone https://github.com/nilshartmann/spring-graphql-training
 ```
 
-**Achtung:** Aus dem Repository werden wir nur das `workspace` Unterverzeichnis verwenden. Bitte nicht das ganze Repository in der IDE öffnen (siehe unten).
+> [!IMPORTANT]
+> Aus dem Repository verwenden wir **nur das `workspace`-Unterverzeichnis**.
+> 
+> Bitte nicht das ganze Repository in der IDE öffnen (siehe unten)!
 
 ## Schritt 2: Testweise den Workspace bauen
 
