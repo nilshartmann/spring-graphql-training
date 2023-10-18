@@ -4,5 +4,5 @@ type Query {
   #
   # Du kannst dieses Feld einfach loeschen und "deine"
   # Root-Felder hier einfuegen.
-  todo: String
+  ping: String
 }
