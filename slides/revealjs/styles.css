@@ -84,9 +84,6 @@ code span.line-number {
   letter-spacing: 1.1;
 }
 
-
-
-
 /* 
  * Aufzaehlungen linksbuendig auf einer Slide.
  * 
@@ -95,7 +92,6 @@ code span.line-number {
 .reveal section.left ul {
   width: 100%;
 }
-
 
 .reveal li {
   margin-bottom: 10px;
@@ -110,7 +106,6 @@ code span.line-number {
   font-size: 80%;
   margin-bottom: 10px;
 }
-
 
 .reveal li > ul {
   margin-top: 10px;
@@ -193,26 +188,44 @@ li > pre.code-wrapper > code {
 /*rgb(196, 215, 240)*/
 
 /* title slide with background image */
+
 body.title {
+  position: relative;
+}
+
+body.title:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  background-image: url("bg.jpg");
-  background-color: rgba(212, 235, 233, 0.5);
+  background-image: url("bg.png");
+  background-color: rgba(212, 235, 233, 0.9);
+}
+
+body.title-content {
+  position: relativ;
 }
 
 body.title b,
 body.title .transparent-bg {
-  background-color: rgba(189, 215, 238, 0.5);
+  background-color: rgba(189, 215, 238, 1);
   padding: 5px 10px;
 }
 
 body.title a.Link {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-weight: bold;
   font-size: 4rem;
   padding: 0.5rem;
-  background-color: rgba(189, 215, 238, 0.5);
+  background-color: rgba(189, 215, 238, 1);
 }
 
 .language-graphql .hljs-punctuation {
@@ -222,7 +235,6 @@ body.title a.Link {
 .language-graphql .hljs-string {
   color: #2aa198;
 }
-
 
 li.demo:before {
   content: "👨‍💻 ";
@@ -241,7 +253,6 @@ li.note {
   margin-top: 5px;
   font-weight: bold;
   list-style-type: none;
-
 }
 
 li.note:before {
