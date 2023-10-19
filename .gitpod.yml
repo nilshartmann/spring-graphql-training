@@ -1,3 +1,5 @@
+image:
+  file: .gitpod.Dockerfile
 workspaceLocation: "./spring-graphql-training/workspace"
 tasks:
   - name: Build
