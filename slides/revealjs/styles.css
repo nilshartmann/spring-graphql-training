@@ -233,6 +233,15 @@ body.title a.Link {
   font-size: 2rem;
 }
 
+.reveal-viewport.title .reveal .controls {
+  bottom: 5em;
+  right: 3em;
+}
+
+.reveal-viewport.title .reveal .controls .navigate-right.highlight {
+  animation: bounce-right 1s 50 both ease-out;
+}
+
 .language-graphql .hljs-punctuation {
   color: #268bd2;
 }
