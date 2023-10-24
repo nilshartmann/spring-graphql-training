@@ -20,6 +20,7 @@ Reveal.initialize({
   center: false,
 
   transition: "none",
+  controlsTutorial: true,
 
   // i need all space i can get
   width: 1900,
